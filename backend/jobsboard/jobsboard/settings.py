@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # to import dj rest framework
     'rest_framework'
 ]
 
@@ -120,6 +121,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# REST FRAMEWORK configuration dictionary for djrestframework global settings 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.

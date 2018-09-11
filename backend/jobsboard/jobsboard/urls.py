@@ -18,5 +18,6 @@ from django.urls import path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # For using API (login and logout views)
    url(r'^api-auth/', include('rest_framework.urls'))
 ]
