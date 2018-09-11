@@ -21,5 +21,6 @@ urlpatterns = [
     # For using API (login and logout views)
    
    path('admin/', admin.site.urls),
-   path('api-auth/', include('rest_framework.urls'))
+   path('api-auth/', include('rest_framework.urls')),
+   path('jobs/', include('jobs.urls'))
 ]
