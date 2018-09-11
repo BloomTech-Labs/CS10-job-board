@@ -1,50 +1,19 @@
 from django.db import models
+from django.utils import timezone
 
-"""
-Job Post
+class JobPost(models.Model):
+    company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    image = models.FileField(upload_to='post_image', blank=True)
+    salary = models.IntegerField()
+    is_active = models.BooleanField()
+    created_date = models.DateTimeField(default=timezone.now)
+    published_date = models.DateTimeField(blank=True, null=True)
 
-ID (Integer)
-Company Name (String)
-Description (String)
-Salary (Float)
-Category/Job Roles (ID)
-Requirements (String)
-Image (Profile Picture)
-Tags (ID)
-Is_Active
-Job Location
-Does it require a degree?
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
 
-
-"""
-
-"""
-Employee
-
-Profile Picture
-Email
-First Name
-Last Name
-Company Name
-Summary
-Applications Inbox
-Password
-Can they post a job? NO
-
-"""
-
-"""
-
-Employer
-
-Profile Picture
-Email
-First Name
-Last Name
-Company Name
-Summary
-Applications Inbox
-Password
-Can they post a job? YES
-
-"""
+    def __str__(self):
+        return self.title 
