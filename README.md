@@ -15,7 +15,6 @@ _Description_ - Job board for students without college degrees
 
 ### Covered
 
-1. 
-
 _Testing_
 _UI/Design_
+_Backend_
