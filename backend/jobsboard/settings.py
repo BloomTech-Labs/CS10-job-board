@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # to import dj rest framework
-    'rest_framework'
+    'rest_framework',
+    'jobs'
 ]
 
 MIDDLEWARE = [
