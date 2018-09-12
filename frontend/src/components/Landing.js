@@ -1,6 +1,7 @@
 import React from "react";
 import { Login, Register } from "./";
 import hero from "../assets/hero.svg";
+import "../css/Landing.css";
 
 class Landing extends React.Component {
     state = {

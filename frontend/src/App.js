@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 import { Landing } from "./components";
-import './App.css';
+import './css/App.css';
 
 class App extends React.Component {
   constructor() {

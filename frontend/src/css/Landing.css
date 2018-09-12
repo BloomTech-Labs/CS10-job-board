@@ -1,0 +1,30 @@
+.landing-page {
+    display: flex;
+    width: 100%
+}
+
+.landing-page > div:first-child {
+    flex-grow: 2;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-page > div:nth-child(2) {
+    flex-grow: 3;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-page img {
+    width: 100%;
+    max-width: 660px;
+}
+
+.landing-page .form {
+    background: white;
+    max-width: 280px;
+}
