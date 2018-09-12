@@ -17,8 +17,8 @@ class Landing extends React.Component {
         return (
             <div className="landing-page">
                 <div>
-                    <h2>No Degree, No Problem.</h2>
-                    <h2>Your next job is just a click away.</h2>
+                    <h1>Open Jobs</h1>
+                    <h2>No Degree, No Problem.<br/>Your next job is just a click away.</h2>
                     <img src={hero} alt="hero illustration"/>
                 </div>
                 <div>
