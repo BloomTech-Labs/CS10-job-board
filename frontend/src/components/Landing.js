@@ -19,7 +19,7 @@ class Landing extends React.Component {
                 <div>
                     <h1>Open Jobs</h1>
                     <h2>No Degree, No Problem.<br/>Your next job is just a click away.</h2>
-                    <img src={hero} alt="hero illustration"/>
+                    <img src={hero} draggable={false} alt="hero illustration"/>
                 </div>
                 <div>
                     {login ? (
