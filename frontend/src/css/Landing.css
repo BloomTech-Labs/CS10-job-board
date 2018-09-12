@@ -1,0 +1,48 @@
+.landing-page {
+    display: flex;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.landing-page > div:first-child {
+    flex-grow: 2;
+    display: flex;
+    position: relative;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-page div:first-child > h1 {
+    position: absolute;
+    margin-top: -262px;
+    color: #665CBF;
+    font-size: 4.8rem;
+}
+
+.landing-page div:first-child > h2 {
+    position: absolute;
+    margin-top: -70px;
+}
+
+.landing-page > div:nth-child(2) {
+    flex-grow: 3;
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.landing-page img {
+    width: 100%;
+    max-width: 660px;
+}
+
+.landing-page .form {
+    background: white;
+    max-width: 280px;
+}
+
+.landing-page .tooltip {
+    margin: 4.8rem 1rem 0;
+}
