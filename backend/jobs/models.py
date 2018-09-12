@@ -32,3 +32,16 @@ class JobPost(models.Model):
 
     def __str__(self):
         return self.title 
+
+
+
+class Employee(models.Model):
+    company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    image = models.FileField(upload_to='post_image', blank=True)
+    email = models.CharField(max_length=35)
+    firstName = models.CharField(max_length=20)
+    lastName = models.CharField(max_length=20)
+    description = models.TextField()
+    appsInbox = models.CharField(max_length=35)
+    password = models.CharField(max_length=100, default="", null=False)
+    isEmployer = models.BooleanField(default=False)
