@@ -1,10 +1,9 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from uuid import uuid4
 
-from uuid import uuid4 
-
-from taggit.managers import TaggableManager
+from taggit.managers import TaggableManager 
 
 # Employer model
 class Employer(models.Model):
