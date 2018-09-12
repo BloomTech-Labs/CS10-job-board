@@ -8,7 +8,7 @@ class Login extends React.Component {
         error: null
     }
 
-    onChange = e => {
+    handleChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     }
 
