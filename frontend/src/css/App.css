@@ -12,10 +12,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: 'Lora', 'Times New Roman', Times, serif;
 }
 
-a, p, input, ul, li, button {
-  font-family: 'Roboto', Verdana, Geneva, Tahoma, sans-serif;
-}
-
 h1 {
   font-size: 3.2rem;
 }
@@ -28,6 +24,11 @@ h3 {
   font-size: 1.8rem;
 }
 
+
+a, p, input, ul, li, button {
+  font-family: 'Roboto', Verdana, Geneva, Tahoma, sans-serif;
+}
+
 a {
   text-decoration: none;
   color: #4A4A4A;
@@ -38,8 +39,20 @@ a:hover {
   cursor: pointer;
 }
 
-p, input {
+p, input, button {
   font-size: 1.4rem;
+}
+
+button {
+  padding: 1rem 0.5rem;
+  background: #7892EA;
+  border: none;
+  border-radius: 4px;
+}
+
+button:hover {
+  background: #B0C9FF;
+  cursor: pointer;
 }
 
 .App {
@@ -88,18 +101,6 @@ p, input {
   align-self: flex-end;
 }
 
-button {
-  padding: 1rem 0.5rem;
-  background: #7892EA;
-  border: none;
-  border-radius: 4px;
-}
-
-button:hover {
-  background: #B0C9FF;
-  cursor: pointer;
-}
-
 .message {
   position: absolute;
 }
@@ -108,7 +109,6 @@ button:hover {
   background: white;
   border-radius: 4px;
   padding: 0.25rem 0.4rem;
-  margin-top: 3.1rem;
   border: 1px solid #7892EA;
 }
 
