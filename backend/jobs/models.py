@@ -1,5 +1,17 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    is_employer = models.BooleanField(default=True)
+
+class Employer(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, related_name='employer_profile')
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    summary = models.TextField()
+
 
 class JobPost(models.Model):
     company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
