@@ -1,6 +1,20 @@
 from django.db import models
 from django.utils import timezone
-from django import forms
+from django.contrib.auth.models import User
+
+# Employer model
+class Employer(models.Model):
+    company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    image = models.FileField(upload_to='post_image', blank=True)
+    email = models.CharField(max_length=35)
+    firstName = models.CharField(max_length=30)
+    lastName = models.CharField(max_length=30)
+    summary = models.TextField()
+    applicationInbox = models.CharField(max_length=35)
+    password = models.CharField(max_length=100, default="", null=False)
+    isEmployee = models.BooleanField(default=False)
+    isActive = models.BooleanField()
+
 
 class JobPost(models.Model):
     company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
