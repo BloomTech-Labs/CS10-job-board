@@ -22,6 +22,7 @@ class Landing extends React.Component {
                     <img src={hero} draggable={false} alt="hero illustration"/>
                 </div>
                 <div>
+                    {/* login toggles the display of Login or Register components */}
                     {login ? (
                         <Login />
                     ) : (
