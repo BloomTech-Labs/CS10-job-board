@@ -3,8 +3,15 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from uuid import uuid4
 
+<<<<<<< HEAD
 from taggit.managers import TaggableManager 
 
+=======
+from uuid import uuid4 
+
+from taggit.managers import TaggableManager
+
+>>>>>>> d083f3f40ac204779c0f4fd4e9a8862f1a192161
 # Employer model
 class Employer(models.Model):
     company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
