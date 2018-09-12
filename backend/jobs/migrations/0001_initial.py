@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=200)),
                 ('description', models.TextField()),
-                ('image', models.FileField(blank=True, upload_to='post_image')),
+                ('company_image', models.FileField(blank=True, upload_to='post_image')),
                 ('salary', models.IntegerField()),
                 ('is_active', models.BooleanField()),
                 ('created_date', models.DateTimeField(default=django.utils.timezone.now)),
