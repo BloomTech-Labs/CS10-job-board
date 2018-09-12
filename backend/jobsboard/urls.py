@@ -15,29 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.contrib.auth.models import User
-from rest_framework import routers, serializers, viewsets
 
-# Serializers for API representation
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = User
-        fields = ('url', 'username', 'email', 'is_staff')
+from django.conf.urls import url 
+from django.conf import settings
+from django.conf.urls.static import static
 
-# ViewSets for defining view behavior
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+from rest_framework import routers 
+from jobs.api import UserViewSet
 
 # Routers for automatically determining the URL configuration
 router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
-
+router.register('users', UserViewSet)
 
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     # For using API (login and logout views)
    path('', include(router.urls)),
    path('admin/', admin.site.urls),
-   path('api-auth/', include('rest_framework.urls',  namespace='rest_framework'))
-]
+   path('api-auth/', include('rest_framework.urls',  namespace='rest_framework')),
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
