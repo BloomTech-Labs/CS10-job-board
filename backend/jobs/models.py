@@ -1,10 +1,10 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from uuid import uuid4
 
-from uuid import uuid4 
+from taggit.managers import TaggableManager 
 
-from taggit.managers import TaggableManager
 
 # Employer model
 class Employer(models.Model):
@@ -25,7 +25,7 @@ class JobPost(models.Model):
     company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField()
-    company_image = models.ImageField(upload_to='post_image', blank=True)
+    company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
     job_location = models.CharField(max_length=30, blank=True)
     requirements = models.CharField(max_length=400, blank=True)
     salary = models.IntegerField()
@@ -33,7 +33,8 @@ class JobPost(models.Model):
     tags = TaggableManager()
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
-
+    
+    
     def publish(self):
         self.published_date = timezone.now()
         self.save()
