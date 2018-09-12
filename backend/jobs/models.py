@@ -33,8 +33,6 @@ class JobPost(models.Model):
     def __str__(self):
         return self.title 
 
-
-
 class Employee(models.Model):
     company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     image = models.FileField(upload_to='post_image', blank=True)
