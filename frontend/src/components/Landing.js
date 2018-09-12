@@ -1,13 +1,10 @@
 import React from "react";
 import { Login, Register } from "./";
-// import hero from "../../assets/hero.svg";
+import hero from "../assets/hero.svg";
 
 class Landing extends React.Component {
-    constructor() {
-        super()
-        this.state = {
-            login: true
-        }
+    state = {
+        login: true
     }
 
     changeComponent = () => {
@@ -21,7 +18,7 @@ class Landing extends React.Component {
                 <div>
                     <h2>No Degree, No Problem.</h2>
                     <h2>Your next job is just a click away.</h2>
-                    
+                    <img src={hero} alt="hero illustration"/>
                 </div>
                 <div>
                     {login ? (
