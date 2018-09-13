@@ -5,6 +5,11 @@ name = "pypi"
 
 [packages]
 django = "*"
+django-cors-headers = "*"
+djangorestframework-jwt = "*"
+djangorestframework = "*"
+pillow = "*"
+django-taggit = "*"
 
 [dev-packages]
 pylint = "<2.0.0"
