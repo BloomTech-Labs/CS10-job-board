@@ -30,11 +30,12 @@ class UserList(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# ListJobPost - list all the posts
 class ListJobPost(generics.ListCreateAPIView):
     queryset = JobPost.objects.all()
     serializer_class = JobPostSerializer
 
-
+#Detail JobPost - CRUD the posts
 class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
     queryset = JobPost.objects.all()
     serializer_class = JobPostSerializer
