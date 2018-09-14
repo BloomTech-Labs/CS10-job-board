@@ -34,18 +34,18 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'jobs',
+    'corsheaders',
     'django.contrib.auth',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'jobs',
-    'taggit',
-    'corsheaders',
     'djoser',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -161,6 +161,6 @@ CORS_ORIGIN_WHITELIST = (
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL': False,
     'SERIALIZERS': {},
 }
