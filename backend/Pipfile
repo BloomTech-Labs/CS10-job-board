@@ -10,6 +10,8 @@ djangorestframework-jwt = "*"
 djangorestframework = "*"
 pillow = "*"
 django-taggit = "*"
+httpie = "*"
+djoser = "*"
 
 [dev-packages]
 pylint = "<2.0.0"

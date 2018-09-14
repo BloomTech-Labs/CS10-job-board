@@ -13,32 +13,32 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
-from django.conf.urls import url 
 
 from django.conf import settings
+from django.contrib import admin
+from django.urls import path, re_path, include
+
 from django.conf.urls.static import static
-from django.views.generic import TemplateView
 
-from rest_framework import routers
-from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework.routers import DefaultRouter
 
-
-from jobs.api import UserViewSet
+from jobs.urls import urlpatterns
+from jobs.views import UserLogoutAllView
 
 
 # Routers for automatically determining the URL configuration
-router = routers.DefaultRouter()
-router.register('users', UserViewSet)
+router = DefaultRouter()
+
+
+#refresh non-expired tokens and add verification endpoint 
+#from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     # For using API (login and logout views)
+    re_path(r'^api/', include('jobs.urls')),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('token-auth/', obtain_jwt_token),
-    path('jobs/', include('jobs.urls')),
+    path('', include('jobs.urls')),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
