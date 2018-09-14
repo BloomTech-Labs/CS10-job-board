@@ -8,7 +8,7 @@ from taggit.managers import TaggableManager
 class Employer(models.Model):
     company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_image', blank=True)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
     summary = models.TextField()

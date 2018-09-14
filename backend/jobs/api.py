@@ -53,7 +53,7 @@ class UserSerializerWithToken(serializers.ModelSerializer):
         fields = ('token', 'username', 'password')
 
 
-
+# I saw that JobPost Serializaer was already added
 class JobPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobPost
