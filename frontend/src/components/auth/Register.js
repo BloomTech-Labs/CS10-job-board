@@ -27,10 +27,10 @@ class Register extends React.Component {
         } else if (password !== repeatpassword) {
             this.setState({ error: `Passwords must match.` });
         } else {
-            axios.post(`localhost:5000/register`, this.state)
+            axios.post(`${process.env.REACT_APP_LOGIN_API}`, this.state)
                 .then(response => {
                     localStorage.setItem('token', response.data.token || 'test');
-                    this.props.history.push('/jobs');
+                    // this.props.history.push('/jobs');
                 })
                 .catch(err => {
                     this.setState({ error: `Error processing your request. Please try again.`})
