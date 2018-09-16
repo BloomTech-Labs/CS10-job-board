@@ -29,7 +29,7 @@ class Register extends React.Component {
         } else {
             axios.post(`${process.env.REACT_APP_LOGIN_API}`, this.state)
                 .then(response => {
-                    localStorage.setItem('token', response.data.token || 'test');
+                    localStorage.setItem('token', response.data.token);
                     // this.props.history.push('/jobs');
                 })
                 .catch(err => {

@@ -17,7 +17,7 @@ class Login extends React.Component {
         axios.post(`${process.env.REACT_APP_LOGIN_API}`, this.state)
             .then(response => {
                 this.setState({ error: null });
-                localStorage.setItem('token', response.data.token || 'test');
+                localStorage.setItem('token', response.data.token);
                 // if user is an employee
                 // this.props.history.push('/jobs');
                 // if use is an employer
