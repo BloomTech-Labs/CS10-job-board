@@ -29,8 +29,18 @@ class Register extends React.Component {
         } else {
             axios.post(`${process.env.REACT_APP_REGISTER_API}`, this.state)
                 .then(response => {
-                    localStorage.setItem('token', response.data.token);
-                    // this.props.history.push('/jobs');
+                    // #TODO: how Djoser handles registration tokens/confirmation emails
+                    // localStorage.setItem('token', response.data.token);
+                    
+                    // BELOW: axios post for dev purposes
+                    axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email, password })
+                        .then(response => {
+                            this.setState({ error: `Success`});
+                            // this.props.history.push('/jobs'); // once jobs component is built, need to incorporate withRouter() from react-router-dom to access history object
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        })
                 })
                 .catch(err => {
                     this.setState({ error: `Error processing your request. Please try again.`})
