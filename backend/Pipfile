@@ -11,6 +11,9 @@ djangorestframework-jwt = "*"
 djangorestframework = "*"
 Pillow = "*"
 django-taggit = "*"
+gunicorn = "*"
+django-heroku = "*"
+"autopep8" = "*"
 
 [dev-packages]
 pylint = "<2.0.0"

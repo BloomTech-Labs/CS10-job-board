@@ -150,3 +150,7 @@ JWT_AUTH = {
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
 )
+
+# Configure Django App for Heroku.
+import django_heroku
+django_heroku.settings(locals())
