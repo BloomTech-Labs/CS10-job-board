@@ -35,7 +35,7 @@ class Login extends React.Component {
                 <div className="message">
                     <p className="error">{error}</p>
                 </div>
-
+                <h4>No Degree, No Problem.<br/>Your next job is just a click away.</h4>
                 <h3>Login</h3>
 
                 <input type="text" name="email"  autoComplete="email" value={email} placeholder="email" onChange={this.handleChange}/>

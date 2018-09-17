@@ -61,7 +61,7 @@ button:hover {
   justify-content: center;
   margin: 0 auto;
   text-rendering: geometricPrecision;
-  background: #C7D5E2;
+  background-image: url('../assets/background.png');
   min-height: 100vh;
 }
 

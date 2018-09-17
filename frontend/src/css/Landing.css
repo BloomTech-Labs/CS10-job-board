@@ -2,6 +2,7 @@
     display: flex;
     width: 100%;
     max-width: 1200px;
+    background-image: "../assets/background.png"
 }
 
 .landing-page > div:first-child {
@@ -15,7 +16,7 @@
 
 .landing-page div:first-child > h1 {
     position: absolute;
-    margin-top: -262px;
+    margin-top: -320px;
     color: #665CBF;
     font-size: 4.8rem;
 }
@@ -45,4 +46,9 @@
 
 .landing-page .tooltip {
     margin: 4.8rem 1rem 0;
+}
+
+.landing-page .logo {
+    margin-top: -200px;
+    width: 200px;
 }
