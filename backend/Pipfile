@@ -14,6 +14,9 @@ django-taggit = "*"
 gunicorn = "*"
 django-heroku = "*"
 "autopep8" = "*"
+"psycopg2-binary" = "*"
+dj-database-url = "*"
+whitenoise = "*"
 
 [dev-packages]
 pylint = "<2.0.0"
