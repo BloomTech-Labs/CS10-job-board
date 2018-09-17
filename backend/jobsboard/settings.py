@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os
+import os, datetime
 from decouple import config 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -33,7 +33,11 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS = [  
+    'jobs',
+    'taggit',
+    'corsheaders',
+    'djoser',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,9 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'jobs',
-    'taggit',
-    'corsheaders',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -127,6 +129,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+AUTH_USER_MODEL = 'jobs.User'
+
 # REST FRAMEWORK configuration dictionary for djrestframework global settings 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -137,16 +141,26 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
 # Default JWT response handler
 JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobsboard.utils.my_jwt_response_handler'
+    #'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobsboard.utils.my_jwt_response_handler',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=500),
+    'JWT_GET_USER_SECRET_KEY': 'jobs.models.jwt_get_secret_key',
 }
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
 )
+
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'SERIALIZERS': {},
+}

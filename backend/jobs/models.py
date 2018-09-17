@@ -1,12 +1,62 @@
+
+from django.contrib import admin
 from django.db import models
+
 from django.utils import timezone
+from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
 from taggit.managers import TaggableManager
 
 
+import uuid
+
+
+def jwt_get_secret_key(user_model):
+    return user_model.jwt_secret
+
+class UserManager(BaseUserManager):
+
+    use_in_migrations = True 
+
+    def create_user(self, email, password=None):
+        if not email:
+            raise ValueError('Users must have an email address')
+
+        user = self.model(
+            email=self.normalize_email(email),
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('Superuser must have is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('Superuser must have is_superuser=True.')
+
+        return self.create_user(email, password, **extra_fields)
+
+class User(AbstractBaseUser):
+    email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    jwt_secret = models.UUIDField(default=uuid.uuid4)
+
+    objects = UserManager()
+
+    USERNAME_FIELD = 'email'
+    
+    def __str__(self):
+            return self.email
+
 # Employer model
 class Employer(models.Model):
-    company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_image', blank=True)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
@@ -30,7 +80,7 @@ class Employer(models.Model):
 
 
 class JobPost(models.Model):
-    company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField()
     company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
@@ -55,7 +105,7 @@ class JobPost(models.Model):
 
 
 class Employee(models.Model):
-    company_name = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_image', blank=True)
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=20)
