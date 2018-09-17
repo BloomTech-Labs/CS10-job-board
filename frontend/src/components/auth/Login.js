@@ -14,17 +14,17 @@ class Login extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        axios.post(`http://localhost:5000/login`, this.state)
+        axios.post(`${process.env.REACT_APP_LOGIN_API}`, this.state)
             .then(response => {
                 this.setState({ error: null });
-                localStorage.setItem('token', response.data.token || 'test');
+                localStorage.setItem('token', response.data.token);
                 // if user is an employee
-                this.props.history.push('/jobs');
+                // this.props.history.push('/jobs');
                 // if use is an employer
                 // this.props.history.push('/dashboard');
             })
             .catch(err => {
-                console.log(err.message);
+                this.setState({ error: `Error processing your request. Please try again.`});
             });
     }
 
