@@ -18,6 +18,8 @@ django-heroku = "*"
 dj-database-url = "*"
 whitenoise = "*"
 "pep8" = "*"
+httpie = "*"
+djoser = "*"
 
 [dev-packages]
 pylint = "<2.0.0"

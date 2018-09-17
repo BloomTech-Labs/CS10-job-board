@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os
+import os, datetime
 from decouple import config 
 import dj_database_url
 
@@ -35,16 +35,23 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'jobs',
+    'corsheaders',
+    'djoser',
+    'taggit',
+    'gunicorn',
+    'whitenoise',
+    'django-heroku',
+    'psycopg2-binary',
     'django.contrib.auth',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'django.contrib.admin',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',
-    'jobs',
-    'taggit',
-    'corsheaders',
+    
 ]
 
 MIDDLEWARE = [
@@ -83,16 +90,16 @@ WSGI_APPLICATION = 'jobsboard.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.config(default=config('DATABASE_URL')),
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.config(default=config('DATABASE_URL')),
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -132,6 +139,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+AUTH_USER_MODEL = 'jobs.User'
+
 # REST FRAMEWORK configuration dictionary for djrestframework global settings 
 REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
@@ -142,20 +151,26 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
 # Default JWT response handler
 JWT_AUTH = {
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobsboard.utils.my_jwt_response_handler'
+    #'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobsboard.utils.my_jwt_response_handler',
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=500),
+    'JWT_GET_USER_SECRET_KEY': 'jobs.models.jwt_get_secret_key',
 }
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
 )
 
-# Configure Django App for Heroku.
-import django_heroku
-django_heroku.settings(locals())
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': False,
+    'SERIALIZERS': {},
+}
