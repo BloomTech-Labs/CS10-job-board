@@ -17,6 +17,7 @@ django-heroku = "*"
 "psycopg2-binary" = "*"
 dj-database-url = "*"
 whitenoise = "*"
+"pep8" = "*"
 
 [dev-packages]
 pylint = "<2.0.0"
