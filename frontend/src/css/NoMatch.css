@@ -1,0 +1,9 @@
+.no-match {
+    align-self: center;
+    text-align: center;
+    margin-top: -100px;
+}
+
+.no-match h2, h3 {
+    margin-bottom: 1em;
+}
