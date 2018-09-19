@@ -1,11 +1,11 @@
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
 from .models import Employer, Employee, JobPost, User
 
 from django.conf import settings, urls
 from rest_framework import serializers, viewsets
-from .models import Employer, Employee, JobPost, Users
+from .models import Employer, Employee, JobPost, User
  
 # Serializers for API representation
 

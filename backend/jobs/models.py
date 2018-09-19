@@ -1,14 +1,10 @@
-
-from django.contrib import admin
+import uuid
 from django.db import models
 
 from django.utils import timezone
-from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 from taggit.managers import TaggableManager
-
-
-import uuid
 
 
 def jwt_get_secret_key(user_model):
@@ -17,18 +13,23 @@ def jwt_get_secret_key(user_model):
 class UserManager(BaseUserManager):
 
     use_in_migrations = True 
-
-    def create_user(self, email, password=None):
+ 
+    def _create_user(self, email, password, **extra_fields):
+        """
+        Create and save a user with the given email and password.
+        """
         if not email:
-            raise ValueError('Users must have an email address')
-
-        user = self.model(
-            email=self.normalize_email(email),
-        )
-
+            raise ValueError('The given email must be set')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
+
+    def create_user(self, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', False)
+        extra_fields.setdefault('is_superuser', False)
+        return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
@@ -41,7 +42,7 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
-class User(AbstractBaseUser):
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
@@ -50,9 +51,9 @@ class User(AbstractBaseUser):
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
-    
+
     def __str__(self):
-            return self.email
+        return self.email
 # Employer model
 class Employer(models.Model):
     company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
@@ -66,7 +67,7 @@ class Employer(models.Model):
     is_employee = models.BooleanField(default=False)
     is_active = models.BooleanField()
     published_date = models.DateTimeField(blank=True, null=True)
-    
+   
     def publish(self):
         self.published_date = timezone.now()
         self.save()
@@ -85,7 +86,8 @@ class JobPost(models.Model):
     company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
     job_location = models.CharField(max_length=30, blank=True)
     requirements = models.CharField(max_length=400, blank=True)
-    salary = models.IntegerField()
+    min_salary = models.IntegerField(null=True, blank=True)
+    max_salary = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField()
     tags = TaggableManager()
     created_date = models.DateTimeField(default=timezone.now)
