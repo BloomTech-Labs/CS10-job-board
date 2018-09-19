@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
-import { Landing } from "./components";
+import { Landing, NoMatch } from "./components";
 import './css/App.css';
 
 class App extends React.Component {
@@ -24,6 +24,7 @@ class App extends React.Component {
       <div className="App">
         <Switch>
           <Route exact path="/" component={Landing} />
+          <Route component={NoMatch} />
         </Switch>
       </div>
     );
