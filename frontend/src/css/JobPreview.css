@@ -1,0 +1,8 @@
+.job-preview {
+    display: flex;
+    align-items: baseline;
+}
+
+.job-preview * {
+    margin: 0 2%;
+}
