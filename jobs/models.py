@@ -126,3 +126,17 @@ class Employee(models.Model):
     def publish(self):
         self.published_date = timezone.now()
         self.save()
+
+
+#3 types of memberships
+MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack', '12'), ('Unlimited', 'unlimited'))
+
+#create a class for the various types of memberships
+class Membership(models.Model):
+    slug = models.SlugField()
+    membership_type = models.CharField(choices=MEMBERSHIP_CHOICES, default='Free', max_length=30)
+    price = models.IntegerField(default=15)
+    stripe_plan_id = models.CharField(max_length=40)
+
+    def __str__(self):
+        return self.membership_type
