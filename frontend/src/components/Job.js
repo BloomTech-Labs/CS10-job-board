@@ -1,8 +1,26 @@
 import React from "react";
 import { Tag } from "./";
+import '../css/Job.css';
 
 const Job = props => {
-    const { job } = props;
+    // const { job } = props;
+    const job = {
+        company_name: `Cool New co.`,
+        company_desc: `Specializing in cool tech.`,
+        title: `Full Stack Developer`,
+        salary: `60,000`,
+        description: `We need someone who can do everything, impossibly! Are you them? Hello?`, 
+        requirements: `Living human with skills in tech, 0-100 years experience.`,
+        tags: [
+            { name: `Cool`},
+            { name: `Tech`},
+            { name: `Fullstack`},
+            { name: `Winning`},
+            { name: `Not Losing`},
+            { name: `MERNCSHARPJAVAORSCRIPT?`},
+        ]
+    }
+    
     return (
         <div className="job">
             <div>
@@ -18,13 +36,15 @@ const Job = props => {
             <p>{job.requirements}</p>
             <div>
                 <h3>Tags</h3>
-                {job.tags ? (
-                    job.tags.map(tag => {
-                        return (
-                            <Tag tag={tag} />
-                        );
-                    })
-                ) : (null)}
+                <div className="job-tags">
+                    {job.tags ? (
+                        job.tags.map(tag => {
+                            return (
+                                <Tag tag={tag} />
+                            );
+                        })
+                    ) : (null)}
+                </div>
             </div>
         </div>
     );

@@ -1,3 +1,9 @@
 .job {
-    
+    display: flex;
+    flex-flow: column wrap;
+}
+
+.job-tags {
+    display: flex;
+    flex-wrap: wrap;
 }
