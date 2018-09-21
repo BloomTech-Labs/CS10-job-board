@@ -1,0 +1,19 @@
+.job-post div {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: baseline;
+    justify-content: flex-end;
+}
+
+.job-post div:last-child {
+    flex-direction: unset;
+    justify-content: space-between;
+}
+
+.job-post div * {
+    width: unset;
+}
+
+.job-post div button {
+    width: 44%;
+}

@@ -1,0 +1,5 @@
+.jobs-list {
+    display: flex;
+    flex-flow: column wrap;
+    flex-grow: 2;
+}

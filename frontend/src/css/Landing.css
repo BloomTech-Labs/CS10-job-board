@@ -1,5 +1,6 @@
 .landing-page {
     display: flex;
+    margin: 0 auto;
     width: 100%;
     max-width: 1200px;
 }
@@ -38,7 +39,7 @@
     max-width: 660px;
 }
 
-.landing-page .form {
+.landing-page form {
     background: white;
     max-width: 280px;
 }

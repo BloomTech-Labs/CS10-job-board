@@ -4,8 +4,11 @@ import hero from "../assets/hero.svg";
 import "../css/Landing.css";
 
 class Landing extends React.Component {
-    state = {
-        login: true
+    constructor(props) {
+        super(props)
+        this.state = {
+            login: true
+        }
     }
 
     changeComponent = () => {
@@ -24,9 +27,9 @@ class Landing extends React.Component {
                 <div>
                     {/* login toggles the display of Login or Register components */}
                     {login ? (
-                        <Login />
+                        <Login {...this.props}/>
                     ) : (
-                        <Register />
+                        <Register {...this.props}/>
                         )}
                         <a onClick={this.changeComponent}>
                             {login ? (`Register`) : ( `Login` )}
