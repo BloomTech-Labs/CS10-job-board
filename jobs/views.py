@@ -4,9 +4,12 @@ from djoser import serializers
 from rest_framework import views, permissions, status
 from rest_framework.response import Response
 from rest_framework import permissions
-from .models import User
-from rest_framework import views, permissions, status
+from .models import User, JobPost
+from rest_framework import views, permissions, status, generics
 from rest_framework.response import Response
+
+# import JobPost serializer
+from .api import JobPostSerializer
 
 class UserLogoutAllView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
@@ -15,3 +18,13 @@ class UserLogoutAllView(views.APIView):
         user.jwt_secret = uuid.uuid4()
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# setting up views for HTTP requests
+class ListJobPost(generics.ListCreateAPIView):
+    queryset = JobPost.objects.all()
+    serializer_class = JobPostSerializer
+
+class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
+    queryset = JobPost.objects.all()
+    serializer_class = JobPostSerializer
+
