@@ -174,7 +174,7 @@ JWT_AUTH = {
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
-    'https://sharp-bhabha-303aff.netlify.com'
+    'sharp-bhabha-303aff.netlify.com'
 )
 
 DJOSER = {
