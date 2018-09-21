@@ -1,4 +1,5 @@
 from django.conf.urls import re_path
+from django.urls import path
 from django.contrib.auth import get_user_model
 
 from djoser import views as djoser_views
@@ -26,7 +27,7 @@ urlpatterns = [
     re_path(r'^login/refresh/$', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
 
  # Setting up paths for JobPosts
-    re_path('', views.ListJobPost.as_view()),
-    re_path('<int:pk>/', views.DetailJobPost.as_view())
+    path('', views.ListJobPost.as_view()),
+    path('<int:pk>/', views.DetailJobPost.as_view())
 
 ]

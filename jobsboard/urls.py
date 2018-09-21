@@ -36,9 +36,9 @@ router = DefaultRouter()
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     # For using API (login and logout views)
-    re_path(r'^api/', include('jobs.urls')),
+    # re_path(r'^api/jobs', include('jobs.urls')),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('', include('jobs.urls')),
+    path('api/', include('jobs.urls')),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
