@@ -22,10 +22,20 @@ class Billing extends React.Component {
     render() {
         return (
             <div className="billing">
-                <form action="">
-                    <input type="checkbox"/>
-                    <input type="checkbox"/>
-                    <input type="checkbox"/>
+                <h3>Payment Info</h3>
+                <form>
+                    <div>
+                        <label htmlFor="">Unlimited Jobs, 1 Month $199.99</label>
+                        <input type="checkbox"/>
+                    </div>
+                    <div>
+                        <label htmlFor="">Post 12 Jobs, $99.99</label>
+                        <input type="checkbox"/>
+                    </div>
+                    <div>
+                        <label htmlFor="">Post Job, $9.99</label>
+                        <input type="checkbox"/>
+                    </div>
                     <button onClick={this.handleBuy}>Buy Now</button>
                 </form>
             </div>

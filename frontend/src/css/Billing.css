@@ -1,3 +1,17 @@
 .billing {
     display: flex;
+    flex-flow: column wrap;
+    width: 100%;
+}
+
+.billing div {
+    display: flex;
+    width: unset;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: baseline;
+}
+
+.billing div * {
+    width: unset;
 }
