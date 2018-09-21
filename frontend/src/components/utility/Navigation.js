@@ -10,6 +10,7 @@ const Navigation = props => {
             <NavLink to='/account'>Account</NavLink>
             <NavLink to='/billing'>Billing</NavLink>
             <NavLink to='/dashboard'>Dashboard</NavLink>
+            <NavLink to='/addjob'>Add Job</NavLink>
             <Search />
             <NavLink to='/' onClick={props.handleLogout}>Logout</NavLink>
         </div>
