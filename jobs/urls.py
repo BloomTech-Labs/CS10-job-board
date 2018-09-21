@@ -5,6 +5,7 @@ from djoser import views as djoser_views
 from rest_framework_jwt import views as jwt_views
 from jobs import views
 from rest_framework.routers import DefaultRouter
+from . import views
 
 router = DefaultRouter()
 
@@ -23,4 +24,9 @@ urlpatterns = [
 
     re_path(r'^login/$', jwt_views.ObtainJSONWebToken.as_view(), name='login'),
     re_path(r'^login/refresh/$', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
+
+ # Setting up paths for JobPosts
+    re_path('', views.ListJobPost.as_view()),
+    re_path('<int:pk>/', views.DetailJobPost.as_view())
+
 ]
