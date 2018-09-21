@@ -1,6 +1,6 @@
 import React from "react";
 import { Route, Switch, NavLink, withRouter } from "react-router-dom";
-import { Account, Billing, Dashboard, Job, JobList, Landing, Navigation, NoMatch } from "./components";
+import { Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch } from "./components";
 import './css/App.css';
 
 class App extends React.Component {
@@ -41,10 +41,11 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/" render={props => (<Landing logIn={this.logIn}/>)} />
             <Route path="/jobs" component={JobList} />
+            <Route path="/job/:id" component={Job} />
+            <Route path="/addjob" component={JobPost} />
             <Route path="/account" component={Account} />
             <Route path="/billing" component={Billing} />
             <Route path="/dashboard" component={Dashboard} />
-            <Route path="/job/:id" component={Job} />
             <Route component={NoMatch} />
           </Switch>
         </div>
