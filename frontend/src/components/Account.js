@@ -39,6 +39,7 @@ class Account extends React.Component {
         const { account } = this.state;
         return (
             <div className="account">
+                <h3>Account Details</h3>
                 <form className="account-form">
                     <label htmlFor="">email:</label>
                     <input type="text" value={account.email} onChange={this.onChange}/>
@@ -46,6 +47,7 @@ class Account extends React.Component {
                     <input type="text" value={account.first_name} onChange={this.onChange}/>
                     <button onClick={this.handleAccountUpdate}>Save</button>
                 </form>
+                <h3>Password Reset</h3>
                 <form className="password-reset">
                     <label htmlFor="">Old Password</label>
                     <input type="text" onChange={this.onChange}/>
