@@ -57,12 +57,19 @@ button:hover {
 
 .App {
   display: flex;
+  flex-flow: column wrap;
   width: 100%;
-  justify-content: center;
   margin: 0 auto;
   text-rendering: geometricPrecision;
   background: #C7D5E2;
   min-height: 100vh;
+}
+
+.main {
+  display: flex;
+  width: 100%;
+  min-height: 95vh;
+  padding: 2% 3%;
 }
 
 .form {
