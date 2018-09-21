@@ -25,7 +25,7 @@ h3 {
 }
 
 
-a, p, input, ul, li, button {
+a, p, input, ul, li, button, label {
   font-family: 'Roboto', Verdana, Geneva, Tahoma, sans-serif;
 }
 
@@ -39,7 +39,7 @@ a:hover {
   cursor: pointer;
 }
 
-p, input, button {
+p, input, button, label {
   font-size: 1.4rem;
 }
 
@@ -72,7 +72,7 @@ button:hover {
   padding: 2% 3%;
 }
 
-.form {
+form {
   text-align: center;
   margin: 1rem;
   padding: 1rem;
@@ -83,7 +83,7 @@ button:hover {
   border-radius: 4px;
 }
 
-.form input {
+form input {
   margin: 0 0 1rem;
   padding: 1rem 0.4rem;
   width: 100%;
@@ -92,17 +92,21 @@ button:hover {
   background: rgba(120, 146, 184, 0.15);
 }
 
-.form input:focus {
+form input:focus {
   outline: none;
   background: white;
   border-bottom: 1px solid #7892EA;
 }
 
-.form h3 {
+form input[type=checkbox] {
   margin: 1rem;
 }
 
-.form button {
+form h3 {
+  margin: 1rem;
+}
+
+form button {
   margin: .5rem 0;
   width: 44%;
   align-self: flex-end;
