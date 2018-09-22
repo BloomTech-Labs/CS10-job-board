@@ -1,2 +1,2 @@
-release: ./releast-tasks.sh
+release: ./release-tasks.sh
 web: gunicorn jobsboard.wsgi --log-file - 
