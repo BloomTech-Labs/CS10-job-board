@@ -18,3 +18,16 @@ _Description_ - Job board for students without college degrees
 _Testing_
 _UI/Design_
 _Backend_
+
+### Frontend
+
+[Deployed site](https://sharp-bhabha-303aff.netlify.com/)
+
+Netlify is configured to deploy from the master branch of this repo.
+Any merge into the master will be tested and deployed if the build is successful.
+
+### Backend
+
+[Deployed database](https://job-board-backend.herokuapp.com/)
+
+To push the latest changes to Heroku, push from a local master branch of this repo using `git push heroku master` with a properly authenticated Heroku account.
