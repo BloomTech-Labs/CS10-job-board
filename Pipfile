@@ -17,6 +17,7 @@ djoser = "*"
 "dj-database-url" = "*"
 "whitenoise" = "*"
 "gunicorn" = "*"
+stripe = "*"
 
 [dev-packages]
 pylint = "<2.0.0"
