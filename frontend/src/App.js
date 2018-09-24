@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, NavLink, withRouter } from "react-router-dom";
 import  PostJob  from './components/PostJob';
-import { Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch } from "./components";
+import { Account, Billing, Dashboard, Job, JobList, Landing, Navigation, NoMatch } from "./components";
 import './css/App.css';
 
 class App extends React.Component {
@@ -35,20 +35,15 @@ class App extends React.Component {
     const { loggedIn } = this.state;
     return (
       <div className="App">
-        <Switch>
-          <Route exact path="/" component={Landing} />
-          <Route path="/post-job" component={PostJob} />
-          <Route component={NoMatch} />
-        </Switch>
         {loggedIn ? (
           <Navigation handleLogout={this.handleLogout}/>
-        ) : (null)}
+          ) : (null)}
         <div className="main">
           <Switch>
             <Route exact path="/" render={props => (<Landing logIn={this.logIn}/>)} />
             <Route path="/jobs" component={JobList} />
             <Route path="/job/:id" component={Job} />
-            <Route path="/addjob" component={JobPost} />
+            <Route path="/addjob" component={PostJob} />            
             <Route path="/account" component={Account} />
             <Route path="/billing" component={Billing} />
             <Route path="/dashboard" component={Dashboard} />
