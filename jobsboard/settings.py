@@ -32,7 +32,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
-
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 
 # Application definition
 
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djoser',
     'taggit',
+    'stripe'
 ]
 
 MIDDLEWARE = [
