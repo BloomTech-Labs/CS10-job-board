@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os, datetime
-from decouple import config, Csv
+from decouple import config, Csv 
 import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -29,10 +29,10 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['job-board-backend.herokuapp.com', '127.0.0.1']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
-
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 
 # Application definition
 
@@ -49,11 +49,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djoser',
     'taggit',
+    'stripe'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -141,8 +143,10 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_USER_MODEL = 'jobs.User'
 
@@ -171,6 +175,7 @@ JWT_AUTH = {
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
+    'sharp-bhabha-303aff.netlify.com'
 )
 
 DJOSER = {

@@ -1,11 +1,15 @@
 import React from "react";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
 
 class Login extends React.Component {
-    state = {
-        email: '',
-        password: '',
-        error: null
+    constructor(props) {
+        super(props)
+        this.state = {
+            email: '',
+            password: '',
+            error: null
+        }
     }
 
     handleChange = e => {
@@ -19,7 +23,8 @@ class Login extends React.Component {
                 this.setState({ error: null });
                 localStorage.setItem('token', response.data.token);
                 // if user is an employee
-                // this.props.history.push('/jobs');
+                this.props.logIn();
+                this.props.history.push('/jobs');
                 // if use is an employer
                 // this.props.history.push('/dashboard');
             })
@@ -46,4 +51,4 @@ class Login extends React.Component {
     }
 }
 
-export default Login;
+export default withRouter(Login);

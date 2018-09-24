@@ -1,16 +1,20 @@
 import React from "react";
 import axios from "axios";
+import { withRouter } from "react-router-dom";
 
 class Register extends React.Component {
-    state = {
-        email: '',
-        password: '',
-        repeatpassword: '',
-        firstName: '',
-        lastName: '',
-        error: null,
-        tooltip1: false,
-        tooltip2: false,
+    constructor(props) {
+        super(props)
+        this.state = {
+            email: '',
+            password: '',
+            repeatpassword: '',
+            firstName: '',
+            lastName: '',
+            error: null,
+            tooltip1: false,
+            tooltip2: false
+        }
     }
 
     onChange = e => {
@@ -37,7 +41,8 @@ class Register extends React.Component {
                         .then(response => {
                             this.setState({ error: `Success`});
                             localStorage.setItem('token', response.data.token);
-                            // this.props.history.push('/jobs'); 
+                            this.props.logIn();
+                            this.props.history.push('/jobs'); 
                             // once jobs component is built, need to incorporate withRouter() from react-router-dom to access history object
                         })
                         .catch(err => {
@@ -111,4 +116,4 @@ class Register extends React.Component {
     }
 }
 
-export default Register;
+export default withRouter(Register);
