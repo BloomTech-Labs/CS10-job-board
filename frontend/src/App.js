@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Switch, NavLink, withRouter } from "react-router-dom";
-import  PostJob  from './components/PostJob';
-import { Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch } from "./components";
+
+import { Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch, EmployerProfile, Avatar } from "./components";
 import './css/App.css';
 
 class App extends React.Component {
@@ -52,6 +52,7 @@ class App extends React.Component {
             <Route path="/account" component={Account} />
             <Route path="/billing" component={Billing} />
             <Route path="/dashboard" component={Dashboard} />
+            <Route path="/profile" component={EmployerProfile} />
             <Route component={NoMatch} />
           </Switch>
         </div>

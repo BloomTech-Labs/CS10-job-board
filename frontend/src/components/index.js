@@ -17,3 +17,5 @@ export { default as JobList } from "./JobList.js";
 export { default as JobPost } from "./JobPost.js";
 export { default as JobPreview } from "./JobPreview.js";
 export { default as Tag } from "./Tag.js";
+export { default as EmployerProfile } from "./EmployerProfile.js";
+export { default as Avatar } from "./Avatar.js";
