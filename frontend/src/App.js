@@ -1,11 +1,12 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Switch, NavLink, withRouter } from "react-router-dom";
 import { Landing, NoMatch } from "./components";
+import  PostJob  from './components/PostJob';
 import './css/App.css';
 
 class App extends React.Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
     this.state = {
       loggedIn: false
     }
@@ -24,6 +25,7 @@ class App extends React.Component {
       <div className="App">
         <Switch>
           <Route exact path="/" component={Landing} />
+          <Route path="/post-job" component={PostJob} />
           <Route component={NoMatch} />
         </Switch>
       </div>
@@ -31,4 +33,4 @@ class App extends React.Component {
   }
 }
 
-export default App;
+export default withRouter(App);
