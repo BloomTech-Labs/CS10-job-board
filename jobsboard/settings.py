@@ -29,7 +29,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['127.0.0.1', '.herokuapp.com']
+ALLOWED_HOSTS = ['job-board-backend.herokuapp.com', '127.0.0.1']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
@@ -54,8 +54,8 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -175,6 +175,7 @@ JWT_AUTH = {
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
+    'sharp-bhabha-303aff.netlify.com'
 )
 
 DJOSER = {
