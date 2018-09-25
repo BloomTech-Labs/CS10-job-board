@@ -1,5 +1,3 @@
-export { default as PostJob } from "./PostJob.js";
-export { default as Tags } from "./Tags.js";
 // auth
 export { default as  Landing } from "./Landing.js";
 export { default as Login } from "./auth/Login.js";
@@ -14,6 +12,8 @@ export { default as Billing } from "./Billing.js";
 export { default as Dashboard } from "./Dashboard.js";
 export { default as Job } from "./Job.js";
 export { default as JobList } from "./JobList.js";
-export { default as JobPost } from "./JobPost.js";
 export { default as JobPreview } from "./JobPreview.js";
 export { default as Tag } from "./Tag.js";
+// antd components
+export { default as PostJob } from "./PostJob.js";
+export { default as Tags } from "./Tags.js";
