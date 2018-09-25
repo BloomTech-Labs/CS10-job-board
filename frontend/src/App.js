@@ -15,7 +15,6 @@ class App extends React.Component {
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token) {
-      this.setState({ loggedIn: true });
       this.props.history.push('/jobs');
     }
     else {
@@ -24,8 +23,9 @@ class App extends React.Component {
     }
   }
 
+
   logIn = () => {
-    this.setState({ loggedIn: true});
+    this.setState({ loggedIn: true, message: null });
   }
 
   handleLogout = e => {
