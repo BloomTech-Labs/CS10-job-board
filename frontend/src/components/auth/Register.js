@@ -1,6 +1,10 @@
 import React from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
+import { Tooltip, Form, Icon, Input, Button } from 'antd';
+
+const FormItem = Form.Item;
+const PassTool = <span>8 Characters Minimum</span>
 
 class Register extends React.Component {
     constructor(props) {
@@ -12,8 +16,6 @@ class Register extends React.Component {
             firstName: '',
             lastName: '',
             error: null,
-            tooltip1: false,
-            tooltip2: false
         }
     }
 
@@ -55,26 +57,10 @@ class Register extends React.Component {
         }
     }
 
-    showTooltip1 = () => {
-        this.setState({ tooltip1: true });
-    }
-
-    hideTooltip1 = () => {
-        this.setState({ tooltip1: false });
-    }
-
     passwordChange1 = e => {
         this.setState({ [e.target.name]: e.target.value });
         if (e.target.value.length >= 8) this.setState({ tooltip1: false });
         else this.setState({ tooltip1: true });
-    }
-
-    showTooltip2 = () => {
-        this.setState({ tooltip2: true });
-    }
-
-    hideTooltip2 = () => {
-        this.setState({ tooltip2: false });
     }
 
     passwordChange2 = e => {
@@ -86,34 +72,30 @@ class Register extends React.Component {
     render() {
         const { email, password, repeatpassword, firstName, lastName, error, tooltip1, tooltip2 } = this.state;
         return (
-            <form className="form">
+            <Form className="form">
                 <div className="message">
                     <p className="error">{error}</p>
                 </div>
                 <h3>Register</h3>
-                <input type="email" name="email" autoComplete="email" value={email} placeholder="email" onChange={this.onChange} required/>
-                <div>
-                    {tooltip1 ? (
-                        <div className="message tooltip">
-                            <p>8 characters minimum</p>
-                        </div>
-                    ) : (null)}
-                    <input type="password" name="password" autoComplete="off" value={password} placeholder="password" onChange={this.passwordChange1} onFocus={this.showTooltip1} onBlur={this.hideTooltip1} required/>
-                </div>
-                <div>
-                    {tooltip2 ? (
-                        <div className="message tooltip">
-                            <p>8 characters minimum</p>
-                        </div>
-                    ) : (null)}
-                    <input type="password" name="repeatpassword" autoComplete="off" value={repeatpassword} placeholder="repeat password" onChange={this.passwordChange2} onFocus={this.showTooltip2} onBlur={this.hideTooltip2} required/>
-                </div>
-                <input type="text" name="firstName" autoComplete="given-name" value={firstName} placeholder="First Name" onChange={this.onChange}/>
-                <input type="text" name="lastName" autoComplete="family-name" value={lastName} placeholder="Last Name" onChange={this.onChange}/>
-                <button onClick={this.handleSubmit}>Sign Up</button>
-            </form>
+                <FormItem>
+                <Input type="text" name="email" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}  autoComplete="email" value={email} placeholder="email" onChange={this.onChange} required/>
+                </FormItem>
+                <FormItem>
+                    <Tooltip placement="right" title={PassTool}>
+                        <Input type="password" name="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}  autoComplete="off" value={password} placeholder="password" onChange={this.passwordChange1} onFocus={this.showTooltip1} onBlur={this.hideTooltip1} required/>
+                    </Tooltip>
+                </FormItem>
+                <FormItem>
+                    <Tooltip placement="right" title={PassTool}>
+                        <Input type="password" name="repeatpassword" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}  autoComplete="off" value={repeatpassword} placeholder="repeat password" onChange={this.passwordChange2} onFocus={this.showTooltip2} onBlur={this.hideTooltip2} required/>
+                    </Tooltip>
+                </FormItem>
+                <Input type="text" name="firstName" prefix={<Icon type="idcard" style={{ color: 'rgba(0,0,0,.25)' }} />} autoComplete="given-name" value={firstName} placeholder="First Name" onChange={this.onChange}/>
+                <Input type="text" name="lastName" prefix={<Icon type="idcard" style={{ color: 'rgba(0,0,0,.25)' }} />} autoComplete="family-name" value={lastName} placeholder="Last Name" onChange={this.onChange}/>
+                <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.handleSubmit}>Sign Up</Button>
+            </Form>
         );
     }
 }
 
-export default withRouter(Register);
+export default Form.create()(withRouter(Register));
