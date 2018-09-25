@@ -7,7 +7,8 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      loggedIn: false
+      loggedIn: false,
+      message: null
     }
   }
 
@@ -19,6 +20,7 @@ class App extends React.Component {
     }
     else {
       this.props.history.push('/');
+      this.setState({ message: `Please log in or register.`});
     }
   }
 
@@ -34,13 +36,14 @@ class App extends React.Component {
   }
 
   render() {
-    const { loggedIn } = this.state;
+    const { loggedIn, message } = this.state;
     return (
       <div className="App">
         {loggedIn ? (
           <Navigation handleLogout={this.handleLogout}/>
           ) : (null)}
         <div className="main">
+          {message ? (<h3 className="message">{message}</h3>) : (null)}
           <Switch>
             <Route exact path="/" render={() => (<Landing logIn={this.logIn}/>)} />
             <Route path="/jobs" component={JobList} />
