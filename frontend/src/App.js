@@ -18,8 +18,11 @@ class App extends React.Component {
       this.props.history.push('/jobs');
     }
     else {
+      let path = this.props.history.location.pathname;
       this.props.history.push('/');
-      this.setState({ message: `Please log in or register.`});
+      if (path !== '/') {
+        this.setState({ message: `Please log in or register.`});
+      }
     }
   }
 
