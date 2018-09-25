@@ -70,7 +70,7 @@ class Register extends React.Component {
     }
 
     render() {
-        const { email, password, repeatpassword, firstName, lastName, error, tooltip1, tooltip2 } = this.state;
+        const { email, password, repeatpassword, firstName, lastName, error } = this.state;
         return (
             <Form className="form">
                 <div className="message">
