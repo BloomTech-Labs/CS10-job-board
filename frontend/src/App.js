@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch, NavLink, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter } from "react-router-dom";
 import  PostJob  from './components/PostJob';
 import { Account, Billing, Dashboard, Job, JobList, Landing, Navigation, NoMatch } from "./components";
 import './css/App.css';
