@@ -1,7 +1,6 @@
 import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
-import  PostJob  from './components/PostJob';
-import { Account, Billing, Dashboard, Job, JobList, Landing, Navigation, NoMatch } from "./components";
+import { Account, Billing, Dashboard, Job, JobList, PostJob, Landing, Navigation, NoMatch } from "./components";
 import './css/App.css';
 
 class App extends React.Component {
@@ -17,6 +16,9 @@ class App extends React.Component {
     if (token) {
       this.setState({ loggedIn: true });
       this.props.history.push('/jobs');
+    }
+    else {
+      this.props.history.push('/');
     }
   }
 
@@ -40,7 +42,7 @@ class App extends React.Component {
           ) : (null)}
         <div className="main">
           <Switch>
-            <Route exact path="/" render={props => (<Landing logIn={this.logIn}/>)} />
+            <Route exact path="/" render={() => (<Landing logIn={this.logIn}/>)} />
             <Route path="/jobs" component={JobList} />
             <Route path="/job/:id" component={Job} />
             <Route path="/addjob" component={PostJob} />            
