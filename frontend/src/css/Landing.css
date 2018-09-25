@@ -41,9 +41,14 @@
 
 .landing-page form {
     background: white;
-    max-width: 280px;
+    max-width: 300px;
 }
 
-.landing-page .tooltip {
-    margin: 4.8rem 1rem 0;
+.landing-page Form Input {
+    width: 280px;
+    margin: 1rem 0 0;
+}
+
+.landing-page Button {
+    margin-right: 1rem;
 }

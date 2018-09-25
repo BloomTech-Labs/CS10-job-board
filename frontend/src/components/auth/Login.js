@@ -1,6 +1,9 @@
 import React from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
+import { Form, Icon, Input, Button } from 'antd';
+
+const FormItem = Form.Item;
 
 class Login extends React.Component {
     constructor(props) {
@@ -34,21 +37,23 @@ class Login extends React.Component {
     }
 
     render() {
-        const { email, password, error } = this.state;
+        const { email, password } = this.state;
         return (
-            <form className="form">
-                <div className="message">
-                    <p className="error">{error}</p>
-                </div>
+            <Form className="form">
 
                 <h3>Login</h3>
 
-                <input type="text" name="email"  autoComplete="email" value={email} placeholder="email" onChange={this.handleChange}/>
-                <input type="password" name="password"  autoComplete="password" value={password} placeholder="password" onChange={this.handleChange}/>
-                <button onClick={this.handleSubmit}>Sign In</button>
-            </form>
+                <FormItem>
+                    <Input type="text" name="email" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />
+                </FormItem>
+                <FormItem>
+                    <Input type="password" name="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} value={password} autoComplete="password" placeholder="Password" onChange={this.handleChange} />
+                </FormItem>
+
+                <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.handleSubmit}>Sign In</Button>
+            </Form>
         );
     }
 }
 
-export default withRouter(Login);
+export default Form.create()(withRouter(Login));
