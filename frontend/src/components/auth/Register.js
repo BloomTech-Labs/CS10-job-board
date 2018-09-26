@@ -43,12 +43,12 @@ class Register extends React.Component {
                         .then(response => {
                             this.setState({ error: `Success`});
                             localStorage.setItem('token', response.data.token);
-                            this.props.logIn();
+                            this.props.logIn(response.data.token);
                             this.props.history.push('/jobs'); 
                             // once jobs component is built, need to incorporate withRouter() from react-router-dom to access history object
                         })
                         .catch(err => {
-                            console.log(err);
+                            this.setState({ error: `Error logging in. Please log in.`});
                         })
                 })
                 .catch(err => {
