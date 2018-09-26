@@ -44,10 +44,10 @@ class Login extends React.Component {
                 <h3>Login</h3>
 
                 <FormItem>
-                    <Input type="text" name="email" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />
+                    <Input type="text" name="email" prefix={<Icon type="user" />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />
                 </FormItem>
                 <FormItem>
-                    <Input type="password" name="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} value={password} autoComplete="password" placeholder="Password" onChange={this.handleChange} />
+                    <Input type="password" name="password" prefix={<Icon type="lock" />} value={password} autoComplete="password" placeholder="Password" onChange={this.handleChange} />
                 </FormItem>
 
                 <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.handleSubmit}>Sign In</Button>

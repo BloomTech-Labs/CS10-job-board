@@ -78,20 +78,20 @@ class Register extends React.Component {
                 </div>
                 <h3>Register</h3>
                 <FormItem>
-                <Input type="text" name="email" prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}  autoComplete="email" value={email} placeholder="email" onChange={this.onChange} required/>
+                <Input type="text" name="email" prefix={<Icon type="user" />}  autoComplete="email" value={email} placeholder="email" onChange={this.onChange} required/>
                 </FormItem>
                 <FormItem>
-                    <Tooltip placement="right" title={PassTool}>
-                        <Input type="password" name="password" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}  autoComplete="off" value={password} placeholder="password" onChange={this.passwordChange1} onFocus={this.showTooltip1} onBlur={this.hideTooltip1} required/>
+                    <Tooltip placement="right" trigger="focus" title={PassTool}>
+                        <Input type="password" name="password" prefix={<Icon type="lock" />}  autoComplete="off" value={password} placeholder="password" onChange={this.passwordChange1} required/>
                     </Tooltip>
                 </FormItem>
                 <FormItem>
-                    <Tooltip placement="right" title={PassTool}>
-                        <Input type="password" name="repeatpassword" prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}  autoComplete="off" value={repeatpassword} placeholder="repeat password" onChange={this.passwordChange2} onFocus={this.showTooltip2} onBlur={this.hideTooltip2} required/>
+                    <Tooltip placement="right" trigger="focus" title={PassTool}>
+                        <Input type="password" name="repeatpassword" prefix={<Icon type="lock" />}  autoComplete="off" value={repeatpassword} placeholder="repeat password" onChange={this.passwordChange2} required/>
                     </Tooltip>
                 </FormItem>
-                <Input type="text" name="firstName" prefix={<Icon type="idcard" style={{ color: 'rgba(0,0,0,.25)' }} />} autoComplete="given-name" value={firstName} placeholder="First Name" onChange={this.onChange}/>
-                <Input type="text" name="lastName" prefix={<Icon type="idcard" style={{ color: 'rgba(0,0,0,.25)' }} />} autoComplete="family-name" value={lastName} placeholder="Last Name" onChange={this.onChange}/>
+                <Input type="text" name="firstName" prefix={<Icon type="idcard" />} autoComplete="given-name" value={firstName} placeholder="First Name" onChange={this.onChange}/>
+                <Input type="text" name="lastName" prefix={<Icon type="idcard" />} autoComplete="family-name" value={lastName} placeholder="Last Name" onChange={this.onChange}/>
                 <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.handleSubmit}>Sign Up</Button>
             </Form>
         );

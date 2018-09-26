@@ -26,6 +26,10 @@ _Backend_
 Netlify is configured to deploy from the master branch of this repo.
 Any merge into the master will be tested and deployed if the build is successful.
 
+##### Using ant-design
+
+To overwrite an ant-design class, use the `AndDesignOverride.css` file in `frontend/src/css/`.
+
 ### Backend
 
 [Deployed database](https://job-board-backend.herokuapp.com/)
