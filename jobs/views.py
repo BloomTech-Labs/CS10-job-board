@@ -4,10 +4,11 @@ from djoser import serializers
 from rest_framework import views, permissions, status
 from rest_framework.response import Response
 from rest_framework import permissions
-from .models import User, JobPost
+from .models import User, JobPost, Membership
 from rest_framework import views, permissions, status, generics
 from rest_framework.response import Response
-
+from django.shortcuts import render
+from django.views.generic import ListView
 # import JobPost serializer
 from .api import JobPostSerializer
 
@@ -28,3 +29,6 @@ class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
     queryset = JobPost.objects.all()
     serializer_class = JobPostSerializer
 
+# for selecting a paid membership
+class MembershipSelectView(ListView):
+    model = Membership
