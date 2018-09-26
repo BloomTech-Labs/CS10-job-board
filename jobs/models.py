@@ -55,7 +55,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
-# Employer model
+
+
 class Employer(models.Model):
     company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='post_image', blank=True)
@@ -84,19 +85,15 @@ class JobPost(models.Model):
     # company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField()
-    """
     company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
     job_location = models.CharField(max_length=30, blank=True)
     requirements = models.CharField(max_length=400, blank=True)
     min_salary = models.IntegerField(null=True, blank=True)
     max_salary = models.IntegerField(null=True, blank=True)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=False)
     tags = TaggableManager() 
-    """
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True, null=True)
-   
-
      
     class Meta:
         ordering = ('published_date',)
