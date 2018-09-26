@@ -27,7 +27,7 @@ urlpatterns = [
     re_path(r'^login/refresh/$', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
 
  # Setting up paths for JobPosts
-    path('', views.ListJobPost.as_view()),
-    path('<int:pk>/', views.DetailJobPost.as_view())
+    path('jobs/', views.ListJobPost.as_view()),
+    path('jobs/<int:pk>/', views.DetailJobPost.as_view())
 
 ]
