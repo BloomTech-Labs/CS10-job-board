@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djoser',
     'taggit',
+    'taggit_serializer',
     'stripe'
 ]
 
