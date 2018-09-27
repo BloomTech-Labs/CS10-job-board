@@ -17,3 +17,5 @@ export { default as Tag } from "./Tag.js";
 // antd components
 export { default as PostJob } from "./PostJob.js";
 export { default as Tags } from "./Tags.js";
+export { default as EmployerProfile } from "./EmployerProfile";
+export { default as Avatar } from "./Avatar";
