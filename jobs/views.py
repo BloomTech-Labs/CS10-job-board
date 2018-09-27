@@ -21,7 +21,7 @@ class UserLogoutAllView(views.APIView):
 
 # setting up views for HTTP requests
 class ListJobPost(generics.ListCreateAPIView):
-    queryset = JobPost.objects.all()
+    queryset = JobPost.objects.all()[:10]
     serializer_class = JobPostSerializer
 
 class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
