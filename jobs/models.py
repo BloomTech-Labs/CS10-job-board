@@ -68,42 +68,13 @@ class Employer(models.Model):
     password = models.CharField(max_length=100, default="", null=False)
     is_employee = models.BooleanField(default=False)
     is_active = models.BooleanField()
-    published_date = models.DateTimeField(blank=True, null=True)
-   
-    def publish(self):
-        self.published_date = timezone.now()
-        self.save()
+    created_date = models.DateTimeField(default=timezone.now)
 
     class Meta:
-        ordering = ('published_date',)
+        ordering = ['created_date']
 
     def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)
-
-
-class JobPost(models.Model):
-    # company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
-    job_location = models.CharField(max_length=30, blank=True)
-    requirements = models.CharField(max_length=400, blank=True)
-    min_salary = models.IntegerField(null=True, blank=True)
-    max_salary = models.IntegerField(null=True, blank=True)
-    is_active = models.BooleanField(default=False)
-    tags = TaggableManager() 
-    created_date = models.DateTimeField(default=timezone.now)
-    published_date = models.DateTimeField(blank=True, null=True)
-     
-    class Meta:
-        ordering = ('published_date',)
-
-    def __str__(self):
-        return self.title
-
-    def publish(self):
-        self.published_date = timezone.now()
-        self.save()
 
 
 class Employee(models.Model):
@@ -116,13 +87,34 @@ class Employee(models.Model):
     apps_inbox = models.CharField(max_length=35)
     password = models.CharField(max_length=100, default="", null=False)
     is_employer = models.BooleanField(default=False)
-    published_date = models.DateTimeField(blank=True, null=True)
-    
+    created_date = models.DateTimeField(default=timezone.now)
+
     class Meta:
-        ordering = ('published_date',)
+        ordering = ['created_date']
 
     def __str__(self):
         return '%s %s' % (self.first_name, self.last_name)
+
+
+class JobPost(models.Model):
+    # company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
+    job_location = models.CharField(max_length=30, blank=True)
+    requirements = models.TextField()
+    min_salary = models.IntegerField(null=True, blank=True)
+    max_salary = models.IntegerField(null=True, blank=True)
+    is_active = models.BooleanField(default=False)
+    tags = TaggableManager(verbose_name="Tags", help_text="Enter tags separated by commas", blank=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    published_date = models.DateTimeField(blank=True, null=True)
+     
+    class Meta:
+        ordering = ['-published_date']
+
+    def __str__(self):
+        return self.title
 
     def publish(self):
         self.published_date = timezone.now()
