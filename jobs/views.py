@@ -31,4 +31,6 @@ class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
 
 # for selecting a paid membership
 class MembershipSelectView(ListView):
-    model = Membership
+    # model = Membership
+    queryset = JobPost.objects.all()
+    serializer_class = JobPostSerializer
