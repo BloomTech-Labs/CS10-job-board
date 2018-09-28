@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
-import { Tooltip, Form, Icon, Input, Button } from 'antd';
+import { Alert, Tooltip, Form, Icon, Input, Button } from 'antd';
 
 const FormItem = Form.Item;
 const PassTool = <span>8 Characters Minimum</span>
@@ -16,6 +16,7 @@ class Register extends React.Component {
             firstName: '',
             lastName: '',
             error: null,
+            message: null
         }
     }
 
@@ -70,12 +71,17 @@ class Register extends React.Component {
     }
 
     render() {
-        const { email, password, repeatpassword, firstName, lastName, error } = this.state;
+        const { email, password, repeatpassword, firstName, lastName, error, message } = this.state;
         return (
             <Form className="form">
-                <div className="message">
-                    <p className="error">{error}</p>
-                </div>
+
+                {error ? (
+                  <Alert message={error} type="error" closable showIcon />
+                  ) : (null)}
+                {message ? (
+                  <Alert message={message} type="success" closable showIcon />
+                ) : (null)}
+
                 <h3>Register</h3>
                 <FormItem>
                 <Input type="text" name="email" prefix={<Icon type="user" />}  autoComplete="email" value={email} placeholder="email" onChange={this.onChange} required/>
