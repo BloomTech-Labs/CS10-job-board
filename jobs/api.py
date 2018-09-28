@@ -24,9 +24,9 @@ class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
         model = JobPost
         fields = (
             'id',
+            'company_name',
             'title',
             'description',
-            'company_image',
             'job_location',
             'requirements',
             'min_salary',
@@ -35,6 +35,14 @@ class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'tags',
             'created_date',
             'published_date')
+
+
+class JobPreviewSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = JobPost
+        fields = ('id', 'title', 'description', 'min_salary', 'max_salary')
+
 
 # ViewSets for defining view behavior
 class UserViewSet(viewsets.ModelViewSet):
