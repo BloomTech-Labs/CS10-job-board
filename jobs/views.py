@@ -9,20 +9,28 @@ from rest_framework import views, permissions, status, generics
 from rest_framework.response import Response
 
 # import JobPost serializer
-from .api import JobPostSerializer
+from .api import JobPostSerializer, JobPreviewSerializer
+
 
 class UserLogoutAllView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         user = request.user
         user.jwt_secret = uuid.uuid4()
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 # setting up views for HTTP requests
-class ListJobPost(generics.ListCreateAPIView):
-    queryset = JobPost.objects.all()[:10]
+class ListJobPost(generics.ListAPIView):
+    queryset = JobPost.objects.exclude(published_date=None)[:10]
+    serializer_class = JobPreviewSerializer
+
+
+class CreateJobPost(generics.CreateAPIView):
     serializer_class = JobPostSerializer
+
 
 class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
     queryset = JobPost.objects.all()
