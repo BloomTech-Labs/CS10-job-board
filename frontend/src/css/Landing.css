@@ -42,10 +42,11 @@
 .landing-page form {
     background: white;
     max-width: 300px;
+    padding: 10px;
 }
 
-.landing-page Form Input {
-    width: 280px;
+.landing-page form input {
+    padding: 20px 0;
 }
 
 .landing-page Button {
