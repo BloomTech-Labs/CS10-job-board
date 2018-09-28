@@ -1,36 +1,72 @@
 import React from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Alert, Icon } from "antd";
+import { Link, withRouter } from "react-router-dom";
 import { JobPreview } from "./";
 import '../css/JobList.css'
 
 
-const JobList = () => {
-    let jobs = [];
-    
-    for (let i = 0; i < 10; i++) {
-        const job = {
-            id: i,
-            title: `Job ${i}`,
-            salary: `40,000 - 60,000`,
-            body: `Description of the Job ${i}.`
+class JobList extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            error: null,
+            loading: null
         }
-        jobs.push(job);
     }
-    return (
-        <div className="jobs-list">
-            {jobs ? (
-                jobs.map(job => {
-                return (
-                    <Link key={job.id} to={`/job/${job.id}`}>
-                        <JobPreview job={job}/>
-                    </Link>
-                );
-            })
-            ) : (null)
+
+    componentDidMount() {
+        // Prevents calling a GET request every time component is rendered
+        // jobs is inherited from App.js
+        if (!this.props.jobs) {
+            this.fetchJobs();
         }
-        </div>
-    );
+
+    }
+
+    fetchJobs = () => {
+        this.setState({ loading: true });
+        const token = localStorage.getItem('token');
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        axios.get(`${process.env.REACT_APP_API}${this.props.history.location.pathname}`, requestOptions)
+            .then(response => {
+                // setJobs is inherited from App.js
+                this.props.setJobs(response.data);
+            })
+            .catch(err => {
+                this.setState({ error: `Error processing request. Try Again.`});
+            });
+        this.setState({ loading: false });
+    }
+
+
+
+    render() {
+        const { jobs } = this.props;
+        const { error, loading } = this.state;
+        return (
+            <div>
+                {error ? (
+                   <Alert message={error} type="error" closable showIcon />
+                   ) : (null)}
+                {jobs ? (
+                    <div className="jobs-list">
+                        <button onClick={this.fetchJobs}>
+                            <Icon type="sync" spin={loading}/>
+                        </button>
+                            {jobs.map(job => {
+                            return (
+                                <Link key={job.id} to={`/jobs/${job.id}`}>
+                                    <JobPreview job={job}/>
+                                </Link>
+                            );
+                        })}
+                    </div>
+
+                ) : (null)}
+            </div>
+        );
+    }
 }
 
-export default JobList;
+export default withRouter(JobList);
