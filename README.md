@@ -26,8 +26,18 @@ _Backend_
 Netlify is configured to deploy from the master branch of this repo.
 Any merge into the master will be tested and deployed if the build is successful.
 
+##### Using ant-design
+
+To overwrite an ant-design class, use the `AndDesignOverride.css` file in `frontend/src/css/`.
+
 ### Backend
 
 [Deployed database](https://job-board-backend.herokuapp.com/)
 
 To push the latest changes to Heroku, push from a local master branch of this repo using `git push heroku master` with a properly authenticated Heroku account.
+
+#### Jobs API
+
+- `/api/jobs` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (latest published first). It only accepts a GET request.
+- `/api/addjob` accepts a POST request to create a new Job. 
+- `/api/jobs/:id` returns a specific job, and accepts PUT, and DELETE requests.

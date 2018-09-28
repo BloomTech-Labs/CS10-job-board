@@ -6,6 +6,8 @@ from .models import Employer, Employee, JobPost, User, UserMembership
 from django.conf import settings, urls
 from rest_framework import serializers, viewsets
 from .models import Employer, Employee, JobPost, User
+from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
+
  
 # Serializers for API representation
 
@@ -15,10 +17,32 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'email', 'is_staff')
 
 
-class JobPostSerializer(serializers.ModelSerializer):
+class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
+    tags = TagListSerializerField()
+
     class Meta:
         model = JobPost
-        fields = ('id', 'title', 'description',)
+        fields = (
+            'id',
+            'company_name',
+            'title',
+            'description',
+            'job_location',
+            'requirements',
+            'min_salary',
+            'max_salary',
+            'is_active',
+            'tags',
+            'created_date',
+            'published_date')
+
+
+class JobPreviewSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = JobPost
+        fields = ('id', 'title', 'description', 'min_salary', 'max_salary')
+
 
 class UserMembershipSerializer(serializers.ModelSerializer):
     class Meta:

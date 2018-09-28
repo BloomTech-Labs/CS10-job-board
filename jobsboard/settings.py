@@ -49,12 +49,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djoser',
     'taggit',
+    'taggit_serializer',
     'stripe'
 ]
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -138,7 +139,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+#USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
@@ -156,26 +157,25 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
-        'rest_framework.permissions.AllowAny',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication'
     ),
 }
 
 # Default JWT response handler
 JWT_AUTH = {
     #'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobsboard.utils.my_jwt_response_handler',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=500),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=86400),
     'JWT_GET_USER_SECRET_KEY': 'jobs.models.jwt_get_secret_key',
 }
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
-    'sharp-bhabha-303aff.netlify.com'
+    'sharp-bhabha-303aff.netlify.com',
+    'job-board-backend.herokuapp.com',
 )
 
 DJOSER = {

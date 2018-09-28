@@ -1,0 +1,54 @@
+/* Ant Design overrides */
+@import '~antd/dist/antd.css';
+
+
+/* Login Icons */
+.anticon {
+    color: rgba(0, 0, 0, 0.35);
+}
+
+.anticon:hover {
+    cursor: pointer;
+}
+
+.anticon svg {
+    display: flex;
+}
+
+.ant-input-affix-wrapper {
+    font-size: 16px;
+}
+
+.ant-input-affix-wrapper .ant-input-prefix {
+    left: 0.8rem;
+    top: 40%;
+}
+
+/* Form  */
+
+.ant-form {
+    padding: unset;
+    margin: unset;
+}
+
+.ant-input {
+    font-size: 1.55rem;
+}
+
+.ant-form-item {
+    margin-bottom: 0;
+}
+
+.ant-form-item-label label {
+    color: unset;
+}
+
+.ant-form label {
+    font-size: 1.55rem;
+}
+
+/* Job Post */
+.ant-input-number {
+    width: 100%;
+    max-width: 150px;
+}

@@ -7,3 +7,7 @@
     display: flex;
     flex-wrap: wrap;
 }
+
+.job .anticon {
+    font-size: 28px;
+}

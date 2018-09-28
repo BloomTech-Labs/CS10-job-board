@@ -1,6 +1,9 @@
 import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
-import { Account, Billing, Dashboard, Job, JobList, PostJob, Landing, Navigation, NoMatch } from "./components";
+import { Alert } from "antd";
+import { Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch, EmployerProfile, Avatar } from "./components";
+
+import './css/AntDesignOverride.css';
 import './css/App.css';
 
 class App extends React.Component {
@@ -8,53 +11,72 @@ class App extends React.Component {
     super(props)
     this.state = {
       loggedIn: false,
-      message: null
+      error: null,
+      message: null,
+      token: null,
+      jobs: null
     }
   }
 
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token) {
+      this.logIn(token);
       this.props.history.push('/jobs');
     }
     else {
+      let path = this.props.history.location.pathname;
       this.props.history.push('/');
-      this.setState({ message: `Please log in or register.`});
+      if (path !== '/') {
+        this.setState({ error: `Please log in or register.`});
+      }
     }
   }
 
 
-  logIn = () => {
-    this.setState({ loggedIn: true, message: null });
+  logIn = token => {
+    this.setState({ loggedIn: true, error: null, message: null, token: token });
   }
 
-  handleLogout = e => {
-    e.preventDefault();
+  logOut = () => {
     localStorage.removeItem('token');
-    this.setState({ loggedIn: false });
+    this.setState({ loggedIn: false, token: null, error: null, message: null, jobs: null });
     this.props.history.push('/');
   }
 
+  setJobs = jobs => {
+    this.setState({ jobs: jobs });
+  }
+
   render() {
-    const { loggedIn, message } = this.state;
+    const { loggedIn, error, message, token, jobs } = this.state;
     return (
       <div className="App">
-        {loggedIn ? (
-          <Navigation handleLogout={this.handleLogout}/>
+
+        {error ? (
+          <Alert message={error} type="error" closable showIcon banner />
           ) : (null)}
+        {message ? (
+          <Alert message={message} type="success" closable showIcon />
+        ) : (null)}
+
+        {loggedIn ? (
+          <Navigation logOut={this.logOut}/>
+          ) : (null)}
+
         <div className="main">
-          {message ? (<h3 className="message">{message}</h3>) : (null)}
           <Switch>
-            <Route exact path="/" render={() => (<Landing logIn={this.logIn}/>)} />
-            <Route path="/jobs" component={JobList} />
-            <Route path="/job/:id" component={Job} />
-            <Route path="/addjob" component={PostJob} />            
-            <Route path="/account" component={Account} />
-            <Route path="/billing" component={Billing} />
+            <Route exact path="/" render={() => <Landing logIn={this.logIn}/>} />
+            <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
+            <Route path="/jobs/:id" component={Job} />
+            <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />            
+            <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
+            <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} />
             <Route path="/dashboard" component={Dashboard} />
             <Route component={NoMatch} />
           </Switch>
         </div>
+
       </div>
     );
   }

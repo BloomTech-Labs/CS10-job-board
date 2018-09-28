@@ -1,19 +1,15 @@
-.job-post div {
+.job-post {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+}
+
+.job-post form .flex  {
     display: flex;
-    flex-direction: row-reverse;
-    align-items: baseline;
-    justify-content: flex-end;
-}
-
-.job-post div:last-child {
-    flex-direction: unset;
     justify-content: space-between;
+    align-items: flex-end;
 }
 
-.job-post div * {
-    width: unset;
-}
-
-.job-post div button {
-    width: 44%;
+.job-post form textarea {
+    min-height: 100px;
 }
