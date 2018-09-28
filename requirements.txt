@@ -9,6 +9,7 @@ django-templated-mail==1.1.1
 djangorestframework==3.8.2
 djangorestframework-jwt==1.11.0
 djoser==1.3.0
+faker==0.9.1
 gunicorn==19.9.0
 httpie==0.9.9
 idna==2.7
