@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Icon } from "antd";
 import '../../css/Search.css';
 
 class Search extends React.Component {
@@ -16,7 +17,7 @@ class Search extends React.Component {
         return(
             <form className="search">
                 <input type="text"/>
-                <button onClick={this.handleSearch}>Search</button>
+                <Icon onClick={this.handleSearch} type="search" theme="outlined" />
             </form>
         );
     }
