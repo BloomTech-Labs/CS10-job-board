@@ -1,7 +1,7 @@
 from django.conf.urls import re_path
 from django.urls import path
 from django.contrib.auth import get_user_model
-
+from .views import MembershipSelectView
 from djoser import views as djoser_views
 from rest_framework_jwt import views as jwt_views
 from jobs import views
@@ -12,6 +12,9 @@ router = DefaultRouter()
 
 
 User = get_user_model()
+
+
+app_name = 'memberships'
 
 # Assign custom paths for views 
 
@@ -29,6 +32,9 @@ urlpatterns = [
     # Jobs API 
     path('jobs/', views.ListJobPost.as_view()),
     path('jobs/<int:pk>/', views.DetailJobPost.as_view()),
-    path('addjob/', views.CreateJobPost.as_view())
+    path('addjob/', views.CreateJobPost.as_view()),
+
+# Setting up for Membership types
+    path('', views.MembershipSelectView.as_view(), name='select')
 
 ]
