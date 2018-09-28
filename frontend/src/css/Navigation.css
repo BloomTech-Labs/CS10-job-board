@@ -1,8 +1,10 @@
 .nav-bar {
     display: flex;
     align-items: baseline;
+    justify-content: center;
+    background: white;
 }
 
 .nav-bar * {
-    margin: 2%;
+    margin: 2% 2% 6px;
 }
