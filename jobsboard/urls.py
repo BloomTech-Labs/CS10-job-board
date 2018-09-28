@@ -33,6 +33,7 @@ router = DefaultRouter()
 #refresh non-expired tokens and add verification endpoint 
 #from rest_framework_jwt.views import refresh_jwt_token, verify_jwt_token
 
+
 # Wire up our API using automatic URL routing.
 urlpatterns = [
     # For using API (login and logout views)
@@ -40,5 +41,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/', include('jobs.urls')),
+    path('memberships/', include('jobs.urls', namespace='membership')),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

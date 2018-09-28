@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { Button } from "antd";
 import "../../css/Navigation.css";
 import { Search } from "../";
 
@@ -12,7 +13,7 @@ const Navigation = props => {
             <NavLink to='/dashboard'>Dashboard</NavLink>
             <NavLink to='/addjob'>Add Job</NavLink>
             <Search />
-            <NavLink to='/' onClick={props.handleLogout}>Logout</NavLink>
+            <NavLink to='/' onClick={props.logOut}><Button>Logout</Button></NavLink>
         </div>
     );
 }

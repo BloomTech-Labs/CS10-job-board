@@ -40,7 +40,7 @@ class Account extends React.Component {
         return (
             <div className="account">
                 <h3>Account Details</h3>
-                <form className="account-form">
+                <form className="form">
                     <label htmlFor="">email:</label>
                     <input type="text" value={account.email} onChange={this.onChange}/>
                     <label htmlFor="">First Name</label>
@@ -48,7 +48,7 @@ class Account extends React.Component {
                     <button onClick={this.handleAccountUpdate}>Save</button>
                 </form>
                 <h3>Password Reset</h3>
-                <form className="password-reset">
+                <form className="form">
                     <label htmlFor="">Old Password</label>
                     <input type="text" onChange={this.onChange}/>
                     <label htmlFor="">New password:</label>

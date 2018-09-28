@@ -13,9 +13,9 @@ export { default as Dashboard } from "./Dashboard.js";
 export { default as Job } from "./Job.js";
 export { default as JobList } from "./JobList.js";
 export { default as JobPreview } from "./JobPreview.js";
-export { default as Tag } from "./Tag.js";
+export { default as TagView } from "./TagView.js";
 // antd components
-export { default as PostJob } from "./PostJob.js";
-export { default as Tags } from "./Tags.js";
+export { default as JobPost } from "./JobPost.js";
+export { default as TagCreate } from "./TagCreate.js";
 export { default as EmployerProfile } from "./EmployerProfile";
 export { default as Avatar } from "./Avatar";
