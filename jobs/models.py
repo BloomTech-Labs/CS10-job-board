@@ -97,10 +97,9 @@ class Employee(models.Model):
 
 
 class JobPost(models.Model):
-    # company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
+    company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE, default='Test Company')
     title = models.CharField(max_length=200)
     description = models.TextField()
-    company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
     job_location = models.CharField(max_length=30, blank=True)
     requirements = models.TextField()
     min_salary = models.IntegerField(null=True, blank=True)
