@@ -3,6 +3,7 @@
     align-items: baseline;
     justify-content: center;
     background: white;
+    height: 70px;
 }
 
 .nav-bar * {
