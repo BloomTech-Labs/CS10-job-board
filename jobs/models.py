@@ -124,32 +124,6 @@ class JobPost(models.Model):
         self.save()
 
 
-
-class JobPost(models.Model):
-    company_name = models.CharField(max_length=200, null=True)
-    title = models.CharField(max_length=200)
-    description = models.TextField()
-    
-    company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
-    job_location = models.CharField(max_length=30, blank=True)
-    requirements = models.TextField(max_length=400, blank=True)
-    min_salary = models.IntegerField(null=True, blank=True)
-    max_salary = models.IntegerField(null=True, blank=True)
-    is_active = models.BooleanField(default=True)
-    tags = TaggableManager(verbose_name="Tags", help_text="Enter tags separated by commas", blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
-    published_date = models.DateTimeField(blank=True, null=True)
-
-    class Meta:
-        ordering = ['-published_date']
-
-    def __str__(self):
-        return self.title
-
-    def publish(self):
-        self.published_date = timezone.now()
-        self.save()
-
 #3 types of memberships
 MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack', '12'), ('Unlimited', 'unlimited'))
 
