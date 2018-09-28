@@ -1,12 +1,16 @@
 import uuid
 from django.db import models
 from django.conf import settings
-from django.utils import timezone
+from django.utils import timezone 
+import datetime 
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db.models.signals import post_save
 from taggit.managers import TaggableManager
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
+
+
 
 def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
@@ -119,6 +123,32 @@ class JobPost(models.Model):
         self.published_date = timezone.now()
         self.save()
 
+
+
+class JobPost(models.Model):
+    company_name = models.CharField(max_length=200, null=True)
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    
+    company_image = models.ImageField(null=True, blank=True, upload_to='post_image')
+    job_location = models.CharField(max_length=30, blank=True)
+    requirements = models.TextField(max_length=400, blank=True)
+    min_salary = models.IntegerField(null=True, blank=True)
+    max_salary = models.IntegerField(null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+    tags = TaggableManager(verbose_name="Tags", help_text="Enter tags separated by commas", blank=True)
+    created_date = models.DateTimeField(default=timezone.now)
+    published_date = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        ordering = ['-published_date']
+
+    def __str__(self):
+        return self.title
+
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
 
 #3 types of memberships
 MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack', '12'), ('Unlimited', 'unlimited'))
