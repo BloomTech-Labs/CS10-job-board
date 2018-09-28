@@ -1,6 +1,7 @@
 import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
-import { Alert, Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch, EmployerProfile, Avatar } from "./components";
+import { Alert } from "antd";
+import { Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch, EmployerProfile, Avatar } from "./components";
 
 import './css/AntDesignOverride.css';
 import './css/App.css';
