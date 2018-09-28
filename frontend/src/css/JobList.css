@@ -3,3 +3,12 @@
     flex-flow: column wrap;
     flex-grow: 2;
 }
+
+.jobs-list button {
+    width: 70px;
+}
+
+.jobs-list .anticon {
+    font-size: 20px;
+    color: white;
+}

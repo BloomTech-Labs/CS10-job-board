@@ -1,53 +1,73 @@
 import React from "react";
-import { Tag } from "./";
+import axios from "axios";
+import { withRouter } from "react-router-dom";
+import { Alert, Icon } from "antd";
+import { TagView } from "./";
 import '../css/Job.css';
 
-const Job = props => {
-    // const { job } = props;
-    const job = {
-        company_name: `Cool New co.`,
-        company_desc: `Specializing in cool tech.`,
-        title: `Full Stack Developer`,
-        salary: `60,000`,
-        description: `We need someone who can do everything, impossibly! Are you them? Hello?`, 
-        requirements: `Living human with skills in tech, 0-100 years experience.`,
-        tags: [
-            { name: `Cool`},
-            { name: `Tech`},
-            { name: `Fullstack`},
-            { name: `Winning`},
-            { name: `Not Losing`},
-            { name: `MERNCSHARPJAVAORSCRIPT?`},
-        ]
+class Job extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            job: null,
+            error: null,
+        }
     }
-    
-    return (
-        <div className="job">
+
+    componentDidMount() {
+        this.fetchJob();
+    }
+
+    fetchJob = () => {
+        const token = localStorage.getItem('token');
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        axios.get(`${process.env.REACT_APP_API}${this.props.history.location.pathname}`, requestOptions)
+            .then(response => {
+                this.setState({ job: response.data });
+            })
+            .catch(err => {
+                this.setState({ error: `Error processing your request. Try again.`});
+            });
+    }
+
+    render() {
+        const { job, error } = this.state;
+        return (
             <div>
-                <img src="" alt="" className="job-logo"/>
-                <h3>{job.company_name}</h3>
-                <p>{job.company_desc}</p>
-            </div>
-            <h2>{job.title}</h2>
-            <h3>{job.salary}</h3>
-            <h3>Job Description</h3>
-            <p>{job.description}</p>
-            <h3>Requirement</h3>
-            <p>{job.requirements}</p>
-            <div>
-                <h3>Tags</h3>
-                <div className="job-tags">
-                    {job.tags ? (
-                        job.tags.map(tag => {
-                            return (
-                                <Tag tag={tag} />
-                            );
-                        })
+                {error ? (
+                    <Alert message={error} type="error" closable showIcon />
                     ) : (null)}
-                </div>
+                {job ? (
+                    <div className="job">
+                         <Icon onClick={this.props.history.goBack}type="left-circle" theme="twoTone" /> 
+                        <div>
+                            <img src="" alt="" className="job-logo"/>
+                            <h3>{job.company_name}</h3>
+                            <p>{job.company_desc}</p>
+                        </div>
+                        <h2>{job.title}</h2>
+                        <h3>{job.min_salary} - {job.max_salary}</h3>
+                        <h3>Job Description</h3>
+                        <p>{job.description}</p>
+                        <h3>Requirements</h3>
+                        <p>{job.requirements}</p>
+                        <div>
+                            <h3>Tags</h3>
+                            <div className="job-tags">
+                                {job.tags ? (
+                                    job.tags.map(tag => {
+                                        return (
+                                            <TagView key={tag} tag={tag} />
+                                        );
+                                    })
+                                ) : (null)}
+                            </div>
+                        </div>
+                    </div>
+                ) : (null)}
             </div>
-        </div>
-    );
+        );
+    }
 }
 
-export default Job;
+export default withRouter(Job);

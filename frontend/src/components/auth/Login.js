@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Alert } from "antd";
 import { withRouter } from "react-router-dom";
 import { Form, Icon, Input, Button } from 'antd';
 
@@ -11,6 +12,7 @@ class Login extends React.Component {
         this.state = {
             email: '',
             password: '',
+            message: null,
             error: null
         }
     }
@@ -26,7 +28,7 @@ class Login extends React.Component {
                 this.setState({ error: null });
                 localStorage.setItem('token', response.data.token);
                 // if user is an employee
-                this.props.logIn();
+                this.props.logIn(response.data.token);
                 this.props.history.push('/jobs');
                 // if use is an employer
                 // this.props.history.push('/dashboard');
@@ -37,10 +39,15 @@ class Login extends React.Component {
     }
 
     render() {
-        const { email, password } = this.state;
+        const { email, password, error, message } = this.state;
         return (
             <Form className="form">
-
+                {error ? (
+                    <Alert message={error} type="error" closable showIcon banner />
+                    ) : (null)}
+                {message ? (
+                    <Alert message={message} type="success" closable showIcon />
+                    ) : (null)}
                 <h3>Login</h3>
 
                 <FormItem>

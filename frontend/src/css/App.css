@@ -76,8 +76,7 @@ button:hover {
 
 .form {
   text-align: center;
-  margin: 1rem;
-  padding: 1rem;
+  margin: 10px 0;
   display: flex;
   flex-flow: column wrap;
   width: 100%;
@@ -87,7 +86,7 @@ button:hover {
 
 .form input {
   margin: 0 0 1rem;
-  padding: 2rem 0.4rem;
+  padding: 7px;
   width: 100%;
   border: none;
   border-bottom: 1px solid rgba(120, 146, 184, 0);
