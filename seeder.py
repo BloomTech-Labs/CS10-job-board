@@ -1,8 +1,8 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 import datetime
-from random import randint, choice 
-from faker import Faker 
+from random import randint, choice
+from faker import Faker
 fake = Faker()
 
 from django.contrib.auth import get_user_model
