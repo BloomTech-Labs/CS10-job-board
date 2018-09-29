@@ -15,7 +15,7 @@ class App extends React.Component {
       message: null,
       token: null,
       jobs: null,
-      employer: false
+      employer: true
     }
   }
 
