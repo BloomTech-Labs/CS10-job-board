@@ -17,7 +17,7 @@ skills_list = [
 
 class Command(BaseCommand):
 
-    for entry in range(30):
+    for entry in range(40):
         title = fake.job()
         description = fake.text(max_nb_chars=200, ext_word_list=None)
         job_location = fake.city()
@@ -27,8 +27,7 @@ class Command(BaseCommand):
         created_date = fake.past_date()
 
         # Create publish state
-
-        published_date = fake.past_date()
+        published = fake.boolean(chance_of_getting_true=60)
 
         # Create Tags
         count = 0
@@ -45,13 +44,15 @@ class Command(BaseCommand):
             requirements=requirements,
             min_salary=min_salary,
             max_salary=max_salary,
-            created_date=created_date,
-            published_date=published_date
+            created_date=created_date
         )
 
         # Loop through tags list, save each tag to get the correct separation
         for tag in tags:
             new_jobpost.tags.add(tag)
+        # Set publish date if boolean is True
+        if published:
+            new_jobpost.published_date = fake.past_date()
 
         new_jobpost.save()
         print(new_jobpost)
