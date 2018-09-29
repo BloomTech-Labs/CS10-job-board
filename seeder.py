@@ -1,13 +1,9 @@
 from django.core.management.base import BaseCommand
-from django.conf import settings
-import datetime
-import json
 from random import randint, choice
+from jobs.models import JobPost
+from django.contrib.auth import get_user_model
 from faker import Faker
 fake = Faker()
-
-from django.contrib.auth import get_user_model
-from jobs.models import JobPost
 
 User = get_user_model()
 
@@ -18,16 +14,20 @@ skills_list = [
 'Django', 'Ruby on Rails', 'Java'
 ]
 
+
 class Command(BaseCommand):
 
-    for entry in range(10):
+    for entry in range(30):
         title = fake.job()
         description = fake.text(max_nb_chars=200, ext_word_list=None)
         job_location = fake.city()
         requirements = fake.text(max_nb_chars=200, ext_word_list=None)
-        min_salary = fake.random_int(min=59999, max = 69999)
-        max_salary = fake.random_int(min=70000, max=99999)
+        min_salary = fake.random_int(min=29999, max=69999)
+        max_salary = fake.random_int(min=70000, max=179999)
         created_date = fake.past_date()
+
+        # Create publish state
+
         published_date = fake.past_date()
 
         # Create Tags
