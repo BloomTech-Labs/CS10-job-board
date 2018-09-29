@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.conf import settings
 import datetime
+import json
 from random import randint, choice
 from faker import Faker
 fake = Faker()
@@ -19,7 +20,7 @@ skills_list = [
 
 class Command(BaseCommand):
 
-    for entry in range(30):
+    for entry in range(10):
         title = fake.job()
         description = fake.text(max_nb_chars=200, ext_word_list=None)
         job_location = fake.city()
@@ -29,13 +30,13 @@ class Command(BaseCommand):
         created_date = fake.past_date()
         published_date = fake.past_date()
 
-        count = 0 
-        tag_count = randint(1, 4)
+        # Create Tags
+        count = 0
+        tag_count = randint(1, 7)
         tags = []
-        while count <= tag_count:
+        while count < tag_count:
             tags.append(choice(skills_list))
-            count += 1 
-        tags = ", ".join(str(x) for x in tags)
+            count += 1
 
         new_jobpost, _ = JobPost.objects.get_or_create(
             title=title,
@@ -45,9 +46,12 @@ class Command(BaseCommand):
             min_salary=min_salary,
             max_salary=max_salary,
             created_date=created_date,
-            published_date=published_date 
+            published_date=published_date
         )
-         
-        new_jobpost.tags.add(tags)
+
+        # Loop through tags list, save each tag to get the correct separation
+        for tag in tags:
+            new_jobpost.tags.add(tag)
+
         new_jobpost.save()
-        # print(new_jobpost)
+        print(new_jobpost)
