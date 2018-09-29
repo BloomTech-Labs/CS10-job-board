@@ -19,7 +19,7 @@ skills_list = [
 
 class Command(BaseCommand):
 
-    for entry in range(10):
+    for entry in range(30):
         title = fake.job()
         description = fake.text(max_nb_chars=200, ext_word_list=None)
         job_location = fake.city()
