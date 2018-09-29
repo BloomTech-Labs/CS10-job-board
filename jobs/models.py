@@ -101,7 +101,7 @@ class Employee(models.Model):
 
 
 class JobPost(models.Model):
-    company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE, default='Test Company')
+    # company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     description = models.TextField()
     job_location = models.CharField(max_length=30, blank=True)
