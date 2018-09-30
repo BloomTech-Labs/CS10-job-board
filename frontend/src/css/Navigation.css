@@ -1,11 +1,38 @@
 .nav-bar {
     display: flex;
     align-items: baseline;
-    justify-content: center;
+    justify-content: space-between;
     background: white;
-    height: 70px;
+    height: 74px;
 }
 
-.nav-bar * {
+.nav-bar > * {
     margin: 2% 2% 6px;
+    display: flex;
+}
+
+.nav-bar .anticon svg {
+    font-size: 24px;
+}
+
+.nav-bar .ant-dropdown-link {
+    align-self: center;
+}
+
+.nav-bar .whitespace {
+    flex-grow: 1;
+}
+
+/* Dropdown is not a child of nav, instead at root because of ant-d's choices,
+which means all dropdown menu items must be styled the same */
+.ant-dropdown-menu {
+    margin-top: 3px;
+}
+
+.ant-dropdown-menu-item {
+    padding: 10px 25px;
+}
+
+.ant-dropdown-menu-item svg {
+    font-size: 16px;
 }
