@@ -6,9 +6,6 @@ import { Search } from "../";
 
 const Navigation = props => {
     const { employer } = props;
-    // const menuStyle = {
-    //     ""
-    // }
     const menu = (
         <Menu>
             <Menu.Item key="0">
