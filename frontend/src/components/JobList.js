@@ -5,7 +5,6 @@ import { Link, withRouter } from "react-router-dom";
 import { JobPreview } from "./";
 import '../css/JobList.css'
 
-
 class JobList extends React.Component {
     constructor(props) {
         super(props)
@@ -45,7 +44,7 @@ class JobList extends React.Component {
         const { jobs } = this.props;
         const { error, loading } = this.state;
         return (
-            <div>
+            <div className="jobs-list-container">
                 {error ? (
                    <Alert message={error} type="error" closable showIcon />
                    ) : (null)}
