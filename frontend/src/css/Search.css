@@ -1,5 +1,5 @@
 .search {
-    margin: 0;
+    margin: 2% 0;
     display: flex;
     background: white;
     border-radius: 4px;
@@ -43,6 +43,4 @@
 .search .anticon {
     font-size: 22px;
     margin: 0 5px;
-    position: relative;
-    top: 2px;
 }
