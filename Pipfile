@@ -4,23 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-<<<<<<< HEAD
-django = "*"
-django-cors-headers = "*"
-python-decouple = "*"
-djangorestframework-jwt = "*"
-djangorestframework = "*"
-Pillow = "*"
-django-taggit = "*"
-httpie = "*"
-djoser = "*"
-"psycopg2-binary" = "*"
-"dj-database-url" = "*"
-"whitenoise" = "*"
-"gunicorn" = "*"
-stripe = "*"
-pytest = "*"
-=======
 certifi = "==2018.8.24"
 chardet = "==3.0.4"
 dj-database-url = "==0.5.0"
@@ -47,7 +30,6 @@ Faker = "==0.9.1"
 Pillow = "==5.2.0"
 Pygments = "==2.2.0"
 PyJWT = "==1.6.4"
->>>>>>> 41aebfff80fe9a21ad1bfcf244d8b25950cece3d
 
 [dev-packages]
 
