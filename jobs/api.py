@@ -1,7 +1,7 @@
 #from django.contrib.auth.models import User
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 
-from .models import Employer, Employee, JobPost, User, UserMembership
+from .models import Employer, Employee, JobPost, User
 
 from django.conf import settings, urls
 from rest_framework import serializers, viewsets
@@ -44,11 +44,6 @@ class JobPreviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'description', 'min_salary', 'max_salary')
 
 
-class UserMembershipSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserMembership
-        fields = ('user', 'stripe_customer_id', 'membership',)        
-
 # ViewSets for defining view behavior
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -57,7 +52,3 @@ class UserViewSet(viewsets.ModelViewSet):
 class JobPostViewSet(viewsets.ModelViewSet):
     queryset = JobPost.objects.all()
     serializer_class = JobPostSerializer
-
-class UserMembershipViewSet(viewsets.ModelViewSet):
-    queryset = UserMembership.objects.all()
-    serializer_class = UserMembershipSerializer
