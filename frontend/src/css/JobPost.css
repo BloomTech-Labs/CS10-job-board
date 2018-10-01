@@ -13,3 +13,9 @@
 .job-post form textarea {
     min-height: 100px;
 }
+
+.job-post Button {
+    height: 10%;
+    width: 100%;
+    font-size: 4rem;
+}

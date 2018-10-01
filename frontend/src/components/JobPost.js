@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import { TagCreate } from "./";
 import "../css/JobPost.css"
 
-import { Alert, Form, Input, InputNumber, Button, Switch } from 'antd';
+import { Alert, Form, Input, InputNumber, Button, Switch, Modal } from 'antd';
 
 const FormItem = Form.Item;
 
@@ -15,8 +15,22 @@ class JobPost extends React.Component {
     super();
     this.state = {
       message: null,
-      error: null
+      error: null,
+      visible: false
     };
+  }
+
+  showModal = () => {
+    this.setState({
+      visible: true,
+    });
+  }
+
+  handleCancel = (e) => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
   }
 
   handleJobPost = e => {
@@ -32,7 +46,7 @@ class JobPost extends React.Component {
       axios.post(`${process.env.REACT_APP_API}${this.props.history.location.pathname}/`, this.state, requestOptions)
         .then(response => {
           // console.log(response);
-          this.setState({ message: `Job Posted!` });
+          this.setState({ message: `Job Posted!`, visible: false });
         })
         .catch(err => {
           // console.log(this.state, requestOptions, err);
@@ -71,13 +85,19 @@ class JobPost extends React.Component {
     const { error, message, is_active } = this.state;
     return (
       <div className="job-post">
+      <Button type="primary" onClick={this.showModal}>
+          Post a Job
+        </Button>
         {error ? (
           <Alert message={error} type="error" closable showIcon />
           ) : (null)}
         {message ? (
           <Alert message={message} type="success" closable showIcon />
         ) : (null)}
-        <h2>Post a Job</h2>
+        <Modal title="Post A Job"
+        visible={this.state.visible}
+        onOk={this.handleCancel}
+        onCancel={this.handleCancel}>
         <Form>
 
           <FormItem label="Title" >
@@ -129,7 +149,7 @@ class JobPost extends React.Component {
             <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
           </div>
 
-        </Form>
+        </Form></Modal>
       </div>
     );
   }
