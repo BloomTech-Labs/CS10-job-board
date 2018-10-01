@@ -1,10 +1,10 @@
 from django.test import TestCase
-from .models import JobPost
+from jobs.models import JobPost
 
 # Create your tests here.
 
 
-class JopPostTest(TestCase):
+class JobPostTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
