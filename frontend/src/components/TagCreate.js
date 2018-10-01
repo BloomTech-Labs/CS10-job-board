@@ -48,7 +48,7 @@ class TagCreate extends React.Component {
   render() {
     const { tags, inputVisible, inputValue } = this.state;
     return (
-      <div className="tags">
+      <div className="tag">
         {tags.map((tag, index) => {
           let isLongTag = tag.length > 14;
           const tagElem = (
@@ -70,10 +70,7 @@ class TagCreate extends React.Component {
           />
         )}
         {!inputVisible && (
-          <Tag
-            onClick={this.showInput}
-            style={{ background: '#fff', borderStyle: 'dashed' }}
-          >
+          <Tag onClick={this.showInput}>
             <Icon type="plus" /> Add skills
           </Tag>
         )}

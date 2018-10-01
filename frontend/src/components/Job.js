@@ -33,7 +33,7 @@ class Job extends React.Component {
     render() {
         const { job, error } = this.state;
         return (
-            <div>
+            <div className="job-container">
                 {error ? (
                     <Alert message={error} type="error" closable showIcon />
                     ) : (null)}

@@ -34,7 +34,7 @@ urlpatterns = [
     path('jobs/<int:pk>/', views.DetailJobPost.as_view()),
     path('addjob/', views.CreateJobPost.as_view()),
 
-  # Setting up for Membership types
+# Setting up for Membership types
     path('', views.MembershipSelectView.as_view(), name='select')
 
 ]

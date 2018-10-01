@@ -1,14 +1,3 @@
-@import '~antd/dist/antd.css';
-
-form {
-    text-align: center;
-    margin: 1rem;	  
-    display: flex;	   ;
-    flex-flow: column wrap;	  
-    width: 100%;	  
-    max-width: 300px;	   
-  }
-
 .profile {
     width: unset;
     padding: 24px;

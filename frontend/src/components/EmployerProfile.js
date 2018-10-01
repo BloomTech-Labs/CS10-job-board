@@ -1,8 +1,8 @@
 import React from "react";
-import "../css/EmployerProfile.css"
+import { withRouter } from "react-router-dom";
 import { Avatar } from "./";
-import 'antd/dist/antd.css';
 import { Form, Input, Button } from 'antd';
+import "../css/EmployerProfile.css"
 
 const FormItem = Form.Item;
 
@@ -193,4 +193,4 @@ class EmployerProfile extends React.Component {
   }
 }
 
-export default EmployerProfile = Form.create()(EmployerProfile);
+export default EmployerProfile = Form.create()(withRouter(EmployerProfile));

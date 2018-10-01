@@ -1,10 +1,19 @@
 import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
-import { Alert } from "antd";
-import { Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch, EmployerProfile, Avatar } from "./components";
-
+// Do not change the order of lines 4 - 6 to preserve styling logic
 import './css/AntDesignOverride.css';
 import './css/App.css';
+import { Account,
+  Billing,
+  Dashboard,
+  Job,
+  JobList,
+  JobPost,
+  Landing,
+  Navigation,
+  NoMatch,
+  EmployerProfile } from "./components";
+import { Alert } from "antd";
 
 class App extends React.Component {
   constructor(props) {
@@ -14,7 +23,8 @@ class App extends React.Component {
       error: null,
       message: null,
       token: null,
-      jobs: null
+      jobs: null,
+      employer: true
     }
   }
 
@@ -33,7 +43,7 @@ class App extends React.Component {
     }
   }
 
-
+  
   logIn = token => {
     this.setState({ loggedIn: true, error: null, message: null, token: token });
   }
@@ -49,7 +59,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { loggedIn, error, message, token, jobs } = this.state;
+    const { loggedIn, error, message, token, jobs, employer } = this.state;
     return (
       <div className="App">
 
@@ -61,7 +71,7 @@ class App extends React.Component {
         ) : (null)}
 
         {loggedIn ? (
-          <Navigation logOut={this.logOut}/>
+          <Navigation logOut={this.logOut} employer={employer}/>
           ) : (null)}
 
         <div className="main">
@@ -69,8 +79,12 @@ class App extends React.Component {
             <Route exact path="/" render={() => <Landing logIn={this.logIn}/>} />
             <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
             <Route path="/jobs/:id" component={Job} />
-            <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />            
-            <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
+            <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />  
+            {employer ? (
+              <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />
+              ) : (
+              <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
+            )}
             <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} />
             <Route path="/dashboard" component={Dashboard} />
             <Route component={NoMatch} />

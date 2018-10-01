@@ -1,18 +1,20 @@
-.tags {
+.tag {
     display: flex;
     flex-flow: row wrap;
     align-items: baseline;
     min-height: 50px;
 }
 
-.tags .ant-tag {
+.tag .ant-tag {
     padding: 5px 12px;
     margin: 5px 10px 5px 0;
     font-size: 1.4rem;
     height: unset;
+    border-style: dashed;
+    background: white;
 }
 
-.tags input.ant-input {
+.tag input.ant-input {
     padding: 4px 11px;
     margin: 0 10px 5px 0;
     font-size: 1.4rem;
