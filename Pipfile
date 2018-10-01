@@ -18,6 +18,7 @@ djoser = "*"
 "whitenoise" = "*"
 "gunicorn" = "*"
 stripe = "*"
+pytest = "*"
 
 [dev-packages]
 pylint = "<2.0.0"

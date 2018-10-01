@@ -1,5 +1,6 @@
 from django.test import TestCase
 from jobs.models import JobPost
+import pytest
 
 # Create your tests here.
 

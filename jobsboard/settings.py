@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'djoser',
     'taggit',
     'taggit_serializer',
-    'stripe'
+    'stripe',
+    'pytest'
 ]
 
 MIDDLEWARE = [
