@@ -3,7 +3,16 @@ import { Route, Switch, withRouter } from "react-router-dom";
 // Do not change the order of lines 4 - 6 to preserve styling logic
 import './css/AntDesignOverride.css';
 import './css/App.css';
-import { Account, Billing, Dashboard, Job, JobList, JobPost, Landing, Navigation, NoMatch, EmployerProfile } from "./components";
+import { Account,
+  Billing,
+  Dashboard,
+  Job,
+  JobList,
+  JobPost,
+  Landing,
+  Navigation,
+  NoMatch,
+  EmployerProfile } from "./components";
 import { Alert } from "antd";
 
 class App extends React.Component {
@@ -34,8 +43,7 @@ class App extends React.Component {
     }
   }
 
-  // add employer state function to pass to App state
-
+  
   logIn = token => {
     this.setState({ loggedIn: true, error: null, message: null, token: token });
   }
