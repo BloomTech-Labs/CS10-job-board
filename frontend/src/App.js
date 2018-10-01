@@ -69,7 +69,7 @@ class App extends React.Component {
             <Route exact path="/" render={() => <Landing logIn={this.logIn}/>} />
             <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
             <Route path="/jobs/:id" component={Job} />
-            <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />            
+            <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />
             <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
             <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} />
             <Route path="/dashboard" component={Dashboard} />
