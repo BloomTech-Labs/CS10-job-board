@@ -32,7 +32,7 @@ urlpatterns = [
     # Jobs API 
     path('jobs/', views.ListJobPost.as_view()),
     path('jobs/<int:pk>/', views.DetailJobPost.as_view()),
-    path('addjob/', views.CreateJobPost.as_view())
+    path('addjob/', views.CreateJobPost.as_view()),
 
   # Setting up for Membership types
     path('', views.MembershipSelectView.as_view(), name='select')
