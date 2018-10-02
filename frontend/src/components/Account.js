@@ -58,7 +58,7 @@ class Account extends React.Component {
                     <button onClick={this.handlePasswordUpdate}>Update</button>
                 </form>
             </div>
-        );  
+        );
     }
 }
 

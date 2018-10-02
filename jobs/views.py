@@ -8,6 +8,7 @@ from .models import User, JobPost, Membership, UserMembership, Subscription
 from rest_framework import views, permissions, status, generics
 from rest_framework.response import Response
 from django.shortcuts import render
+from django.utils import timezone
 from django.views.generic import ListView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
@@ -33,12 +34,26 @@ class ListJobPost(generics.ListAPIView):
 
 
 class CreateJobPost(generics.CreateAPIView):
-    serializer_class = JobPostSerializer
+
+    def post(self, request):
+        if request.data['is_active'] is True:
+            # If published when created,
+            # add published_date to request data to then be serialized
+            request.data['published_date'] = timezone.now()
+            serializer_class = JobPostSerializer(data=request.data)
+            serializer_class.is_valid()
+            serializer_class.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            serializer_class = JobPostSerializer(data=request.data)
+            serializer_class.save()
+            return Response(status=status.HTTP_201_CREATED)
 
 
 class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
     queryset = JobPost.objects.all()
     serializer_class = JobPostSerializer
+
 
 def get_user_membership(request):
     user_membership_qs = UserMembership.objects.filter(user=request.user)
