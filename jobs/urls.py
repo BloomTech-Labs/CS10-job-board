@@ -28,6 +28,7 @@ urlpatterns = [
 
     re_path(r'^login/$', jwt_views.ObtainJSONWebToken.as_view(), name='login'),
     re_path(r'^login/refresh/$', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
+    re_path(r'^login/verify/$', jwt_views.VerifyJSONWebToken.as_view(), name='login-verify'),
 
     # Jobs API 
     path('jobs/', views.ListJobPost.as_view()),
