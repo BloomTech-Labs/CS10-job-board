@@ -36,7 +36,7 @@ const Navigation = props => {
                 ) : (null)}
             <Dropdown overlay={menu} trigger={['hover']} placement="bottomRight">
                 <a className="ant-dropdown-link" href="#">
-                  <Icon type="setting" style={{"margin-top": "6px"}}/>
+                  <Icon type="setting" style={{"marginTop": "6px"}}/>
                 </a>
             </Dropdown>
         </div>
