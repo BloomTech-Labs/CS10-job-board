@@ -8,7 +8,7 @@ import pytest
 class JobPostTest(TestCase):
 
     @classmethod
-    def setUpTestData(cls):
+    def set_up(cls):
         JobPost.objects.create(title='first job')
         JobPost.objects.create(description='a description here')
 
