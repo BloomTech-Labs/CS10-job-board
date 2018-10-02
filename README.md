@@ -25,6 +25,8 @@ Any merge into the master will be tested and deployed if the build is successful
 
 To overwrite an ant-design class, use the `AndDesignOverride.css` file in `frontend/src/css/`.
 
+For ant-design inline styles use `camelCase` (ie. `marginTop`, `fontSize`)
+
 # Backend
 
 [Deployed database](https://job-board-backend.herokuapp.com/)
