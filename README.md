@@ -21,6 +21,16 @@ _Description_ - Job board for students without college degrees
 Netlify is configured to deploy from the master branch of this repo.
 Any merge into the master will be tested and deployed if the build is successful.
 
+### Using numeral.js Number formatting
+
+```import numeral from "numeral";```
+
+
+```numeral().format('')```
+Note - props of the number type can be called within `numeral()`
+Possible formats for reference - http://numeraljs.com/#format
+
+
 ### Using ant-design
 
 To overwrite an ant-design class, use the `AntDesignOverride.css` file in `frontend/src/css/`.
