@@ -96,6 +96,7 @@ class JobPost extends React.Component {
         ) : (null)}
         <Modal title="Post A Job"
         visible={this.state.visible}
+        onCancel={this.handleCancel}
         footer={[null, null,]}>
         <Form>
 
