@@ -32,7 +32,25 @@ refer to https://reactjs.org/docs/dom-elements.html#style
 
 [Deployed database](https://job-board-backend.herokuapp.com/)
 
+### Heroku
+
 To push the latest changes to Heroku, push from a local master branch of this repo using `git push heroku master` with a properly authenticated Heroku account.
+
+### Workflow in Django
+
+>When adding dependencies with `pip install`, make sure to add the dependency to the `requirements.txt`, with specific version.
+
+#### When downloading a newer version of the app with added dependencies:
+1.  delete the `Pipfile` and `Pipfile.lock`
+2.  use the command `pipenv install -r requirements.txt`
+3.  Manually change the `python_version` in the newly generated `Pipfile` to `3.6.6` 
+4.  Run `pipenv install` to update the lock file
+5.  Run python migration commands in `pipenv shell`: 
+    `./manage.py makemigrations` \
+    `./manage.py makemigrations jobs` \
+    `./manage.py migrate`
+
+
 
 ### Jobs API
 
