@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 from jobs.models import JobPost
 
 
@@ -13,7 +14,7 @@ class JobPostTest(TestCase):
         JobPost.objects.create(min_salary=100000)
         JobPost.objects.create(max_salary=200000)
         JobPost.objects.create(is_active=True)
-        JobPost.objects.create(tags='a description here', 'school', 'life')
+        JobPost.objects.create(tags='a description here')
         JobPost.objects.create(created_date=timezone.now())
         JobPost.objects.create(published_date=timezone.now())
 
