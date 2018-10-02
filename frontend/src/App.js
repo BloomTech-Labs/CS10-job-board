@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import { Route, Switch, withRouter } from "react-router-dom";
 // Do not change the order of lines 4 - 6 to preserve styling logic
 import './css/AntDesignOverride.css';
@@ -31,8 +32,15 @@ class App extends React.Component {
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token) {
-      this.logIn(token);
-      this.props.history.push('/jobs');
+      axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, { token: token })
+        .then(response => {
+          this.logIn(response.data.token);
+          this.props.history.push('/jobs');
+        })
+        .catch(err => {
+          this.logOut();
+          this.setState({ error: `Error processing request. Please log in or register.`});
+        });
     }
     else {
       let path = this.props.history.location.pathname;
