@@ -23,7 +23,10 @@ Any merge into the master will be tested and deployed if the build is successful
 
 ### Using ant-design
 
-To overwrite an ant-design class, use the `AndDesignOverride.css` file in `frontend/src/css/`.
+To overwrite an ant-design class, use the `AntDesignOverride.css` file in `frontend/src/css/`.
+
+For ant-design inline styles use `camelCase` (ie. `marginTop`, `fontSize`)
+refer to https://reactjs.org/docs/dom-elements.html#style
 
 # Backend
 
@@ -37,7 +40,7 @@ To push the latest changes to Heroku, push from a local master branch of this re
 - `/api/addjob` accepts a POST request to create a new Job. 
 - `/api/jobs/:id` returns a specific job, and accepts PUT, and DELETE requests.
 
-## Dependencies:  
+## Dependencies:
 
 ###  Faker: generating job post data: [DOCS](https://faker.readthedocs.io/en/master/)
 

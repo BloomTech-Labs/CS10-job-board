@@ -26,8 +26,7 @@ class JobPost extends React.Component {
     });
   }
 
-  handleCancel = (e) => {
-    console.log(e);
+  handleCancel = () => {
     this.setState({
       visible: false,
     });
@@ -96,8 +95,8 @@ class JobPost extends React.Component {
         ) : (null)}
         <Modal title="Post A Job"
         visible={this.state.visible}
-        onOk={this.handleCancel}
-        onCancel={this.handleCancel}>
+        onCancel={this.handleCancel}
+        footer={[null, null,]}>
         <Form>
 
           <FormItem label="Title" >
@@ -118,7 +117,7 @@ class JobPost extends React.Component {
 
           <div className="flex">
             <FormItem label="Minimum Salary">
-              <InputNumber 
+              <InputNumber
                 onChange={this.updateMinSalary} name="min_salary"
                 step={10000}
                 min={0}
@@ -126,15 +125,15 @@ class JobPost extends React.Component {
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
               required />
             </FormItem>
-  
+
             <FormItem label="Maximum Salary">
-              <InputNumber 
+              <InputNumber
                 onChange={this.updateMaxSalary} name="max_salary"
                 step={10000}
                 min={0}
                 parser={value => value.replace(/\$\s?|(,*)/g, '')}
                 formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-              required /> 
+              required />
             </FormItem>
           </div>
 
@@ -146,10 +145,12 @@ class JobPost extends React.Component {
             <FormItem label="Publish">
               <Switch onChange={this.togglePublish} />
             </FormItem>
-            <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
+
           </div>
 
-        </Form></Modal>
+        </Form>
+        <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
+        </Modal>
       </div>
     );
   }
