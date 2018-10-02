@@ -34,6 +34,8 @@ ALLOWED_HOSTS = ['job-board-backend.herokuapp.com', '127.0.0.1']
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
 
+SENDGRID_API_KEY = config('SENDGRID_API_KEY')
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -181,9 +183,9 @@ CORS_ORIGIN_WHITELIST = (
     'job-board-backend.herokuapp.com',
 )
 
-DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': False,
-    'SERIALIZERS': {},
-}
+# DJOSER = {
+#     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+#     'ACTIVATION_URL': '#/activate/{uid}/{token}',
+#     'SEND_ACTIVATION_EMAIL': False,
+#     'SERIALIZERS': {},
+# }
