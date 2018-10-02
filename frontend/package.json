@@ -6,14 +6,11 @@
     "@types/numeral": "^0.0.25",
     "antd": "3.9.3",
     "axios": "0.18.0",
-<<<<<<< HEAD
     "chai": "^4.2.0",
     "enzyme": "^3.0.0",
     "enzyme-adapter-react-16": "^1.5.0",
     "immutable": "^3.7.4",
-=======
     "numeral": "^2.0.6",
->>>>>>> c2b66279ba28d4c352be5a6e7cbe67a801533ac6
     "react": "16.5.0",
     "react-dom": "16.5.0",
     "react-router-dom": "4.3.1",
