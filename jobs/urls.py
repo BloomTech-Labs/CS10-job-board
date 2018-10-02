@@ -16,7 +16,7 @@ User = get_user_model()
 
 app_name = 'memberships'
 
-# Assign custom paths for views 
+# Assign custom paths for views
 
 urlpatterns = [
     re_path(r'^view/$', views.UserView.as_view(), name='view'),
@@ -30,12 +30,12 @@ urlpatterns = [
     re_path(r'^login/refresh/$', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
     re_path(r'^login/verify/$', jwt_views.VerifyJSONWebToken.as_view(), name='login-verify'),
 
-    # Jobs API 
+    # Jobs API
     path('jobs/', views.ListJobPost.as_view()),
     path('jobs/<int:pk>/', views.DetailJobPost.as_view()),
     path('addjob/', views.CreateJobPost.as_view()),
 
-# Setting up for Membership types
+    # Setting up for Membership types
     path('', views.MembershipSelectView.as_view(), name='select')
 
 ]
