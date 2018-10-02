@@ -26,6 +26,7 @@ Any merge into the master will be tested and deployed if the build is successful
 To overwrite an ant-design class, use the `AntDesignOverride.css` file in `frontend/src/css/`.
 
 For ant-design inline styles use `camelCase` (ie. `marginTop`, `fontSize`)
+refer to https://reactjs.org/docs/dom-elements.html#style
 
 # Backend
 
