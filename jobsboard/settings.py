@@ -170,11 +170,11 @@ REST_FRAMEWORK = {
 
 # Default JWT response handler
 JWT_AUTH = {
-    #'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobsboard.utils.my_jwt_response_handler',
+    # 'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobs.views.jwt_response_handler',
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=86400),
     'JWT_REFRESH_DELTA': datetime.timedelta(days=7),
-    'JWT_GET_USER_SECRET_KEY': 'jobs.models.jwt_get_secret_key',
+    'JWT_GET_USER_SECRET_KEY': 'jobs.views.jwt_get_secret_key',
 }
 
 CORS_ORIGIN_WHITELIST = (
