@@ -10,10 +10,6 @@ import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
-
-def jwt_get_secret_key(user_model):
-    return user_model.jwt_secret
-
 class UserManager(BaseUserManager):
 
     use_in_migrations = True
