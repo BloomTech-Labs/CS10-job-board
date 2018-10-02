@@ -1,13 +1,12 @@
 import uuid
 from django.db import models
 from django.conf import settings
-from django.utils import timezone 
-import datetime 
-
+from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db.models.signals import post_save
 from taggit.managers import TaggableManager
 import stripe
+
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
@@ -17,8 +16,8 @@ def jwt_get_secret_key(user_model):
 
 class UserManager(BaseUserManager):
 
-    use_in_migrations = True 
- 
+    use_in_migrations = True
+
     def _create_user(self, email, password, **extra_fields):
         """
         Create and save a user with the given email and password.
