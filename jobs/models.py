@@ -105,7 +105,7 @@ class JobPost(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     job_location = models.CharField(max_length=30, blank=True)
-    requirements = models.TextField()
+    requirements = models.TextField(null=True)
     min_salary = models.IntegerField(null=True, blank=True)
     max_salary = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
@@ -133,7 +133,6 @@ class Membership(models.Model):
     membership_type = models.CharField(choices=MEMBERSHIP_CHOICES, default='Free', max_length=30)
     price = models.IntegerField(default=15)
     stripe_plan_id = models.CharField(max_length=40)
-    plan_description = models.TextField()
 
     def __str__(self):
         return self.membership_type

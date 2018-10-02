@@ -5,7 +5,6 @@ from .models import Employer, Employee, JobPost, User, UserMembership
 
 from django.conf import settings, urls
 from rest_framework import serializers, viewsets
-from .models import Employer, Employee, JobPost, User
 from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
 
  
@@ -42,12 +41,11 @@ class JobPreviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobPost
         fields = ('id', 'title', 'description', 'min_salary', 'max_salary')
-
-
+    
 class UserMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMembership
-        fields = ('user', 'stripe_customer_id', 'membership',)        
+        fields = ('user', 'stripe_customer_id', 'membership',)      
 
 # ViewSets for defining view behavior
 class UserViewSet(viewsets.ModelViewSet):
