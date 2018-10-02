@@ -50,7 +50,8 @@ INSTALLED_APPS = [
     'djoser',
     'taggit',
     'taggit_serializer',
-    'stripe'
+    'stripe',
+    'pytest'
 ]
 
 MIDDLEWARE = [
@@ -168,7 +169,9 @@ REST_FRAMEWORK = {
 # Default JWT response handler
 JWT_AUTH = {
     #'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobsboard.utils.my_jwt_response_handler',
+    'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=86400),
+    'JWT_REFRESH_DELTA': datetime.timedelta(days=7),
     'JWT_GET_USER_SECRET_KEY': 'jobs.models.jwt_get_secret_key',
 }
 
