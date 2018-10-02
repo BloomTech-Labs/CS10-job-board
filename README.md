@@ -1,6 +1,6 @@
 # We Don't Need No Education
 
-_Description_ - Job board for students without college degrees 
+_Description_ - Job board for students without college degrees
 
 ---
 
@@ -20,6 +20,16 @@ _Description_ - Job board for students without college degrees
 
 Netlify is configured to deploy from the master branch of this repo.
 Any merge into the master will be tested and deployed if the build is successful.
+
+### Using numeral.js Number formatting
+
+```import numeral from "numeral";```
+
+
+```numeral().format('')```
+Note - props of the number type can be called within `numeral()`
+Possible formats for reference - http://numeraljs.com/#format
+
 
 ### Using ant-design
 
@@ -55,7 +65,7 @@ To push the latest changes to Heroku, push from a local master branch of this re
 ### Jobs API
 
 - `/api/jobs` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (latest published first). It only accepts a GET request.
-- `/api/addjob` accepts a POST request to create a new Job. 
+- `/api/addjob` accepts a POST request to create a new Job.
 - `/api/jobs/:id` returns a specific job, and accepts PUT, and DELETE requests.
 
 ## Dependencies:

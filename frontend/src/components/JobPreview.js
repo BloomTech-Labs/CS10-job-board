@@ -1,4 +1,5 @@
 import React from "react";
+import numeral from "numeral";
 import '../css/JobPreview.css';
 
 const StylelizedLine = () => {
@@ -13,8 +14,8 @@ const JobPreview = props => {
     return (
         <div>
             <div className="job-preview">
-                <h3>{job.title}</h3>
-                <h3>{job.min_salary} - {job.max_salary}</h3>
+                <h2>{job.title}</h2>
+                <h3>{numeral(job.min_salary).format('($0.00a)')} - {numeral(job.max_salary).format('($0.00a)')}</h3>
                 <p>{job.description}</p>
             </div>
             <StylelizedLine />

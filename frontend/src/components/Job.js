@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { Alert, Icon } from "antd";
+import numeral from "numeral";
 import { TagView } from "./";
 import '../css/Job.css';
 
@@ -46,7 +47,7 @@ class Job extends React.Component {
                             <p>{job.company_desc}</p>
                         </div>
                         <h2>{job.title}</h2>
-                        <h3>{job.min_salary} - {job.max_salary}</h3>
+                        <h3>{numeral(job.min_salary).format('($0.00a)')} - {numeral(job.max_salary).format('($0.00a)')}</h3>
                         <h3>Job Description</h3>
                         <p>{job.description}</p>
                         <h3>Requirements</h3>
