@@ -111,15 +111,15 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 #     def __str__(self):
 #         return '%s %s' % (self.first_name, self.last_name)
-
+default_company = 1
 
 class JobPost(models.Model):
-    company = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=128)
-    title = models.CharField(max_length=200)
-    description = models.TextField()
+    # company = models.ForeignKey('jobs.User', on_delete=models.CASCADE, default=default_company)
+    company_name = models.CharField(max_length=128, blank=True)
+    title = models.CharField(max_length=200, blank=True)
+    description = models.TextField(blank=True)
     job_location = models.CharField(max_length=30, blank=True)
-    requirements = models.TextField(null=True)
+    requirements = models.TextField(null=True, blank=True)
     min_salary = models.IntegerField(null=True, blank=True)
     max_salary = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
@@ -143,7 +143,7 @@ MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack',
 
 #create a class for the various types of memberships
 class Membership(models.Model):
-    slug = models.SlugField()
+    # slug = models.SlugField()
     membership_type = models.CharField(choices=MEMBERSHIP_CHOICES, default='Free', max_length=30)
     price = models.IntegerField(default=15)
     stripe_plan_id = models.CharField(max_length=40)
@@ -161,18 +161,18 @@ class UserMembership(models.Model):
         return self.user.email
 
 
-def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
-    if created:
-        UserMembership.objects.get_or_create(user=instance)
+    def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
+        if created:
+            UserMembership.objects.get_or_create(user=instance)
 
-    user_membership, created = UserMembership.objects.get_or_create(user=instance)
-    #if the user has not signed up, create stripe id for them
-    if user_membership.stripe_customer_id is None or user_membership.stripe_customer_id == '':
-        new_customer_id = stripe.Customer.create(email=instance.email)
-        user_membership.stripe_customer_id = new_customer_id['id']
-        user_membership.save()
+        user_membership, created = UserMembership.objects.get_or_create(user=instance)
+        #if the user has not signed up, create stripe id for them
+        if user_membership.stripe_customer_id is None or user_membership.stripe_customer_id == '':
+            new_customer_id = stripe.Customer.create(email=instance.email)
+            user_membership.stripe_customer_id = new_customer_id['id']
+            user_membership.save()
     
-post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
+    post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
 
 class Subscription(models.Model):
     user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
