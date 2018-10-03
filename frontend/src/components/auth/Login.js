@@ -27,11 +27,7 @@ class Login extends React.Component {
             .then(response => {
                 this.setState({ error: null });
                 localStorage.setItem('token', response.data.token);
-                // if user is an employee
-                this.props.logIn(response.data.token);
-                this.props.history.push('/jobs');
-                // if use is an employer
-                // this.props.history.push('/dashboard');
+                this.props.logIn(response.data);
             })
             .catch(err => {
                 this.setState({ error: `Error processing your request. Please try again.`});
