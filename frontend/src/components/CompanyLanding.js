@@ -3,7 +3,9 @@ import { CompanyRegister } from ".";
 import "../css/Landing.css";
 
 class CompanyLanding extends React.Component {
-
+    constructor(props) {
+        super(props)
+    }
     render() {
         return (
             <div className="landing-page">
@@ -13,7 +15,7 @@ class CompanyLanding extends React.Component {
                     {/* <img src={hero} draggable={false} alt="hero illustration"/> */}
                 </div>
                 <div>
-                    <CompanyRegister />
+                    <CompanyRegister {...this.props}/>
                 </div>
             </div>
         );

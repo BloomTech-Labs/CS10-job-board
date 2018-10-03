@@ -107,6 +107,7 @@ class App extends React.Component {
         <div className="main">
           <Switch>
             <Route exact path="/" render={() => <Landing logIn={this.logIn}/>} />
+            <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
             <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
             <Route path="/jobs/:id" component={Job} />
             <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />  
@@ -117,7 +118,6 @@ class App extends React.Component {
             )}
             <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} />
             <Route path="/dashboard" component={Dashboard} />
-            <Route path="/company" component={CompanyLanding} />
             <Route component={NoMatch} />
           </Switch>
         </div>
