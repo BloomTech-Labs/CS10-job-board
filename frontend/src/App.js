@@ -1,11 +1,12 @@
 import React from "react";
 import axios from "axios";
-import { Route, Switch, withRouter } from "react-router-dom";
+import { Route, Switch, withRouter, NavLink } from "react-router-dom";
 // Do not change the order of lines 4 - 6 to preserve styling logic
 import './css/AntDesignOverride.css';
 import './css/App.css';
 import { Account,
   Billing,
+  CompanyLanding,
   Dashboard,
   Job,
   JobList,
@@ -14,7 +15,7 @@ import { Account,
   Navigation,
   NoMatch,
   EmployerProfile } from "./components";
-import { Alert } from "antd";
+import { Alert, Button} from "antd";
 
 class App extends React.Component {
   constructor(props) {
@@ -25,16 +26,16 @@ class App extends React.Component {
       message: null,
       token: null,
       jobs: null,
-      employer: true
+      employer: false
     }
   }
 
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, { token: token })
+      axios.post(`${process.env.REACT_APP_LOGIN_API}refresh/`, { token: token })
         .then(response => {
-          this.logIn(response.data.token);
+          this.logIn(response.data);
           this.props.history.push('/jobs');
         })
         .catch(err => {
@@ -52,8 +53,20 @@ class App extends React.Component {
   }
 
   
-  logIn = token => {
-    this.setState({ loggedIn: true, error: null, message: null, token: token });
+  logIn = data => {
+    this.setState({ 
+      loggedIn: true,
+      error: null,
+      message: null,
+      token: data.token,
+      employer: data.user.is_employer 
+    });
+    // Redirect based on user type
+    if (data.user.is_employer) {
+      this.props.history.push('/dashboard');
+    } else {
+      this.props.history.push('/jobs');
+    }
   }
 
   logOut = () => {
@@ -68,6 +81,7 @@ class App extends React.Component {
 
   render() {
     const { loggedIn, error, message, token, jobs, employer } = this.state;
+    let home = this.props.history.location.pathname === '/';
     return (
       <div className="App">
 
@@ -79,12 +93,21 @@ class App extends React.Component {
         ) : (null)}
 
         {loggedIn ? (
-          <Navigation logOut={this.logOut} employer={employer}/>
-          ) : (null)}
+            <Navigation logOut={this.logOut} employer={employer}/>
+          ) : (
+            // Hides Post a Job button if not on '/'
+            <div className="company-register-link">
+              {home ? (
+                <NavLink to='/company'><Button>Post a Job</Button></NavLink>
+              ) : (null) 
+              }
+            </div>
+          )}
 
         <div className="main">
           <Switch>
             <Route exact path="/" render={() => <Landing logIn={this.logIn}/>} />
+            <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
             <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
             <Route path="/jobs/:id" component={Job} />
             <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />  

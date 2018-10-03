@@ -14,7 +14,28 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 # import JobPost serializer
-from .api import JobPostSerializer, JobPreviewSerializer
+from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer
+
+
+def jwt_get_secret_key(user_model):
+    return user_model.jwt_secret
+
+
+def jwt_response_handler(token, user=None, request=None):
+    return {
+        'token': token,
+        'user': UserSerializer(user, context={'request': request}).data
+    }
+
+
+class UserRegisterView(generics.CreateAPIView):
+    
+    def post(self, request):
+        print(request.data)
+        serializer_class = UserRegistrationSerializer(data=request.data)
+        serializer_class.valid()
+        serializer_class.save()
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class UserLogoutAllView(views.APIView):
