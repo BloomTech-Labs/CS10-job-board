@@ -6,7 +6,7 @@ import { Alert, Tooltip, Form, Icon, Input, Button } from 'antd';
 const FormItem = Form.Item;
 const PassTool = <span>8 Characters Minimum</span>
 
-class Register extends React.Component {
+class CompanyRegister extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -15,6 +15,7 @@ class Register extends React.Component {
             repeatpassword: '',
             firstName: '',
             lastName: '',
+            is_employer: true,
             error: null,
             message: null
         }
@@ -79,7 +80,7 @@ class Register extends React.Component {
                   <Alert message={message} type="success" closable showIcon />
                 ) : (null)}
 
-                <h3>Register</h3>
+                <h3>Company Signup</h3>
                 <FormItem>
                 <Input type="text" name="email" prefix={<Icon type="user" />}  autoComplete="email" value={email} placeholder="email" onChange={this.onChange} required/>
                 </FormItem>
@@ -101,4 +102,4 @@ class Register extends React.Component {
     }
 }
 
-export default Form.create()(withRouter(Register));
+export default Form.create()(withRouter(CompanyRegister));
