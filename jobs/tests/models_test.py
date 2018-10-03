@@ -4,7 +4,7 @@ from jobs.models import JobPost
 
 
 class JobPostTest(TestCase):
-  
+
     # set up data for job post
     @classmethod
     def setUpTestData(cls):
@@ -28,6 +28,16 @@ class JobPostTest(TestCase):
         jobPost = JobPost.objects.get(id=2)
         expected_object_name = f'{jobPost.description}'
         self.assertEquals(expected_object_name, 'a description here')
+
+    def test_job_location_content(self):
+        jobPost = JobPost.objects.get(id=3)
+        expected_object_name = f'{jobPost.job_location}'
+        self.assertEquals(expected_object_name, 'Location, State')
+
+    def test_requirements_content(self):
+        jobPost = JobPost.objects.get(id=4)
+        expected_object_name = f'{jobPost.requirements}'
+        self.assertEquals(expected_object_name, 'Location, State')
 
 
 """
