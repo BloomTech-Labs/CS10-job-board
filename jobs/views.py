@@ -17,6 +17,10 @@ from django.contrib import messages
 from .api import JobPostSerializer, JobPreviewSerializer
 
 
+def jwt_get_secret_key(user_model):
+    return user_model.jwt_secret
+
+
 class UserLogoutAllView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
 

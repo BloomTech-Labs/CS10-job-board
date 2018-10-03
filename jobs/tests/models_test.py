@@ -4,9 +4,9 @@ from jobs.models import JobPost
 
 
 class JobPostTest(TestCase):
-
-    @classmethod
+  
     # set up data for job post
+    @classmethod
     def setUpTestData(cls):
         JobPost.objects.create(title='first job')
         JobPost.objects.create(description='a description here')
@@ -31,7 +31,8 @@ class JobPostTest(TestCase):
 
 
 """
-guide for test cases
+
+# guide for test cases
 
 title = models.CharField(max_length=200)
 description = models.TextField()

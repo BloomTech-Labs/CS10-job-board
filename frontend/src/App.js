@@ -32,7 +32,7 @@ class App extends React.Component {
   componentDidMount() {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, { token: token })
+      axios.post(`${process.env.REACT_APP_LOGIN_API}refresh/`, { token: token })
         .then(response => {
           this.logIn(response.data.token);
           this.props.history.push('/jobs');
