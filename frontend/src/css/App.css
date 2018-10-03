@@ -67,6 +67,15 @@ button:hover {
   min-height: 100vh;
 }
 
+.App .company-register-link {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.App .company-register-link > a {
+  margin: 15px 30px;
+}
+
 .main {
   display: flex;
   width: 100%;
