@@ -168,7 +168,7 @@ REST_FRAMEWORK = {
 
 # Default JWT response handler
 JWT_AUTH = {
-    # 'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobs.views.jwt_response_handler',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobs.views.jwt_response_handler',
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=86400),
     'JWT_REFRESH_DELTA': datetime.timedelta(days=7),
@@ -185,5 +185,7 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': False,
-    'SERIALIZERS': {},
+    'SERIALIZERS': {
+        'user_create': 'jobs.api.UserRegistrationSerializer'
+    },
 }
