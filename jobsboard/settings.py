@@ -14,6 +14,8 @@ import os, datetime
 from decouple import config, Csv 
 import dj_database_url
 
+os.environ['DJANGO_SETTINGS_MODULE'] = 'jobsboard.settings'
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
@@ -101,10 +103,9 @@ WSGI_APPLICATION = 'jobsboard.wsgi.application'
 #     }
 # }
 
-
 DATABASES = {
-    'default': dj_database_url.config('DATABASE_URL', default='sqlite:///db.sqlite3')
-}
+        'default': dj_database_url.config('DATABASE_URL', default='sqlite:///db.sqlite3'),
+    }
 
 
 # db_from_env = dj_database_url.config(conn_max_age=500)
