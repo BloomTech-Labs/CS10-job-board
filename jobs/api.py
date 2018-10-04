@@ -7,7 +7,7 @@ from rest_framework import serializers
 from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
 
  
-# Serializers for API representation
+# Serializers for API representation 
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,7 +29,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     #     user.save()
     #     return user
 
-    # Encrypts password with create_user
+    # Encrypts password with create_user=Django default create user method
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
