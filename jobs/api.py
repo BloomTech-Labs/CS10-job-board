@@ -2,7 +2,7 @@
 # from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 # from django.core import serializers
 # from django.conf import settings, urls
-from .models import JobPost, User, UserMembership
+from .models import JobPost, User, UserMembership, Membership
 from rest_framework import serializers
 from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
 
@@ -70,6 +70,10 @@ class JobPreviewSerializer(serializers.ModelSerializer):
         model = JobPost
         fields = ('id', 'title', 'description', 'min_salary', 'max_salary')
 
+class MembershipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Membership
+        fields = ('membership_type', 'price', 'stripe_plan_id')
 
 class UserMembershipSerializer(serializers.ModelSerializer):
     class Meta:
