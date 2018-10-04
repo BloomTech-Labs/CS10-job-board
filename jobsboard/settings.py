@@ -154,15 +154,10 @@ AUTH_USER_MODEL = 'jobs.User'
 
 # REST FRAMEWORK configuration dictionary for djrestframework global settings 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+    # Setting custom auth schemes: https://www.django-rest-framework.org/api-guide/authentication/#setting-the-authentication-scheme
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication'
     ),
 }
 
