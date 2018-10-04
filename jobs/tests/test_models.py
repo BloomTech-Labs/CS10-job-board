@@ -6,7 +6,7 @@ import pytest
 @pytest.mark.django_db
 class TestJobPost:
     def setUp(self):
-        self.company_name = 'admin'
+        self.company_name = 'Google MERN'
         self.title = 'Software Engineer'
         self.description = 'Program in MERN stack'
         self.job_location = 'Las Vegas'

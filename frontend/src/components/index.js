@@ -1,7 +1,9 @@
 // auth
-export { default as  Landing } from "./Landing.js";
+export { default as Landing } from "./Landing.js";
+export { default as CompanyLanding } from "./CompanyLanding.js";
 export { default as Login } from "./auth/Login.js";
 export { default as Register } from "./auth/Register.js";
+export { default as CompanyRegister } from "./auth/CompanyRegister.js";
 // utility
 export { default as Navigation } from "./utility/Navigation.js";
 export { default as NoMatch } from "./utility/NoMatch.js";

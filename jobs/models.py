@@ -29,6 +29,7 @@ class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
+        is_employee = models.BooleanField(default=False)
         return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
@@ -42,65 +43,83 @@ class UserManager(BaseUserManager):
 
         return self._create_user(email, password, **extra_fields)
 
+        # add username, first_name, last_name, email, password
+
+
 class User(AbstractBaseUser, PermissionsMixin):
+    is_employer = models.BooleanField(default=False)
     email = models.EmailField(verbose_name='email address', max_length=255, unique=True)
+    password = models.CharField(max_length=100, default="", null=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    company_name = models.CharField(max_length=128, blank=True)
+    company_logo = models.ImageField(upload_to='post_image', blank=True)
+    company_summary = models.TextField(blank=True)
+    applications_inbox = models.EmailField(blank=True, default='')
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    profile_photo = models.ImageField(upload_to='post_image', blank=True)
+    created_date = models.DateTimeField(default=timezone.now)
     jwt_secret = models.UUIDField(default=uuid.uuid4)
 
     objects = UserManager()
 
     USERNAME_FIELD = 'email'
+    # REQUIRED_FIELDS = []
+
+    class Meta:
+        ordering = ['created_date']
 
     def __str__(self):
         return self.email
 
 
-class Employer(models.Model):
-    company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='post_image', blank=True)
-    email = models.EmailField()
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
-    summary = models.TextField()
-    applications_inbox = models.EmailField(blank=True, default='')
-    password = models.CharField(max_length=100, default="", null=False)
-    is_employee = models.BooleanField(default=False)
-    is_active = models.BooleanField()
-    created_date = models.DateTimeField(default=timezone.now)
+# class Employer(models.Model):
+#     # company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='post_image', blank=True)
+#     email = models.EmailField()
+#     first_name = models.CharField(max_length=30)
+#     last_name = models.CharField(max_length=30)
+#     summary = models.TextField()
+#     applications_inbox = models.EmailField(blank=True, default='')
+#     password = models.CharField(max_length=100, default="", null=False)
+#     # is_employee = models.BooleanField(default=False)
+#     # is_active = models.BooleanField()
+#     created_date = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        ordering = ['created_date']
+#     class Meta:
+#         ordering = ['created_date']
 
-    def __str__(self):
-        return '%s %s' % (self.first_name, self.last_name)
+#     def __str__(self):
+#         return '%s %s' % (self.first_name, self.last_name)
 
 
-class Employee(models.Model):
-    company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='post_image', blank=True)
-    email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=20)
-    description = models.TextField()
-    apps_inbox = models.CharField(max_length=35)
-    password = models.CharField(max_length=100, default="", null=False)
-    is_employer = models.BooleanField(default=False)
-    created_date = models.DateTimeField(default=timezone.now)
+# class Employee(models.Model):
+#     company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
+#     image = models.ImageField(upload_to='post_image', blank=True)
+#     email = models.EmailField(unique=True)
+#     first_name = models.CharField(max_length=20)
+#     last_name = models.CharField(max_length=20)
+#     description = models.TextField()
+#     apps_inbox = models.CharField(max_length=35)
+#     password = models.CharField(max_length=100, default="", null=False)
+#     is_employer = models.BooleanField(default=False)
+#     created_date = models.DateTimeField(default=timezone.now)
 
-    class Meta:
-        ordering = ['created_date']
+#     class Meta:
+#         ordering = ['created_date']
 
-    def __str__(self):
-        return '%s %s' % (self.first_name, self.last_name)
-
+#     def __str__(self):
+#         return '%s %s' % (self.first_name, self.last_name)
+default_company = 1
 
 class JobPost(models.Model):
-    company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
-    title = models.CharField(max_length=200)
-    description = models.TextField()
+    # company = models.ForeignKey('jobs.User', on_delete=models.CASCADE, default=default_company)
+    company_name = models.CharField(max_length=128, blank=True)
+    title = models.CharField(max_length=200, blank=True)
+    description = models.TextField(blank=True)
     job_location = models.CharField(max_length=30, blank=True)
-    requirements = models.TextField(null=True)
+    requirements = models.TextField(null=True, blank=True)
     min_salary = models.IntegerField(null=True, blank=True)
     max_salary = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
@@ -125,7 +144,7 @@ MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack',
 
 #create a class for the various types of memberships
 class Membership(models.Model):
-    slug = models.SlugField()
+    # slug = models.SlugField()
     membership_type = models.CharField(choices=MEMBERSHIP_CHOICES, default='Free', max_length=30)
     price = models.IntegerField(default=15)
     stripe_plan_id = models.CharField(max_length=40)
@@ -143,18 +162,18 @@ class UserMembership(models.Model):
         return self.user.email
 
 
-def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
-    if created:
-        UserMembership.objects.get_or_create(user=instance)
+    def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
+        if created:
+            UserMembership.objects.get_or_create(user=instance)
 
-    user_membership, created = UserMembership.objects.get_or_create(user=instance)
-    #if the user has not signed up, create stripe id for them
-    if user_membership.stripe_customer_id is None or user_membership.stripe_customer_id == '':
-        new_customer_id = stripe.Customer.create(email=instance.email)
-        user_membership.stripe_customer_id = new_customer_id['id']
-        user_membership.save()
+        user_membership, created = UserMembership.objects.get_or_create(user=instance)
+        #if the user has not signed up, create stripe id for them
+        if user_membership.stripe_customer_id is None or user_membership.stripe_customer_id == '':
+            new_customer_id = stripe.Customer.create(email=instance.email)
+            user_membership.stripe_customer_id = new_customer_id['id']
+            user_membership.save()
     
-post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
+    post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
 
 class Subscription(models.Model):
     user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)

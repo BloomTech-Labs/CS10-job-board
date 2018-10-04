@@ -86,6 +86,12 @@ TEMPLATES = [
     },
 ]
 
+SETTINGS_PATH = os.path.normpath(os.path.dirname(__file__))
+
+TEMPLATE_DIRS = (
+    os.path.join(SETTINGS_PATH, 'templates'),
+)
+
 WSGI_APPLICATION = 'jobsboard.wsgi.application'
 
 
@@ -155,21 +161,16 @@ AUTH_USER_MODEL = 'jobs.User'
 
 # REST FRAMEWORK configuration dictionary for djrestframework global settings 
 REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
+    # Setting custom auth schemes: https://www.django-rest-framework.org/api-guide/authentication/#setting-the-authentication-scheme
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication'
     ),
 }
 
 # Default JWT response handler
 JWT_AUTH = {
-    # 'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobs.views.jwt_response_handler',
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobs.views.jwt_response_handler',
     'JWT_ALLOW_REFRESH': True,
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=86400),
     'JWT_REFRESH_DELTA': datetime.timedelta(days=7),
@@ -186,5 +187,7 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': False,
-    'SERIALIZERS': {},
+    'SERIALIZERS': {
+        'user_create': 'jobs.api.UserRegistrationSerializer'
+    },
 }
