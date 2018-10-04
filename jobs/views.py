@@ -21,6 +21,7 @@ from .models import User, JobPost, Membership, UserMembership, Subscription
 from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer, MembershipSerializer
 import stripe
 
+
 def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
 
@@ -50,6 +51,7 @@ class UserLogoutAllView(views.APIView):
     )
     permission_classes = (permissions.IsAuthenticated)
     # Resets the jwt_secret, invalidating all token issued
+
     def post(self, request, *args, **kwargs):
         user = request.user
         user.jwt_secret = uuid.uuid4()
@@ -98,22 +100,27 @@ def get_user_membership(request):
         return user_membership_qs.first()
     return None
 
+
 def get_user_subscription(request):
-    user_subscription_qs = Subscription.objects.filter(user_membership=get_user_membership(request))
+    user_subscription_qs = Subscription.objects.filter(
+        user_membership=get_user_membership(request))
     if user_subscription_qs.exists():
         user_subscription = user_subscription_qs.first()
         return user_subscription
     return None
 
+
 def get_selected_membership(request):
 	membership_type = request.session['selected_membership_type']
 	selected_membership_qs = Membership.objects.filter(
-				membership_type=membership_type)
+            membership_type=membership_type)
 	if selected_membership_qs.exists():
 		return selected_membership_qs.first()
 	return None
-  
+
 # for selecting a paid membership
+
+
 class MembershipSelectView(generics.ListAPIView):
     model = Membership
     queryset = Membership.objects.all()
@@ -131,14 +138,14 @@ class MembershipSelectView(generics.ListAPIView):
         context['current_membership'] = str(current_membership.membership)
         print(context)
         return context
-    
+
     def post(self, request, **kwargs):
         selected_membership_type = request.POST.get('membership_type')
         user_subscription = get_user_subscription(request)
         user_membership = get_user_membership(request)
 
         selected_membership_qs = Membership.objects.filter(
-            membership_type = selected_membership_type
+            membership_type=selected_membership_type
         )
         if selected_membership_qs.exists():
             selected_membership = selected_membership_qs.first()
@@ -150,7 +157,8 @@ class MembershipSelectView(generics.ListAPIView):
         '''
         if user_membership.membership == selected_membership:
             if user_subscription != None:
-                messages.info(request, "You already have this membership. Your next payment is due {}".format('get this value from Stripe'))
+                messages.info(request, "You already have this membership. Your next payment is due {}".format(
+                    'get this value from Stripe'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         #assign any changes to membership type to the session
@@ -158,6 +166,8 @@ class MembershipSelectView(generics.ListAPIView):
         return HttpResponseRedirect(reverse('memberships:payment'))
 
     #payment view below
+
+
 def PaymentView(request):
 
 	user_membership = get_user_membership(request)
@@ -170,19 +180,19 @@ def PaymentView(request):
 		try:
 			token = request.POST['stripeToken']
 			subscription = stripe.Subscription.create(
-			  customer=user_membership.stripe_customer_id,
-			  items=[
-			    {
-			      "plan": selected_membership.stripe_plan_id,
-			    },
-			  ],
-			  source=token # 4242424242424242
+                            customer=user_membership.stripe_customer_id,
+                       			  items=[
+                                              {
+                                                  "plan": selected_membership.stripe_plan_id,
+                                              },
+                                          ],
+                       			  source=token  # 4242424242424242
 			)
 
 			return redirect(reverse('memberships:update-transactions',
-				kwargs={
-					'subscription_id': subscription.id
-				}))
+                           kwargs={
+                               'subscription_id': subscription.id
+                           }))
 
 		except stripe.CardError as e:
 			messages.info(request, "Your card has been declined")
@@ -202,7 +212,8 @@ def updateTransactionRecords(request, subscription_id):
 	user_membership.membership = selected_membership
 	user_membership.save()
 
-	sub, created = Subscription.objects.get_or_create(user_membership=user_membership)
+	sub, created = Subscription.objects.get_or_create(
+	    user_membership=user_membership)
 	sub.stripe_subscription_id = subscription_id
 	sub.active = True
 	sub.save()
@@ -212,7 +223,8 @@ def updateTransactionRecords(request, subscription_id):
 	except:
 		pass
 
-	messages.info(request, 'Successfully created {} membership'.format(selected_membership))
+	messages.info(request, 'Successfully created {} membership'.format(
+	    selected_membership))
 	return redirect('/memberships')
 
 
@@ -229,13 +241,13 @@ def cancelSubscription(request):
 	user_sub.active = False
 	user_sub.save()
 
-
 	free_membership = Membership.objects.filter(membership_type='Free').first()
 	user_membership = get_user_membership(request)
 	user_membership.membership = free_membership
 	user_membership.save()
 
-	messages.info(request, "Successfully cancelled membership. We have sent an email")
+	messages.info(
+	    request, "Successfully cancelled membership. We have sent an email")
 	# sending an email here
 
 	return redirect('/memberships')
