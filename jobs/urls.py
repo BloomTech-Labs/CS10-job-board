@@ -3,9 +3,9 @@ from django.urls import path
 from django.contrib.auth import get_user_model
 from djoser import views as djoser_views
 from rest_framework_jwt import views as jwt_views
+from rest_framework.routers import DefaultRouter
 # imports all views
 from jobs import views
-from rest_framework.routers import DefaultRouter
 
 router = DefaultRouter()
 
