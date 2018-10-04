@@ -138,7 +138,7 @@ class JobPost(models.Model):
         self.save()
 
 
-#3 types of memberships
+# 4 types of memberships
 MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack', '12'), ('Unlimited', 'unlimited'))
 
 #create a class for the various types of memberships
@@ -155,21 +155,23 @@ class Membership(models.Model):
 class UserMembership(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stripe_customer_id = models.CharField(max_length=40)
-    membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, null=True)
+    # membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, null=True)
+    stripe_product_id = models.CharField(max_length=40)
 
     def __str__(self):
         return self.user.email
 
-
+    # Creates a Membership instance for User
     def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
         if created:
             UserMembership.objects.get_or_create(user=instance)
 
         user_membership, created = UserMembership.objects.get_or_create(user=instance)
-        #if the user has not signed up, create stripe id for them
+        # if the user has not signed up, create stripe id for them
         if user_membership.stripe_customer_id is None or user_membership.stripe_customer_id == '':
             new_customer_id = stripe.Customer.create(email=instance.email)
             user_membership.stripe_customer_id = new_customer_id['id']
+            # set_product_id = stripe.
             user_membership.save()
     
     post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
