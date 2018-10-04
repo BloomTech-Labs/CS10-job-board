@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
 # import JobPost serializer
-from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer
+from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer, MembershipSerializer
 
 
 def jwt_get_secret_key(user_model):
@@ -90,10 +90,10 @@ def get_user_subscription(request):
     return None
 
 # for selecting a paid membership
-class MembershipSelectView(ListView):
-    # model = Membership
-    # queryset = JobPost.objects.all()
-    # serializer_class = JobPostSerializer
+class MembershipSelectView(generics.ListAPIView):
+    model = Membership
+    queryset = Membership.objects.all()
+    serializer_class = MembershipSerializer
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
