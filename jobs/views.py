@@ -90,7 +90,7 @@ def get_user_subscription(request):
     return None
 
 # for selecting a paid membership
-class MembershipSelectView(ListView):
+class MembershipSelectView(generics.ListAPIView):
     model = Membership
     queryset = Membership.objects.all()
     serializer_class = MembershipSerializer
