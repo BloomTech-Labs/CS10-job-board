@@ -33,6 +33,7 @@ Pygments = "==2.2.0"
 PyJWT = "==1.6.4"
 mixer = "*"
 pytest-pythonpath = "*"
+pytest-django = "*"
 
 [dev-packages]
 

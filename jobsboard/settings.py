@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_serializer',
     'stripe',
-    'pytest',
 ]
 
 MIDDLEWARE = [
