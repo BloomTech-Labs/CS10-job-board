@@ -1,19 +1,20 @@
 import uuid
 # from djoser.views import UserView, UserDeleteView
 # from djoser import serializers
-from rest_framework import views, permissions, status
-from rest_framework.response import Response
-from rest_framework import permissions
-from .models import User, JobPost, Membership, UserMembership, Subscription
-from rest_framework import views, permissions, status, generics
-from rest_framework.response import Response
-from django.shortcuts import render
+# from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import ListView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
-# import JobPost serializer
+# Rest Framework
+from rest_framework import views, permissions, status, authentication, generics
+from rest_framework.response import Response
+# JWT
+import rest_framework_jwt.authentication
+# Models
+from .models import User, JobPost, Membership, UserMembership, Subscription
+# Serializers
 from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer
 
 
@@ -30,10 +31,21 @@ def jwt_response_handler(token, user=None, request=None):
 
 class UserRegisterView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated)
 
 
 class UserLogoutAllView(views.APIView):
-    permission_classes = [permissions.IsAuthenticated]
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated)
     # Resets the jwt_secret, invalidating all token issued
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -44,11 +56,18 @@ class UserLogoutAllView(views.APIView):
 
 # setting up views for HTTP requests
 class ListJobPost(generics.ListAPIView):
+    # returns first 10 most recently published jobs
     queryset = JobPost.objects.exclude(published_date=None)[:10]
     serializer_class = JobPreviewSerializer
 
 
 class CreateJobPost(generics.CreateAPIView):
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated)
 
     def post(self, request):
         if request.data['is_active'] is True:
@@ -88,6 +107,12 @@ class MembershipSelectView(ListView):
     # model = Membership
     # queryset = JobPost.objects.all()
     # serializer_class = JobPostSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
