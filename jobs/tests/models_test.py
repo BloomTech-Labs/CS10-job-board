@@ -15,7 +15,7 @@ class JobPostTest(TestCase):
         JobPost.objects.create(min_salary=100000)
         JobPost.objects.create(max_salary=200000)
         JobPost.objects.create(is_active=True)
-        JobPost.objects.create(tags='a description here')
+        JobPost.objects.create(tags='a tag here')
         JobPost.objects.create(created_date=timezone.now())
         JobPost.objects.create(published_date=timezone.now())
 
@@ -39,10 +39,40 @@ class JobPostTest(TestCase):
         expected_object_name = f'{jobPost.requirements}'
         self.assertEquals(expected_object_name, 'Location, State')
 
+    def test_min_salary_content(self):
+        jobPost = JobPost.objects.get(id=4)
+        expected_object_name = f'{jobPost.min_salary}'
+        self.assertEquals(expected_object_name, 100000)
+
+    def test_max_salary_content(self):
+        jobPost = JobPost.objects.get(id=4)
+        expected_object_name = f'{jobPost.max_salary}'
+        self.assertEquals(expected_object_name, 200000)
+
+    def test_is_active_content(self):
+        jobPost = JobPost.objects.get(id=4)
+        expected_object_name = f'{jobPost.is_active}'
+        self.assertEquals(expected_object_name, True)
+
+    def test_tags_content(self):
+        jobPost = JobPost.objects.get(id=4)
+        expected_object_name = f'{jobPost.tags}'
+        self.assertEquals(expected_object_name, 'a tag here')
+
+    def test_created_date_content(self):
+        jobPost = JobPost.objects.get(id=4)
+        expected_object_name = f'{jobPost.created_date}'
+        self.assertEquals(expected_object_name, timezone.now())
+
+    def test_published_date_content(self):
+        jobPost = JobPost.objects.get(id=4)
+        expected_object_name = f'{jobPost.published_date}'
+        self.assertEquals(expected_object_name, timezone.now())
+
+
 
 """
-
-# guide for test cases
+guide for test cases
 
 title = models.CharField(max_length=200)
 description = models.TextField()
