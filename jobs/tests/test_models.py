@@ -32,7 +32,7 @@ class TestJobPost:
         )
 
         def test_publish_jobpost(self):
-            assert isinstance(self.test_jobpost, JobPost)
+            assert isinstance(self.publish, JobPost)
 
 """
 guide for test cases
