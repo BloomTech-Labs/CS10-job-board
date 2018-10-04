@@ -1,6 +1,6 @@
 import uuid
-from djoser.views import UserView, UserDeleteView
-from djoser import serializers
+# from djoser.views import UserView, UserDeleteView
+# from djoser import serializers
 from rest_framework import views, permissions, status
 from rest_framework.response import Response
 from rest_framework import permissions
@@ -29,18 +29,12 @@ def jwt_response_handler(token, user=None, request=None):
 
 
 class UserRegisterView(generics.CreateAPIView):
-    
-    def post(self, request):
-        print(request.data)
-        serializer_class = UserRegistrationSerializer(data=request.data)
-        serializer_class.valid()
-        serializer_class.save()
-        return Response(status=status.HTTP_201_CREATED)
+    serializer_class = UserRegistrationSerializer
 
 
 class UserLogoutAllView(views.APIView):
     permission_classes = [permissions.IsAuthenticated]
-
+    # Resets the jwt_secret, invalidating all token issued
     def post(self, request, *args, **kwargs):
         user = request.user
         user.jwt_secret = uuid.uuid4()
