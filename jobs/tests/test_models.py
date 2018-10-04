@@ -5,7 +5,7 @@ import pytest
 
 @pytest.mark.django_db
 class TestJobPost:
-    def setUp(self):
+    def test_jobpost_model(self):
         self.company_name = 'Google MERN'
         self.title = 'Software Engineer'
         self.description = 'Program in MERN stack'
@@ -18,7 +18,7 @@ class TestJobPost:
         self.created_date = timezone.now()
         self.published_date = timezone.now()
 
-        self.test_jobpost = JobPost.objects.create_jobpost(
+        self.test_jobpost = JobPost.objects.create(
             title = self.title,
             description = self.description,
             job_location = self.job_location,
@@ -31,7 +31,7 @@ class TestJobPost:
             published_date = self.published_date,
         )
 
-        def test_create_jobpost(self):
+        def test_publish_jobpost(self):
             assert isinstance(self.test_jobpost, JobPost)
 
 """
