@@ -15,7 +15,7 @@ import rest_framework_jwt.authentication
 # Models
 from .models import User, JobPost, Membership, UserMembership, Subscription
 # Serializers
-from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer
+from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer, MembershipSerializer
 
 
 def jwt_get_secret_key(user_model):
@@ -102,11 +102,12 @@ def get_user_subscription(request):
         return user_subscription
     return None
 
+  
 # for selecting a paid membership
-class MembershipSelectView(ListView):
-    # model = Membership
-    # queryset = JobPost.objects.all()
-    # serializer_class = JobPostSerializer
+class MembershipSelectView(generics.ListAPIView):
+    model = Membership
+    queryset = Membership.objects.all()
+    serializer_class = MembershipSerializer
     authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
