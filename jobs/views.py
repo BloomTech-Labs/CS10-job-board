@@ -2,11 +2,14 @@ import uuid
 # from djoser.views import UserView, UserDeleteView
 # from djoser import serializers
 # from django.shortcuts import render
+from django.conf import settings
 from django.utils import timezone
 from django.views.generic import ListView
 from django.urls import reverse
 from django.http import HttpResponseRedirect
 from django.contrib import messages
+from django.shortcuts import render, redirect
+
 # Rest Framework
 from rest_framework import views, permissions, status, authentication, generics
 from rest_framework.response import Response
@@ -16,7 +19,7 @@ import rest_framework_jwt.authentication
 from .models import User, JobPost, Membership, UserMembership, Subscription
 # Serializers
 from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer, MembershipSerializer
-
+import stripe
 
 def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
@@ -102,6 +105,13 @@ def get_user_subscription(request):
         return user_subscription
     return None
 
+def get_selected_membership(request):
+	membership_type = request.session['selected_membership_type']
+	selected_membership_qs = Membership.objects.filter(
+				membership_type=membership_type)
+	if selected_membership_qs.exists():
+		return selected_membership_qs.first()
+	return None
   
 # for selecting a paid membership
 class MembershipSelectView(generics.ListAPIView):
@@ -119,6 +129,7 @@ class MembershipSelectView(generics.ListAPIView):
         context = super().get_context_data(**kwargs)
         current_membership = get_user_membership(self.request)
         context['current_membership'] = str(current_membership.membership)
+        print(context)
         return context
     
     def post(self, request, **kwargs):
@@ -145,3 +156,86 @@ class MembershipSelectView(generics.ListAPIView):
         #assign any changes to membership type to the session
         request.session['selected_membership_type'] = selected_membership.membership_type
         return HttpResponseRedirect(reverse('memberships:payment'))
+
+    #payment view below
+def PaymentView(request):
+
+	user_membership = get_user_membership(request)
+
+	selected_membership = get_selected_membership(request)
+
+	publishKey = settings.STRIPE_PUBLISHABLE_KEY
+
+	if request.method == "POST":
+		try:
+			token = request.POST['stripeToken']
+			subscription = stripe.Subscription.create(
+			  customer=user_membership.stripe_customer_id,
+			  items=[
+			    {
+			      "plan": selected_membership.stripe_plan_id,
+			    },
+			  ],
+			  source=token # 4242424242424242
+			)
+
+			return redirect(reverse('memberships:update-transactions',
+				kwargs={
+					'subscription_id': subscription.id
+				}))
+
+		except stripe.CardError as e:
+			messages.info(request, "Your card has been declined")
+
+	context = {
+		'publishKey': publishKey,
+		'selected_membership': selected_membership
+	}
+
+	return render(request, "memberships/membership_payment.html", context)
+
+
+def updateTransactionRecords(request, subscription_id):
+	user_membership = get_user_membership(request)
+	selected_membership = get_selected_membership(request)
+
+	user_membership.membership = selected_membership
+	user_membership.save()
+
+	sub, created = Subscription.objects.get_or_create(user_membership=user_membership)
+	sub.stripe_subscription_id = subscription_id
+	sub.active = True
+	sub.save()
+
+	try:
+		del request.session['selected_membership_type']
+	except:
+		pass
+
+	messages.info(request, 'Successfully created {} membership'.format(selected_membership))
+	return redirect('/memberships')
+
+
+def cancelSubscription(request):
+	user_sub = get_user_subscription(request)
+
+	if user_sub.active == False:
+		messages.info(request, "You dont have an active membership")
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+	sub = stripe.Subscription.retrieve(user_sub.stripe_subscription_id)
+	sub.delete()
+
+	user_sub.active = False
+	user_sub.save()
+
+
+	free_membership = Membership.objects.filter(membership_type='Free').first()
+	user_membership = get_user_membership(request)
+	user_membership.membership = free_membership
+	user_membership.save()
+
+	messages.info(request, "Successfully cancelled membership. We have sent an email")
+	# sending an email here
+
+	return redirect('/memberships')
