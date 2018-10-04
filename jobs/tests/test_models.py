@@ -2,7 +2,8 @@ from mixer.backend.django import mixer
 from django.utils import timezone
 from jobs.models import JobPost
 import pytest
-
+ 
+# JobPost Test Suite
 @pytest.mark.django_db
 class TestJobPost:
     def test_jobpost_model(self):
