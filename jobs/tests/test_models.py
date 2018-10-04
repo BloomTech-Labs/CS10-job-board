@@ -33,6 +33,9 @@ class TestJobPost:
 
         def test_publish_jobpost(self):
             assert isinstance(self.publish, JobPost)
+        
+        def test_str(self):
+            assert self.__str__ == self.title
 
 """
 guide for test cases
