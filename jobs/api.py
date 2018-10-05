@@ -29,7 +29,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     #     user.save()
     #     return user
 
-    # Encrypts password with create_user=Django default create user method
+    # Encrypts password with create_user=Django default create user method 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
@@ -79,6 +79,13 @@ class UserMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMembership
         fields = ('user', 'stripe_customer_id', 'membership',)
+
+
+# class PaymentSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model =
+
+
 
 
 # May not need these?

@@ -8,26 +8,23 @@ class CheckoutForm extends React.Component {
     this.submit = this.submit.bind(this);
   }
 
-handlePurchase = e => {
-    e.preventDefault();
-    const { token } = await this.props.stripe.createToken({name: "Name"});
-    console.log(token);
+  async submit(ev) {
+    let { token } = await this.props.stripe.createToken({ name: "Name" });
     let response = await fetch("/charge", {
-    method: "POST",
-    headers: {"Content-Type": "text/plain"},
-    body: token.id
-  });
-    axios.post(`${process.env.REACT_APP_API}/charge`)
+      method: "POST",
+      headers: { "Content-Type": "text/plain" },
+      body: token.id
+    });
 
-  if (response.ok) console.log("Purchase Complete!")
-}
+    if (response.ok) console.log("Purchase Complete!")
+  }
 
   render() {
     return (
       <div className="checkout">
         <p>Would you like to complete the purchase?</p>
         <CardElement />
-        <button onClick={this.handlePurchase}>Send</button>
+        <button onClick={this.submit}>Send</button>
       </div>
     );
   }
