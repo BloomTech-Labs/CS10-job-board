@@ -37,7 +37,7 @@ class Billing extends React.Component {
             //         <button onClick={this.handleBuy}>Buy Now</button>
             //     </form> */}
             
-                <StripeProvider apiKey={`${process.env.STRIPE_PUBLISHABLE_KEY}`}>
+                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`}>
                     <div className="checkout-card">
                         <h1>Free</h1>
                         <Elements>
@@ -45,7 +45,7 @@ class Billing extends React.Component {
                         </Elements>
                     </div>
                 </StripeProvider>
-                <StripeProvider apiKey={`${process.env.STRIPE_PUBLISHABLE_KEY}`}>
+                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`}>
                     <div className="checkout-card">
                         <h1>1 Job</h1>
                         <Elements>
@@ -53,7 +53,7 @@ class Billing extends React.Component {
                         </Elements>
                     </div>
                 </StripeProvider>
-                <StripeProvider apiKey={`${process.env.STRIPE_PUBLISHABLE_KEY}`}>
+                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`}>
                     <div className="checkout-card">
                         <h1>12 Jobs</h1>
                         <Elements>
@@ -61,7 +61,7 @@ class Billing extends React.Component {
                         </Elements>
                     </div>
                 </StripeProvider>
-                <StripeProvider apiKey={`${process.env.STRIPE_PUBLISHABLE_KEY}`}>
+                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`}>
                     <div className="checkout-card">
                         <h1>Unlimited</h1>
                         <Elements>
