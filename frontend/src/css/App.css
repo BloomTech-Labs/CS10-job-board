@@ -73,6 +73,8 @@ button:hover {
 }
 
 .App .company-register-link > a {
+  display: flex;
+  justify-content: space-between;
   margin: 15px 30px;
 }
 
@@ -126,6 +128,23 @@ button:hover {
 
 .message {
   position: absolute;
+}
+
+.App .logged-out-heading {
+  display: flex;
+  flex-direction: row;
+}
+.App .logged-out-heading h1 {
+  padding-right: 150px;
+  color: #665CBF;
+  font-size: 4.8rem;
+  text-shadow: 2px 2px 4px#FFFFFF;
+}
+.App .logged-out-heading h2 {
+  margin-top: 20px;
+  padding-right: 600px;
+  color: black;
+  text-shadow: 2px 2px 4px rgba(96,76,176);
 }
 
 /* .tooltip {

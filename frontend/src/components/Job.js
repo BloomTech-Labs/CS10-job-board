@@ -20,9 +20,7 @@ class Job extends React.Component {
     }
 
     fetchJob = () => {
-        const token = localStorage.getItem('token');
-        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        axios.get(`${process.env.REACT_APP_API}${this.props.history.location.pathname}`, requestOptions)
+        axios.get(`${process.env.REACT_APP_API_JOB}`)
             .then(response => {
                 this.setState({ job: response.data });
             })

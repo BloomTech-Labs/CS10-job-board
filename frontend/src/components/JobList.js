@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import { Alert, Icon } from "antd";
+import { Button, Alert, Icon } from "antd";
 import { Link, withRouter } from "react-router-dom";
 import { JobPreview } from "./";
 import '../css/JobList.css'
@@ -25,9 +25,7 @@ class JobList extends React.Component {
 
     fetchJobs = () => {
         this.setState({ loading: true });
-        const token = localStorage.getItem('token');
-        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        axios.get(`${process.env.REACT_APP_API}${this.props.history.location.pathname}`, requestOptions)
+        axios.get(`${process.env.REACT_APP_API}`)
             .then(response => {
                 // setJobs is inherited from App.js
                 this.props.setJobs(response.data);
@@ -50,9 +48,9 @@ class JobList extends React.Component {
                    ) : (null)}
                 {jobs ? (
                     <div className="jobs-list">
-                        <button onClick={this.fetchJobs}>
+                        <Button type="primary" onClick={this.fetchJobs}>
                             <Icon type="sync" spin={loading}/>
-                        </button>
+                        </Button>
                             {jobs.map(job => {
                             return (
                                 <Link key={job.id} to={`/jobs/${job.id}`}>

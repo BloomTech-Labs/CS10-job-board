@@ -1,0 +1,38 @@
+.company-landing {
+    /* margin: 0 auto; */
+    display: flex;
+    width: 100%;
+    height: 100%;
+    max-width: 1200px;
+    /* background-image: url("../assets/hero.svg");
+    background-repeat: no-repeat; */
+}
+
+.company-landing div:first-child > h1 {
+    position: absolute;
+    margin-top: -262px;
+    color: #665CBF;
+    font-size: 4.8rem;
+}
+
+.company-landing div:first-child > h2 {
+    position: absolute;
+    margin-top: -70px;
+}
+
+.company-landing form {
+    margin: 150px 0;
+    background: white;
+    width: 400px;
+    max-width: 600px;
+    padding: 10px;
+
+}
+
+.company-landing form input {
+    padding: 20px 0;
+}
+
+.company-landing Button {
+    width: 36%;
+}
