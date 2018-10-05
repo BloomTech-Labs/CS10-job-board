@@ -8,9 +8,11 @@ export { default as CompanyRegister } from "./auth/CompanyRegister.js";
 export { default as Navigation } from "./utility/Navigation.js";
 export { default as NoMatch } from "./utility/NoMatch.js";
 export { default as Search } from "./utility/Search.js";
+// Billing
+export { default as Billing } from "./billing/Billing.js";
+export { default as CheckoutForm } from "./billing/CheckoutForm.js";
 // root
 export { default as Account } from "./Account.js";
-export { default as Billing } from "./Billing.js";
 export { default as Dashboard } from "./Dashboard.js";
 export { default as Job } from "./Job.js";
 export { default as JobList } from "./JobList.js";
@@ -21,3 +23,4 @@ export { default as JobPost } from "./JobPost.js";
 export { default as TagCreate } from "./TagCreate.js";
 export { default as EmployerProfile } from "./EmployerProfile";
 export { default as Avatar } from "./Avatar";
+
