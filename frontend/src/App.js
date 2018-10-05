@@ -116,7 +116,7 @@ class App extends React.Component {
               ) : (
               <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
             )}
-            {/* <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} /> */}
+            <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} />
             <Route path="/dashboard" component={Dashboard} />
             <Route component={NoMatch} />
           </Switch>
