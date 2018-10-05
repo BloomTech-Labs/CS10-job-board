@@ -115,7 +115,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 default_company = 1
 
 class JobPost(models.Model):
-    # company = models.ForeignKey('jobs.User', on_delete=models.CASCADE, default=default_company)
     company_name = models.CharField(max_length=128, blank=True)
     title = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
@@ -134,6 +133,7 @@ class JobPost(models.Model):
     def __str__(self):
         return self.title
 
+    @property
     def publish(self):
         self.published_date = timezone.now()
         self.save()
@@ -161,6 +161,7 @@ class UserMembership(models.Model):
 
     def __str__(self):
         return self.user.email
+
 
     # Creates a Membership instance for User
     def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
