@@ -53,6 +53,17 @@
 .ant-form label {
     font-size: 1.55rem;
 }
+.ant-btn-primary {
+    background-color: #604CB0;
+    border-color: #D8D5EA;
+    
+    
+}
+.ant-btn-primary:hover {
+    background-color: #D8D5EA;
+    border-color: #604CB0;
+    color: black;
+}
 
 /* Job Post */
 .ant-input-number {

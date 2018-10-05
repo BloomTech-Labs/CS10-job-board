@@ -1,48 +1,35 @@
 .landing-page {
-    display: flex;
     margin: 0 auto;
+    display: flex;
     width: 100%;
+    height: auto;
     max-width: 1200px;
+    /* background-image: url("../assets/hero.svg");
+    background-size: 100%;
+    background-repeat: no-repeat; */
 }
 
-.landing-page > div:first-child {
-    flex-grow: 2;
-    display: flex;
-    position: relative;
-    flex-flow: column wrap;
-    justify-content: center;
-    align-items: center;
+.hero-div {
+    width: 1000px;
+    background-image: url("../assets/hero.svg");
+    background-size: 100%;
+    background-repeat: no-repeat;
 }
 
 .landing-page div:first-child > h1 {
     position: absolute;
-    margin-top: -262px;
+    margin-left: 150px;
     color: #665CBF;
     font-size: 4.8rem;
+    text-shadow: 2px 2px 4px#FFFFFF;
 }
 
 .landing-page div:first-child > h2 {
+    color: black;
     position: absolute;
-    margin-top: -70px;
-}
-
-.landing-page > div:nth-child(2) {
-    flex-grow: 3;
-    display: flex;
-    flex-flow: column wrap;
-    justify-content: center;
-    align-items: center;
-}
-
-.landing-page img {
-    width: 100%;
-    max-width: 660px;
-}
-
-.landing-page form {
-    background: white;
-    max-width: 300px;
-    padding: 10px;
+    margin-top: 150px;
+    margin-left: 150px;
+    text-shadow: 2px 2px 4px rgba(96,76,176);
 }
 
 .landing-page form input {
@@ -51,4 +38,9 @@
 
 .landing-page Button {
     width: 36%;
+}
+.landing-page a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }

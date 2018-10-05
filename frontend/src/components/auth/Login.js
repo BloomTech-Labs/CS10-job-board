@@ -3,6 +3,7 @@ import axios from "axios";
 import { Alert } from "antd";
 import { withRouter } from "react-router-dom";
 import { Form, Icon, Input, Button } from 'antd';
+import "../../css/Login.css";
 
 const FormItem = Form.Item;
 
@@ -44,13 +45,13 @@ class Login extends React.Component {
                 {message ? (
                     <Alert message={message} type="success" closable showIcon />
                     ) : (null)}
+                
                 <h3>Login</h3>
-
                 <FormItem>
-                    <Input type="text" name="email" prefix={<Icon type="user" />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />
+                <Input type="text" name="email" prefix={<Icon type="user" />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />
                 </FormItem>
                 <FormItem>
-                    <Input type="password" name="password" prefix={<Icon type="lock" />} value={password} autoComplete="password" placeholder="Password" onChange={this.handleChange} />
+                <Input type="password" name="password" prefix={<Icon type="lock" />} value={password} autoComplete="password" placeholder="Password" onChange={this.handleChange} />
                 </FormItem>
 
                 <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.handleSubmit}>Sign In</Button>

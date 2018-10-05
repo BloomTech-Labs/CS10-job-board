@@ -31,11 +31,11 @@ const Navigation = props => {
             <NavLink to='/dashboard'>Dashboard</NavLink>
             <div className="whitespace"></div>
             <Search />
-            {employer ? (
+            {/* {employer ? (   */}
                 <NavLink to='/addjob'><Button>Post a Job</Button></NavLink>
-                ) : (null)}
+                {/* ) : (null)} */}
             <Dropdown overlay={menu} trigger={['hover']} placement="bottomRight">
-                <a className="ant-dropdown-link" href="#">
+                <a className="ant-dropdown-link">
                   <Icon type="setting" style={{marginTop: "6px"}}/>
                 </a>
             </Dropdown>
