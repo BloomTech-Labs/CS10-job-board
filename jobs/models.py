@@ -5,6 +5,7 @@ from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db.models.signals import post_save
 from taggit.managers import TaggableManager
+from datetime import datetime
 import stripe
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -114,7 +115,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 default_company = 1
 
 class JobPost(models.Model):
-    # company = models.ForeignKey('jobs.User', on_delete=models.CASCADE, default=default_company)
     company_name = models.CharField(max_length=128, blank=True)
     title = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)
@@ -133,6 +133,7 @@ class JobPost(models.Model):
     def __str__(self):
         return self.title
 
+    @property
     def publish(self):
         self.published_date = timezone.now()
         self.save()
@@ -161,6 +162,7 @@ class UserMembership(models.Model):
     def __str__(self):
         return self.user.email
 
+
     # Creates a Membership instance for User
     def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
         if created:
@@ -177,9 +179,19 @@ class UserMembership(models.Model):
     post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
 
 class Subscription(models.Model):
-    user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
-    stripe_subscription_id = models.CharField(max_length=40)
-    active = models.BooleanField(default=True)
+	user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
+	stripe_subscription_id = models.CharField(max_length=40)
+	active = models.BooleanField(default=True)
 
-    def __str__(self):
-        return self.user_membership.user.email
+	def __str__(self):
+		return self.user_membership.user.email
+
+	@property
+	def get_created_date(self):
+		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+		return datetime.fromtimestamp(subscription.created)
+
+	@property
+	def get_next_billing_date(self):
+		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+		return datetime.fromtimestamp(subscription.current_period_end)

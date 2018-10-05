@@ -64,6 +64,8 @@ To push the latest changes to Heroku, push from a local master branch of this re
 
 ### Jobs API
 
+[Notes on models](jobs/notes/MODELS.md)
+
 - `/api/jobs` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (latest published first). It only accepts a GET request.
 - `/api/addjob` accepts a POST request to create a new Job.
 - `/api/jobs/:id` returns a specific job, and accepts PUT, and DELETE requests.
@@ -83,3 +85,8 @@ To push the latest changes to Heroku, push from a local master branch of this re
 
 `seeder.py` contains the data configuration.
 
+### Running Tests
+
+[Notes on tests goals](jobs/notes/TESTS.md)
+1. Django-pytest
+2. Enzyme

@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
+
 import os, datetime
 from decouple import config, Csv 
 import dj_database_url
@@ -51,7 +52,6 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_serializer',
     'stripe',
-    'pytest'
 ]
 
 MIDDLEWARE = [
@@ -107,10 +107,9 @@ WSGI_APPLICATION = 'jobsboard.wsgi.application'
 #     }
 # }
 
-
 DATABASES = {
-    'default': dj_database_url.config('DATABASE_URL', default='sqlite:///db.sqlite3')
-}
+        'default': dj_database_url.config('DATABASE_URL', default='sqlite:///db.sqlite3'),
+    }
 
 
 # db_from_env = dj_database_url.config(conn_max_age=500)

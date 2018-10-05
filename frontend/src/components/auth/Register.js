@@ -44,13 +44,13 @@ class Register extends React.Component {
                                 this.props.logIn(response.data);
                             })
                             .catch(err => {
-                                this.setState({ error: `Error loggin in. Please log in.`});
+                                this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
                             });
                     }, 2000);
                 })
                 .catch(err => {
 
-                    this.setState({ error: `Error processing your request. Please try again.`});
+                    this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
                 });
         }
     }

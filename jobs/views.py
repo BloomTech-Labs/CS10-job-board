@@ -21,6 +21,7 @@ from .models import User, JobPost, Membership, UserMembership, Subscription
 from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer, MembershipSerializer
 import stripe
 
+
 def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
 
@@ -49,6 +50,7 @@ class UserLogoutAllView(views.APIView):
     ]
     permission_classes = [permissions.IsAuthenticated]
     # Resets the jwt_secret, invalidating all token issued
+
     def post(self, request, *args, **kwargs):
         user = request.user
         user.jwt_secret = uuid.uuid4()
@@ -100,22 +102,26 @@ def get_user_membership(request):
         return user_membership_qs.first()
     return None
 
+
 def get_user_subscription(request):
-    user_subscription_qs = Subscription.objects.filter(user_membership=get_user_membership(request))
+    user_subscription_qs = Subscription.objects.filter(
+        user_membership=get_user_membership(request))
     if user_subscription_qs.exists():
         user_subscription = user_subscription_qs.first()
         return user_subscription
     return None
 
+
 def get_selected_membership(request):
 	membership_type = request.session['selected_membership_type']
 	selected_membership_qs = Membership.objects.filter(
-				membership_type=membership_type)
+            membership_type=membership_type)
 	if selected_membership_qs.exists():
 		return selected_membership_qs.first()
 	return None
-  
-# for selecting a paid membership 
+
+
+# for selecting a paid membership
 class MembershipSelectView(generics.ListAPIView):
     model = Membership
     queryset = Membership.objects.all()
@@ -132,15 +138,16 @@ class MembershipSelectView(generics.ListAPIView):
         current_membership = get_user_membership(self.request)
         context['current_membership'] = str(current_membership.membership)
         # print(context)
+
         return context
-    
+
     def post(self, request, **kwargs):
         selected_membership_type = request.POST.get('membership_type')
         user_subscription = get_user_subscription(request)
         user_membership = get_user_membership(request)
 
         selected_membership_qs = Membership.objects.filter(
-            membership_type = selected_membership_type
+            membership_type=selected_membership_type
         )
         if selected_membership_qs.exists():
             selected_membership = selected_membership_qs.first()
@@ -152,20 +159,22 @@ class MembershipSelectView(generics.ListAPIView):
         '''
         if user_membership.membership == selected_membership:
             if user_subscription != None:
-                messages.info(request, "You already have this membership. Your next payment is due {}".format('get this value from Stripe'))
+                messages.info(request, "You already have this membership. Your next payment is due {}".format(
+                    'get this value from Stripe'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         #assign any changes to membership type to the session
         request.session['selected_membership_type'] = selected_membership.membership_type
         return HttpResponseRedirect(reverse('memberships:payment'))
 
-
+      
 # Tokenizes purchase
 # class PaymentView(generics.CreateAPIView):
 
 # 	user_membership = get_user_membership(request)
 # 	selected_membership = get_selected_membership(request)
 # 	publishKey = settings.STRIPE_PUBLISHABLE_KEY
+
 
 # 	if request.method == "POST":
 # 		try:
