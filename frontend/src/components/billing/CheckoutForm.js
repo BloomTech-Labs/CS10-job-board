@@ -1,11 +1,19 @@
 import React from 'react';
 import axios from "axios";
 import {CardElement, injectStripe} from 'react-stripe-elements';
+import "../../css/CheckoutForm.css";
 
 class CheckoutForm extends React.Component {
   constructor(props) {
     super(props);
     this.submit = this.submit.bind(this);
+    this.state = {
+      pay: false
+    }
+  }
+
+  showStripeCheckout = () => {
+    this.setState({ pay: true });
   }
 
   async submit(ev) {
@@ -20,11 +28,16 @@ class CheckoutForm extends React.Component {
   }
 
   render() {
+    const { pay } = this.state;
     return (
-      <div className="checkout">
+      <div className="checkout-form">
         <p>Would you like to complete the purchase?</p>
         <CardElement />
-        <button onClick={this.submit}>Send</button>
+        {pay ? (
+          <button onClick={this.submit}>Pay</button>
+        ) : (
+          <button onClick={this.showStripeCheckout}>Purchase</button>
+        )}
       </div>
     );
   }
