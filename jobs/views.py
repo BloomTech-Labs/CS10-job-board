@@ -132,6 +132,7 @@ class MembershipSelectView(generics.ListAPIView):
         current_membership = get_user_membership(self.request)
         context['current_membership'] = str(current_membership.membership)
         # print(context)
+
         return context
     
     def post(self, request, **kwargs):
@@ -158,6 +159,7 @@ class MembershipSelectView(generics.ListAPIView):
         #assign any changes to membership type to the session
         request.session['selected_membership_type'] = selected_membership.membership_type
         return HttpResponseRedirect(reverse('memberships:payment'))
+
 
 
 # Tokenizes purchase
