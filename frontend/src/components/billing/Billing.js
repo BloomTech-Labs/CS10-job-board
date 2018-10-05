@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
-import '../css/Billing.css';
+import { Elements, StripeProvider} from "react-stripe-elements";
+import { CheckoutForm } from "../";
+import '../../css/Billing.css';
 
 class Billing extends React.Component {
     constructor(props) {
@@ -14,12 +16,9 @@ class Billing extends React.Component {
         //axios call to mount user data
     }
 
-    handleBuy = e => {
-        e.preventDefault();
-        // Stripe integration
-    }
-
     render() {
+
+        // // Checkout forms
         return (
 
             // <h3>Select a membership</h3>
@@ -60,6 +59,16 @@ class Billing extends React.Component {
                     </div>
                     <button onClick={this.handleBuy}>Buy Now</button>
                 </form>
+
+                {/* Stripe */}
+                <StripeProvider apiKey={`${process.env.STRIPE_SECRET_KEY}`}>
+                    <div className="checkout-form">
+                    <h1>Example Form</h1>
+                        <Element>
+                            <MyStoreCheckout />
+                        </Element>
+                    </div>
+                </StripeProvider>
             </div>
         );
     }
