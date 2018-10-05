@@ -1,17 +1,19 @@
 .billing {
     display: flex;
-    flex-flow: column wrap;
     width: 100%;
 }
 
 .billing div {
     display: flex;
-    width: unset;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
-    align-items: baseline;
 }
 
-.billing div * {
-    width: unset;
+.billing .checkout-card {
+    display: flex;
+    flex-flow: column wrap;
+    width: 25%;
+    background: white;
+    margin: 10px;
+    border-radius: 4px;
+    padding: 20px;
+    max-height: 400px;
 }
