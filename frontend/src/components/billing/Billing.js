@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
-import { Element, StripeProvider} from "react-stripe-elements";
-import { CheckoutForm } from "../";
+import { Elements, StripeProvider} from "react-stripe-elements";
+import {CheckoutForm} from "../";
 import '../../css/Billing.css';
 
 class Billing extends React.Component {
@@ -18,10 +18,9 @@ class Billing extends React.Component {
     // }
 
     render() {
-        console.log(process.env.STRIPE_PUBLISHABLE_KEY);
         return (
-            // <div className="billing">
-            //     <h3>Payment Info</h3>
+            <div className="billing">
+            {/* //     <h3>Payment Info</h3>
             //     <form>
             //         <div>
             //             <label htmlFor="">Unlimited Jobs, 1 Month $199.99</label>
@@ -36,18 +35,41 @@ class Billing extends React.Component {
             //             <input type="checkbox"/>
             //         </div>
             //         <button onClick={this.handleBuy}>Buy Now</button>
-            //     </form>
-
-                {/* Stripe */}
-                <StripeProvider apiKey={"pk_test_rm3iz66aQPSU1pyinUtegUSA"}>
-                    <div className="checkout-form">
-                        {/* <h1>Example Form</h1> */}
-                        <Element>
+            //     </form> */}
+            
+                <StripeProvider apiKey={`${process.env.STRIPE_PUBLISHABLE_KEY}`}>
+                    <div className="checkout-card">
+                        <h1>Free</h1>
+                        <Elements>
                             <CheckoutForm />
-                        </Element>
+                        </Elements>
                     </div>
                 </StripeProvider>
-            // </div>
+                <StripeProvider apiKey={`${process.env.STRIPE_PUBLISHABLE_KEY}`}>
+                    <div className="checkout-card">
+                        <h1>1 Job</h1>
+                        <Elements>
+                            <CheckoutForm />
+                        </Elements>
+                    </div>
+                </StripeProvider>
+                <StripeProvider apiKey={`${process.env.STRIPE_PUBLISHABLE_KEY}`}>
+                    <div className="checkout-card">
+                        <h1>12 Jobs</h1>
+                        <Elements>
+                            <CheckoutForm />
+                        </Elements>
+                    </div>
+                </StripeProvider>
+                <StripeProvider apiKey={`${process.env.STRIPE_PUBLISHABLE_KEY}`}>
+                    <div className="checkout-card">
+                        <h1>Unlimited</h1>
+                        <Elements>
+                            <CheckoutForm />
+                        </Elements>
+                    </div>
+                </StripeProvider>
+            </div>
         );
     }
 }
