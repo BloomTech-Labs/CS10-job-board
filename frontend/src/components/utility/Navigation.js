@@ -20,7 +20,7 @@ const Navigation = props => {
             <Menu.Divider />
             <Menu.Item key="3">
                 <Icon type="poweroff"/>
-                <NavLink to='/' onClick={props.logOut}>Logout</NavLink>
+                <NavLink to='/signin' onClick={(e) => props.logOut(e)}>Logout</NavLink>
             </Menu.Item>
         </Menu>
         );
@@ -31,12 +31,12 @@ const Navigation = props => {
             <NavLink to='/dashboard'>Dashboard</NavLink>
             <div className="whitespace"></div>
             <Search />
-            {/* {employer ? (   */}
-                <NavLink to='/addjob'><Button>Post a Job</Button></NavLink>
-                {/* ) : (null)} */}
+            {employer ? (  
+                <NavLink to='/addjob'><Button type="secondary">Post a Job</Button></NavLink>
+                ) : (null)}
             <Dropdown overlay={menu} trigger={['hover']} placement="bottomRight">
                 <a className="ant-dropdown-link">
-                  <Icon type="setting" style={{marginTop: "6px"}}/>
+                  <Icon type="setting" />
                 </a>
             </Dropdown>
         </div>
