@@ -39,14 +39,7 @@ class CompanyRegister extends React.Component {
                 .then(response => {
                     this.setState({ message: `Account Created! Redirecting... `});
                     setTimeout(() => {                        
-                        axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email, password })
-                            .then(response => {
-                                localStorage.setItem('token', response.data.token);
-                                this.props.logIn(response.data);
-                            })
-                            .catch(err => {
-                                this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
-                            });
+                        this.props.logIn(response.data);
                     }, 2000);
                 })
                 .catch(err => {
