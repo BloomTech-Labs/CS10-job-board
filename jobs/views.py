@@ -16,9 +16,16 @@ from rest_framework.response import Response
 # JWT
 import rest_framework_jwt.authentication
 # Models
-from .models import User, JobPost, Membership, UserMembership, Subscription
+from .models import User, JobPost, Membership, UserMembership, Subscription, Payment
 # Serializers
-from .api import JobPostSerializer, JobPreviewSerializer, UserSerializer, UserRegistrationSerializer, MembershipSerializer
+from .api import (
+    JobPostSerializer,
+    JobPreviewSerializer,
+    UserSerializer,
+    UserRegistrationSerializer,
+    MembershipSerializer,
+    PaymentViewSerializer
+    )
 import stripe
 
 
@@ -167,7 +174,18 @@ class MembershipSelectView(generics.ListAPIView):
         request.session['selected_membership_type'] = selected_membership.membership_type
         return HttpResponseRedirect(reverse('memberships:payment'))
 
-      
+
+class PaymentView(generics.CreateAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentViewSerializer
+    authentication_classes = [
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    ]
+    permission_classes = [permissions.IsAuthenticated]
+
+    
 # Tokenizes purchase
 # class PaymentView(generics.CreateAPIView):
 
