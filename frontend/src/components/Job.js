@@ -20,7 +20,7 @@ class Job extends React.Component {
     }
 
     fetchJob = id => {
-        axios.get(`${process.env.REACT_APP_API}/jobs/${id}`)
+        axios.get(`${process.env.REACT_APP_API}/jobs/${id}/`)
             .then(response => {
                 this.setState({ job: response.data });
             })
