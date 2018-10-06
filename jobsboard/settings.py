@@ -166,6 +166,9 @@ REST_FRAMEWORK = {
     ),
 }
 
+# API slash addition settings: False means it will not add an extra /
+APPEND_SLASH = False
+
 # Default JWT response handler
 JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'jobs.views.jwt_response_handler',
