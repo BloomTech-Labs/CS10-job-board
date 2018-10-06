@@ -1,12 +1,12 @@
 import React from 'react';
 import axios from "axios";
-import {CardElement, injectStripe} from 'react-stripe-elements';
+import { Alert } from "antd";
+import { CardElement, injectStripe } from 'react-stripe-elements';
 import "../../css/CheckoutForm.css";
 
 class CheckoutForm extends React.Component {
   constructor(props) {
     super(props);
-    this.submit = this.submit.bind(this);
     this.state = {
       pay: false
     }
@@ -16,28 +16,42 @@ class CheckoutForm extends React.Component {
     this.setState({ pay: true });
   }
 
-  async submit(ev) {
-    let { token } = await this.props.stripe.createToken({ name: "Name" });
-    let response = await fetch("/charge", {
-      method: "POST",
-      headers: { "Content-Type": "text/plain" },
-      body: token.id
-    });
-
-    if (response.ok) console.log("Purchase Complete!")
+  handlePayment = e => {
+    e.preventDefault();
+    this.setState({ error: null, message: null });
+    // Tokenize purchase with stripe object from injectStripe component
+    this.props.stripe.createToken({ name: "Name" })
+      .then(response => {
+        // console.log(response);
+        const stripe_token = response.token.id;
+        const token = localStorage.getItem('token');
+        // console.log(token, this.props.token);
+        // compare token to token set in App.js when user logged in.
+        if (token !== this.props.token) {
+          this.props.logOut(e, `Error authenticating account. Please log in again.`);
+        } else {
+          const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+          axios.post(`${process.env.REACT_APP_API}/pay`, stripe_token, requestOptions )
+            .then(response => {
+              this.props.handleMessage({ message: `Payment successful!`});
+            })
+            .catch(err => {
+              this.props.handleMessage({ error: `Problem processing your payment. Try again.`});
+            });
+        }
+      })
+      .catch(err => {
+        this.props.handleMessage({ error: `Problem processing your payment. Try again.`})
+      });
   }
 
   render() {
-    const { pay } = this.state;
+    const { error, message, pay } = this.state;
     return (
       <div className="checkout-form">
         <p>Would you like to complete the purchase?</p>
         <CardElement />
-        {pay ? (
-          <button onClick={this.submit}>Pay</button>
-        ) : (
-          <button onClick={this.showStripeCheckout}>Purchase</button>
-        )}
+        <button onClick={this.handlePayment}>Buy</button>
       </div>
     );
   }
