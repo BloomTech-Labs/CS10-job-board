@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-// import hero from "./assets/hero.svg";
 import { Route, Switch, withRouter, NavLink } from "react-router-dom";
 // Do not change the order of imports on lines 6 - 8 to preserve styling specificty
 import './css/AntDesignOverride.css';
