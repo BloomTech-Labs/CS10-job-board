@@ -17,6 +17,10 @@ class JobList extends React.Component {
     componentDidMount() {
         // Prevents calling a GET request every time component is rendered
         // jobs is inherited from App.js
+        const location = this.props.history.location;
+        if (location !== '/' && location !== '/jobs') {
+            this.props.history.push('/');
+        }
         if (!this.props.jobs) {
             this.fetchJobs();
         }
