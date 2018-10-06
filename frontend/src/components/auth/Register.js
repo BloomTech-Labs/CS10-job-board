@@ -37,15 +37,8 @@ class Register extends React.Component {
             axios.post(`${process.env.REACT_APP_REGISTER_API}`, this.state)
                 .then(response => {
                     this.setState({ message: `Account Created! Redirecting... `});
-                    setTimeout(() => {                        
-                        axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email, password })
-                            .then(response => {
-                                localStorage.setItem('token', response.data.token);
-                                this.props.logIn(response.data);
-                            })
-                            .catch(err => {
-                                this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
-                            });
+                    setTimeout(() => {
+                        this.props.logIn(response.data);
                     }, 2000);
                 })
                 .catch(err => {
