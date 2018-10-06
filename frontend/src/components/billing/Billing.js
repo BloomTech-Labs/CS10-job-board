@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+import { Alert } from "antd";
 import { withRouter } from "react-router-dom";
 import { Elements, StripeProvider} from "react-stripe-elements";
 import {CheckoutForm} from "../";
@@ -9,66 +9,79 @@ class Billing extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            id: null
+            id: null,
+            error: null,
+            message: null
         }
     }
 
     // componentDidMount() {
-    //     //axios call to mount user data
+    //     //axios call to mount producst from stripe?
     // }
+    handleMessage = keyPair => {
+        this.setState({ keyPair });
+    }
 
     render() {
+        const { error, message } = this.state;
         return (
             <div className="billing">
-            {/* //     <h3>Payment Info</h3>
-            //     <form>
-            //         <div>
-            //             <label htmlFor="">Unlimited Jobs, 1 Month $199.99</label>
-            //             <input type="checkbox"/>
-            //         </div>
-            //         <div>
-            //             <label htmlFor="">Post 12 Jobs, $99.99</label>
-            //             <input type="checkbox"/>
-            //         </div>
-            //         <div>
-            //             <label htmlFor="">Post Job, $9.99</label>
-            //             <input type="checkbox"/>
-            //         </div>
-            //         <button onClick={this.handleBuy}>Buy Now</button>
-            //     </form> */}
+                {error ? (
+                  <Alert message={error} type="error" closable showIcon />
+                  ) : (null)}
+                {message ? (
+                  <Alert message={message} type="success" closable showIcon />
+                ) : (null)}
             
-                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`}>
+                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_KEY}`}>
                     <div className="checkout-card">
                         <h1>Free</h1>
                         <Elements>
-                            <CheckoutForm />
+                            <CheckoutForm 
+                                token={this.props.token}
+                                logOut={this.props.logOut} 
+                                handleMessage={this.handleMessage}
+                            />
                         </Elements>
                     </div>
                 </StripeProvider>
-                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`}>
+                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_KEY}`}>
                     <div className="checkout-card">
                         <h1>1 Job</h1>
                         <Elements>
-                            <CheckoutForm />
+                            <CheckoutForm 
+                                token={this.props.token}
+                                logOut={this.props.logOut} 
+                                handleMessage={this.handleMessage}
+                            />
                         </Elements>
                     </div>
                 </StripeProvider>
-                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`}>
+                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_KEY}`}>
                     <div className="checkout-card">
                         <h1>12 Jobs</h1>
                         <Elements>
-                            <CheckoutForm />
+                            <CheckoutForm 
+                                token={this.props.token}
+                                logOut={this.props.logOut} 
+                                handleMessage={this.handleMessage}
+                            />
                         </Elements>
                     </div>
                 </StripeProvider>
-                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY}`}>
+                <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_KEY}`}>
                     <div className="checkout-card">
                         <h1>Unlimited</h1>
                         <Elements>
-                            <CheckoutForm />
+                            <CheckoutForm 
+                                token={this.props.token}
+                                logOut={this.props.logOut} 
+                                handleMessage={this.handleMessage}
+                            />
                         </Elements>
                     </div>
                 </StripeProvider>
+
             </div>
         );
     }
