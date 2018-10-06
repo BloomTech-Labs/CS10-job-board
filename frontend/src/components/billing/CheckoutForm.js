@@ -8,7 +8,9 @@ class CheckoutForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      pay: false
+      pay: false,
+      error: null,
+      message: null
     }
   }
 
@@ -31,17 +33,17 @@ class CheckoutForm extends React.Component {
           this.props.logOut(e, `Error authenticating account. Please log in again.`);
         } else {
           const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-          axios.post(`${process.env.REACT_APP_API}/pay`, stripe_token, requestOptions )
+          axios.post(`${process.env.REACT_APP_API}/pay/`, stripe_token, requestOptions )
             .then(response => {
-              this.props.handleMessage({ message: `Payment successful!`});
+              this.setState({ message: `Payment successful!`});
             })
             .catch(err => {
-              this.props.handleMessage({ error: `Problem processing your payment. Try again.`});
+              this.setState({ error: `Problem processing your payment. Try again.`});
             });
         }
       })
       .catch(err => {
-        this.props.handleMessage({ error: `Problem processing your payment. Try again.`})
+        this.setState({ error: `Problem processing your payment. Try again.`})
       });
   }
 
@@ -49,6 +51,12 @@ class CheckoutForm extends React.Component {
     const { error, message, pay } = this.state;
     return (
       <div className="checkout-form">
+        {error ? (
+          <Alert message={error} type="error" closable showIcon banner/>
+          ) : (null)}
+        {message ? (
+          <Alert message={message} type="success" closable showIcon banner/>
+        ) : (null)}
         <p>Would you like to complete the purchase?</p>
         <CardElement />
         <button onClick={this.handlePayment}>Buy</button>
