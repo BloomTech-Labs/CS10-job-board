@@ -11,8 +11,8 @@ class Login extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            email: '',
-            password: '',
+            email: 'test@test.com',
+            password: 'TESTACCOUNT',
             message: null,
             error: null
         }
@@ -27,7 +27,6 @@ class Login extends React.Component {
         axios.post(`${process.env.REACT_APP_LOGIN_API}`, this.state)
             .then(response => {
                 this.setState({ error: null });
-                localStorage.setItem('token', response.data.token);
                 this.props.logIn(response.data);
             })
             .catch(err => {
