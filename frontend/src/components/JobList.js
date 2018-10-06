@@ -29,7 +29,7 @@ class JobList extends React.Component {
 
     fetchJobs = () => {
         this.setState({ loading: true });
-        axios.get(`${process.env.REACT_APP_API}/jobs`)
+        axios.get(`${process.env.REACT_APP_API}/jobs/`)
             .then(response => {
                 // setJobs is inherited from App.js
                 this.props.setJobs(response.data);
