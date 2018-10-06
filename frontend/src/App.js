@@ -106,12 +106,12 @@ class App extends React.Component {
         ) : (null)}
 
         {loggedIn ? (
-          <div>
+          <div className="nav-wrapper">
             <Navigation logOut={this.logOut} employer={employer}/>
           </div>
         ) : (
             // Navigation for unauthenticated users
-            <div>
+            <div className="nav-wrapper">
 
               {home ? (
                 <div className="home-navigation">
