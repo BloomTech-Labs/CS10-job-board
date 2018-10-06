@@ -3,10 +3,6 @@
     width: 100%;
 }
 
-.billing div {
-    display: flex;
-}
-
 .billing .checkout-card {
     display: flex;
     flex-flow: column wrap;
