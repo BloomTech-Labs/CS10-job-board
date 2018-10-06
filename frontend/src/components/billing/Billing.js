@@ -18,20 +18,14 @@ class Billing extends React.Component {
     // componentDidMount() {
     //     //axios call to mount producst from stripe?
     // }
-    handleMessage = keyPair => {
-        this.setState({ keyPair });
-    }
+    // handleMessage = keyPair => {
+    //     this.setState(keyPair);
+    // }
 
     render() {
         const { error, message } = this.state;
         return (
             <div className="billing">
-                {error ? (
-                  <Alert message={error} type="error" closable showIcon />
-                  ) : (null)}
-                {message ? (
-                  <Alert message={message} type="success" closable showIcon />
-                ) : (null)}
             
                 <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_KEY}`}>
                     <div className="checkout-card">
@@ -40,7 +34,7 @@ class Billing extends React.Component {
                             <CheckoutForm 
                                 token={this.props.token}
                                 logOut={this.props.logOut} 
-                                handleMessage={this.handleMessage}
+                                // handleMessage={this.handleMessage}
                             />
                         </Elements>
                     </div>
@@ -52,7 +46,7 @@ class Billing extends React.Component {
                             <CheckoutForm 
                                 token={this.props.token}
                                 logOut={this.props.logOut} 
-                                handleMessage={this.handleMessage}
+                                // handleMessage={this.handleMessage}
                             />
                         </Elements>
                     </div>
@@ -64,7 +58,7 @@ class Billing extends React.Component {
                             <CheckoutForm 
                                 token={this.props.token}
                                 logOut={this.props.logOut} 
-                                handleMessage={this.handleMessage}
+                                // handleMessage={this.handleMessage}
                             />
                         </Elements>
                     </div>
@@ -76,7 +70,7 @@ class Billing extends React.Component {
                             <CheckoutForm 
                                 token={this.props.token}
                                 logOut={this.props.logOut} 
-                                handleMessage={this.handleMessage}
+                                // handleMessage={this.handleMessage}
                             />
                         </Elements>
                     </div>
