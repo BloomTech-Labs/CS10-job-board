@@ -156,8 +156,8 @@ class Membership(models.Model):
 class UserMembership(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stripe_customer_id = models.CharField(max_length=40)
-    # membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, null=True)
-    stripe_product_id = models.CharField(max_length=40)
+    membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, null=True)
+    # stripe_product_id = models.CharField(max_length=40)
 
     def __str__(self):
         return self.user.email
@@ -177,6 +177,12 @@ class UserMembership(models.Model):
             user_membership.save()
     
     post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
+
+
+class Payment(models.Model):
+    # user = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
+    stripe_token = models.CharField(max_length=2000, blank=True)
+
 
 class Subscription(models.Model):
 	user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
