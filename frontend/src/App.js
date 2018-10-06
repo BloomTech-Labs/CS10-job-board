@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 // import hero from "./assets/hero.svg";
 import { Route, Switch, withRouter, NavLink } from "react-router-dom";
-// Do not change the order of lines 4 - 6 to preserve styling logic
+// Do not change the order of imports on lines 6 - 8 to preserve styling specificty
 import './css/AntDesignOverride.css';
 import './css/App.css';
 import { Account,
@@ -23,7 +23,6 @@ class App extends React.Component {
     super(props)
     this.state = {
       loggedIn: false,
-      loggedOut: true,
       error: null,
       message: null,
       token: null,
@@ -49,7 +48,7 @@ class App extends React.Component {
     else {
       let path = this.props.history.location.pathname;
       this.props.history.push('/');
-      if (path !== '/') {
+      if (path !== '/' && path !== '/signin' && path !== '/company') {
         this.setState({ error: `Please log in or register.`});
       }
     }
@@ -58,12 +57,12 @@ class App extends React.Component {
   logIn = data => {
     this.setState({ 
       loggedIn: true,
-      loggedOut: false,
       error: null,
       message: null,
       token: data.token,
       employer: data.user.is_employer
     });
+    localStorage.setItem('token', data.token);
     // Redirect based on user type
     if (data.user.is_employer) {
       this.props.history.push('/dashboard');
@@ -72,10 +71,17 @@ class App extends React.Component {
     }
   }
 
-  logOut = () => {
+  logOut = (e, error) => {
     localStorage.removeItem('token');
-    this.setState({ loggedOut: true, loggedIn: false, token: null, error: null, message: null, jobs: null });
-    this.props.history.push('/');
+    this.setState({ 
+      loggedIn: false,
+      // loggedOut: true,
+      jobs: null, 
+      token: null,
+      error: error,
+      message: null
+    });
+    this.props.history.push('/signin');
   }
 
   setJobs = jobs => {
@@ -84,8 +90,11 @@ class App extends React.Component {
 
   render() {
     const { loggedIn, error, message, token, jobs, employer } = this.state;
-    const loggedOut = this.state && this.props.location.pathname === '/';
-    const companyPage = this.props.location.pathname === '/company';
+    let location = this.props.history.location.pathname;
+    const home = location === '/';
+    const company = location === '/company';
+    const signin = location === '/signin';
+
     return (
       <div className="App">
 
@@ -97,17 +106,46 @@ class App extends React.Component {
         ) : (null)}
 
         {loggedIn ? (
+          <div>
             <Navigation logOut={this.logOut} employer={employer}/>
-          ) : (
-            // Hides Post a Job button if not on '/'
+          </div>
+        ) : (
+            // Navigation for unauthenticated users
             <div>
-            </div>)}
-            <div className="company-register-link">
-            {loggedOut ? (<div className="logged-out-heading"><h1>Open Jobs</h1><h2>No Degree, No Problem.<br/>Your next job is just a click away.</h2></div>):(null)}
-            {loggedOut ? (<NavLink to='/signin'><Button type="primary">Sign In</Button></NavLink>):(null)}
-            {loggedOut ? (<NavLink to='/company'><Button type="primary">Post a Job</Button></NavLink>):(null)}
-            {companyPage ? (<NavLink to='/'><Button type="primary">Job Seeker</Button></NavLink>):(null)}
+
+              {home ? (
+                <div className="home-navigation">
+                  <div>
+                    <h1>Open Jobs</h1>
+                    <h3>No Degree, No Problem.<br/>Your next job is just a click away.</h3>
+                    <div className="whitespace"></div>
+                    <NavLink to='/company'><Button type="secondary">Post a Job</Button></NavLink>
+                    <NavLink to='/signin'><Button type="primary">Sign In</Button></NavLink>
+                  </div>
+                </div>
+              ) : (null)}
+
+              {company ? (
+                <div className="home-navigation">
+                  <div>
+                    <div className="whitespace"></div>
+                    <NavLink to='/'><Button type="secondary">Job Seeker</Button></NavLink>
+                    <NavLink to='/signin'><Button type="primary">Sign In</Button></NavLink>
+                  </div>
+                </div>
+              ) : (null)}
+
+              {signin ? (
+                <div className="home-navigation">
+                  <div>
+                    <div className="whitespace"></div>
+                    <NavLink to='/company'><Button type="secondary">Post a Job</Button></NavLink>
+                  </div>
+                </div>
+              ) : (null)}
+
             </div>
+        )}
 
         <div className="main">
           <Switch>
@@ -115,7 +153,7 @@ class App extends React.Component {
             <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
             <Route exact path="/" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
             <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
-            <Route path="/jobs/:id" component={Job} />
+            <Route path="/jobs/:id" render={() => <Job />} />
             <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />
             {employer ? (
               <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />
