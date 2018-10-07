@@ -15,7 +15,7 @@
 .search::after {
     content: '';
     width: 184px;
-    margin-top: 15px;
+    margin-top: 14px;
     margin-left: 4px;
     height: 1px;
     background: #b9cedc;
