@@ -90,7 +90,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { loggedIn, error, message, token, jobs, employer } = this.state;
+    const { loggedIn, error, message, token, jobs, employer, user } = this.state;
     let location = this.props.history.location.pathname;
     const home = location === '/';
     const company = location === '/company';
@@ -108,7 +108,7 @@ class App extends React.Component {
 
         {loggedIn ? (
           <div className="nav-wrapper">
-            <Navigation logOut={this.logOut} employer={employer} token={token}/>
+            <Navigation logOut={this.logOut} employer={employer} token={token} user={user}/>
           </div>
         ) : (
             // Navigation for unauthenticated users
