@@ -2,7 +2,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { Menu, Dropdown, Button, Icon } from "antd";
 import "../../css/Navigation.css";
-import { Search } from "../";
+import { Search, JobPost } from "../";
 
 const Navigation = props => {
     const { employer } = props;
@@ -25,6 +25,7 @@ const Navigation = props => {
         </Menu>
         );
 
+
     return (
         <div className="nav-bar">
             <NavLink to='/jobs'>Jobs</NavLink>
@@ -32,7 +33,7 @@ const Navigation = props => {
             <div className="whitespace"></div>
             <Search />
             {employer ? (  
-                <NavLink to='/addjob'><Button type="secondary">Post a Job</Button></NavLink>
+                    <JobPost />
                 ) : (null)}
             <Dropdown overlay={menu} trigger={['hover']} placement="bottomRight">
                 <a className="ant-dropdown-link">
