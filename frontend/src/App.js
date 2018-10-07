@@ -155,7 +155,7 @@ class App extends React.Component {
             <Route path="/signin" render={() => <Landing logIn={this.logIn}/>} />
             <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
             {/* Non-Auth Routes */}
-            <Route path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
+            <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
