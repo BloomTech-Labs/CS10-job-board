@@ -11,12 +11,22 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 
 class JobPost extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       message: null,
       error: null,
-      visible: false
+      visible: false,
+      company: this.props.user,
+      company_name: null,
+      title: null,
+      description: null,
+      location: null,
+      requirements: null,
+      min_salary: null,
+      max_salary: null,
+      tags: [],
+      is_active: false
     };
   }
 
@@ -26,7 +36,7 @@ class JobPost extends React.Component {
     });
   }
 
-  handleCancel = () => {
+  hideModal = () => {
     this.setState({
       visible: false,
     });
@@ -37,16 +47,30 @@ class JobPost extends React.Component {
     this.setState({ error: null, message: null});
     // Verification
     const token = localStorage.getItem('token');
-    this.checkToken(this.props.token, token);
+    this.checkToken(e, this.props.token, token);
     if (this.state.min_salary > this.state.max_salary) {
       this.setState({ error: `Maximum Salary is less than Minimum Salary`});
     } else {
       // POST Request
       const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-      axios.post(`${process.env.REACT_APP_API}${this.props.history.location.pathname}/`, this.state, requestOptions)
+      axios.post(`${process.env.REACT_APP_API}addjob/`, this.state, requestOptions)
         .then(response => {
           // console.log(response);
-          this.setState({ message: `Job Posted!`, visible: false });
+          this.setState({ message: `Job Posted!` });
+          setTimeout(() => {
+            this.setState({ 
+              company_name: null,
+              title: null,
+              description: null,
+              location: null,
+              requirements: null,
+              min_salary: null,
+              max_salary: null,
+              tags: [],
+              is_active: false,
+              visible: false
+             });
+          }, 2500);
         })
         .catch(err => {
           // console.log(this.state, requestOptions, err);
@@ -55,9 +79,9 @@ class JobPost extends React.Component {
     }
   }
 
-  checkToken = (appToken, token) => {
+  checkToken = (e, appToken, token) => {
     if (appToken !== token) {
-      this.props.logOut();
+      this.props.logOut(e, `Problem authenticating account. Please log in again.`);
     }
   }
 
@@ -82,25 +106,18 @@ class JobPost extends React.Component {
   }
 
   render() {
-    const { error, message, is_active } = this.state;
+    const { error, message, is_active, visible } = this.state;
     return (
       <div>
         <Button type="secondary" onClick={this.showModal}>Post a Job</Button>
 
 
         <Modal title="Post A Job"
-        visible={this.state.visible}
-        onCancel={this.handleCancel}
+        visible={visible}
+        onCancel={this.hideModal}
         footer={[null, null,]} >
 
           <Form className="job-post">
-            {/* Error / Success messages */}
-            {error ? (
-              <Alert message={error} type="error" closable showIcon />
-              ) : (null)}
-            {message ? (
-              <Alert message={message} type="success" closable showIcon />
-            ) : (null)}
           
             <FormItem label="Title" >
               <Input onChange={this.onChange} type="text" name="title" placeholder="e.g. Software Engineer" required />
@@ -152,7 +169,7 @@ class JobPost extends React.Component {
               </FormItem>
               <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
             </div>
-  
+            
           </Form>
 
         </Modal>
