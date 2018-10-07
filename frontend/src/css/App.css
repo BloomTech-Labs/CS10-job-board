@@ -202,8 +202,14 @@ button:hover {
   position: absolute;
 }
 
+/* Utility classes */
+
 .whitespace {
   flex-grow: 1;
+}
+
+.flex {
+  display: flex;
 }
 
 /* CSS Boneyard */
