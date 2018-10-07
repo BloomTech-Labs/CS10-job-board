@@ -119,6 +119,10 @@ class JobPost extends React.Component {
 
           <Form className="job-post">
           
+            <FormItem label="Company Name" >
+              <Input onChange={this.onChange} type="text" name="company_name" placeholder="e.g. Google" required />
+            </FormItem>
+          
             <FormItem label="Title" >
               <Input onChange={this.onChange} type="text" name="title" placeholder="e.g. Software Engineer" required />
             </FormItem>
