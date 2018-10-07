@@ -22,18 +22,23 @@ urlpatterns = [
     # re_path(r'^delete/$', views.UserDeleteView.as_view(), name='delete'),
 
     # Using Djoser to handle registration email/password reset
-    re_path(r'^register/$', djoser_views.UserCreateView.as_view(), name='register'),
+    re_path('register/', djoser_views.UserCreateView.as_view(), name='register'),
 
     # JWT API
-    re_path(r'^login/$', jwt_views.ObtainJSONWebToken.as_view(), name='login'),
-    re_path(r'^login/refresh/$', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
-    re_path(r'^login/verify/$', jwt_views.VerifyJSONWebToken.as_view(), name='login-verify'),
+    re_path('login/', jwt_views.ObtainJSONWebToken.as_view(), name='login'),
+    # Use to refresh token on login
+    re_path('login/refresh/', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
+    # Use for account operations / billing charges
+    re_path('login/verify/', jwt_views.VerifyJSONWebToken.as_view(), name='login-verify'),
     # Use logout/all/ for password reset/sign out all sessions
-    re_path(r'^logout/all/$', views.UserLogoutAllView.as_view(), name='logout-all'),
+    re_path('logout/all/', views.UserLogoutAllView.as_view(), name='logout-all'),
 
     # Jobs API
     path('jobs/', views.ListJobPost.as_view()),
+    # Invidual job view
     path('jobs/<int:pk>/', views.DetailJobPost.as_view()),
+    # Jobs posted by a user
+    path('jobs/user/<int:pk>', views.ListJobPost.as_view()),
     path('addjob/', views.CreateJobPost.as_view()),
     # path('memberships/', (name='membership')),
 
