@@ -27,7 +27,7 @@ class App extends React.Component {
       token: null,
       jobs: null,
       employer: false,
-      clicked: false,
+      user: null
     }
   }
 
@@ -59,7 +59,8 @@ class App extends React.Component {
       error: null,
       message: null,
       token: data.token,
-      employer: data.user.is_employer
+      employer: data.user.is_employer,
+      user: data.user.email
     });
     localStorage.setItem('token', data.token);
     // Redirect based on user type
@@ -74,11 +75,12 @@ class App extends React.Component {
     localStorage.removeItem('token');
     this.setState({ 
       loggedIn: false,
-      // loggedOut: true,
-      jobs: null, 
-      token: null,
       error: error,
-      message: null
+      message: null,
+      token: null,
+      jobs: null,
+      employer: false,
+      user: null
     });
     this.props.history.push('/signin');
   }
