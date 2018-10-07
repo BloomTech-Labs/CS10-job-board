@@ -42,7 +42,8 @@ class CompanyRegister extends React.Component {
                         axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email, password })
                             .then(response => {
                                 localStorage.setItem('token', response.data.token);
-                                this.props.logIn(response.data);
+                                const registerCompany = true;
+                                this.props.logIn(response.data, registerCompany);
                             })
                             .catch(err => {
                                 this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
@@ -51,7 +52,7 @@ class CompanyRegister extends React.Component {
                 })
                 .catch(err => {
 
-                    this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
+                    this.setState({ error: `Email already exists. Please choose another.`});
                 });
         }
     }
