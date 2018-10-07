@@ -81,19 +81,22 @@ class CreateJobPost(generics.CreateAPIView):
     ]
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request):
-        if request.data['is_active'] is True:
-            # If published when created,
-            # add published_date to request data to then be serialized
-            request.data['published_date'] = timezone.now()
-            serializer_class = JobPostSerializer(data=request.data)
-            serializer_class.is_valid()
-            serializer_class.save()
-            return Response(status=status.HTTP_201_CREATED)
-        else:
-            serializer_class = JobPostSerializer(data=request.data)
-            serializer_class.save()
-            return Response(status=status.HTTP_201_CREATED)
+    # def post(self, request):
+    #     print(request.data)
+    #     # is_active = request.POST.get('is_active', False)
+    #     if request.data['is_active'] is True:
+    #         # If published when created,
+    #         # add published_date to request data to then be serialized
+    #         request.data['published_date'] = timezone.now()
+    #         serializer_class = JobPostSerializer(data=request.data)
+    #         serializer_class.is_valid()
+    #         serializer_class.save()
+    #         return Response(status=status.HTTP_201_CREATED)
+    #     else:
+    #         serializer_class = JobPostSerializer(data=request.data)
+    #         serializer_class.is_valid()
+    #         serializer_class.save()
+    #         return Response(status=status.HTTP_201_CREATED)
 
 
 class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
