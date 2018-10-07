@@ -53,7 +53,7 @@ class App extends React.Component {
     }
   }
 
-  logIn = data => {
+  logIn = (data, registerCompany) => {
     this.setState({ 
       loggedIn: true,
       error: null,
@@ -64,7 +64,10 @@ class App extends React.Component {
     });
     localStorage.setItem('token', data.token);
     // Redirect based on user type
-    if (data.user.is_employer) {
+    if (registerCompany) {
+      this.props.history.push('/account');
+      this.setState({ message: `Please complete your company profile.`});
+    } else if (data.user.is_employer) {
       this.props.history.push('/dashboard');
     } else {
       this.props.history.push('/jobs');
