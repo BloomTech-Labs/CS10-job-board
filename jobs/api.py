@@ -50,10 +50,28 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
 
+    # def create(self, validated_data):
+    #     company = self.context['request'].user
+    #     request = self.context['request']
+    #     # is_active = hasattr(request.data, 'is_active')
+    #     is_active = request.data['is_active']
+    #     print(is_active, request.data)
+
+    #     if request.data['is_active'] is True:
+    #         request.data['published_date'] = timezone.now()
+    #         print(request.data['published_date'])
+
+    #     job_post = JobPost.objects.create(
+    #         company=company,
+    #         published_date=published_date,
+    #         **validated_data
+    #     )
+    #     return job_post
+
     class Meta:
         model = JobPost
         fields = (
-            'company',
+            # 'company',
             'company_name',
             'title',
             'description',
