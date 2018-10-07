@@ -5,7 +5,7 @@ import "../../css/Navigation.css";
 import { Search, JobPost } from "../";
 
 const Navigation = props => {
-    const { employer } = props;
+    const { employer, logOut, token } = props;
     const menu = (
         <Menu>
             <Menu.Item key="0">
@@ -33,7 +33,7 @@ const Navigation = props => {
             <div className="whitespace"></div>
             <Search />
             {employer ? (  
-                    <JobPost />
+                    <JobPost logOut={logOut} token={token}/>
                 ) : (null)}
             <Dropdown overlay={menu} trigger={['hover']} placement="bottomRight">
                 <a className="ant-dropdown-link">
