@@ -3,7 +3,7 @@
     margin: 0 auto;
 }
 
-.flex  {
+.job-post .flex  {
     justify-content: space-between;
     align-items: flex-end;
 }
