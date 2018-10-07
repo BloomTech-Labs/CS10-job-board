@@ -167,7 +167,7 @@ REST_FRAMEWORK = {
 }
 
 # API slash addition settings: False means it will not add an extra /
-APPEND_SLASH = True
+APPEND_SLASH = False
 
 # Default JWT response handler
 JWT_AUTH = {
