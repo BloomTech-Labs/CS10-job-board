@@ -2,6 +2,8 @@
 # from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 # from django.core import serializers
 # from django.conf import settings, urls
+from django.utils import timezone
+
 from .models import JobPost, User, UserMembership, Membership, Payment
 from rest_framework import serializers
 from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
@@ -12,7 +14,7 @@ from taggit_serializer.serializers import (TagListSerializerField, TaggitSeriali
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'is_employer')
+        fields = ('email', 'is_employer')
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -51,7 +53,7 @@ class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = JobPost
         fields = (
-            'id',
+            'company',
             'company_name',
             'title',
             'description',
