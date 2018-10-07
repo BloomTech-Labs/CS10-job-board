@@ -106,7 +106,7 @@ class App extends React.Component {
 
         {loggedIn ? (
           <div className="nav-wrapper">
-            <Navigation logOut={this.logOut} employer={employer}/>
+            <Navigation logOut={this.logOut} employer={employer} token={token}/>
           </div>
         ) : (
             // Navigation for unauthenticated users
@@ -148,12 +148,14 @@ class App extends React.Component {
 
         <div className="main">
           <Switch>
-            <Route exact path="/signin" render={() => <Landing logIn={this.logIn}/>} />
-            <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
+            {/* Landing Pages */}
             <Route exact path="/" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
-            <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
+            <Route path="/signin" render={() => <Landing logIn={this.logIn}/>} />
+            <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
+            {/* Non-Auth Routes */}
+            <Route path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
             <Route path="/jobs/:id" render={() => <Job />} />
-            <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />
+            {/* Auth Routes */}
             {employer ? (
               <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />
               ) : (
