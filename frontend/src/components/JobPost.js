@@ -84,18 +84,17 @@ class JobPost extends React.Component {
   render() {
     const { error, message, is_active } = this.state;
     return (
-      <div className="job-post">
-        <Button type="primary" onClick={this.showModal}>
-          Post a Job
-        </Button>
+      <div>
+        <Button type="secondary" onClick={this.showModal}>Post a Job</Button>
 
 
         <Modal title="Post A Job"
         visible={this.state.visible}
         onCancel={this.handleCancel}
-        footer={[null, null,]}>
+        footer={[null, null,]} >
 
-          <Form>
+          <Form className="job-post">
+            {/* Error / Success messages */}
             {error ? (
               <Alert message={error} type="error" closable showIcon />
               ) : (null)}
@@ -155,6 +154,7 @@ class JobPost extends React.Component {
             </div>
   
           </Form>
+
         </Modal>
       </div>
     );
