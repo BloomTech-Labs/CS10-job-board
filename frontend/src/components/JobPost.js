@@ -170,6 +170,14 @@ class JobPost extends React.Component {
               <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
             </div>
             
+            {/* Error / Success messages */}
+            {error ? (
+              <Alert message={error} type="error" closable showIcon />
+              ) : (null)}
+            {message ? (
+              <Alert message={message} type="success" closable showIcon />
+            ) : (null)}
+
           </Form>
 
         </Modal>
