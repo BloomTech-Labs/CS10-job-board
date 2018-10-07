@@ -1,6 +1,5 @@
 .job-post {
     width: 100%;
-    max-width: 360px;
     margin: 0 auto;
 }
 
@@ -9,12 +8,6 @@
     align-items: flex-end;
 }
 
-.job-post form textarea {
-    min-height: 100px;
-}
-
-.job-post Button {
-    height: 10%;
-    width: 100%;
-    font-size: 4rem;
+.job-post textarea {
+    min-height: 140px;
 }
