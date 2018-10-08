@@ -166,7 +166,6 @@ class JobPost extends React.Component {
                   step={10000}
                   min={0}
                   max={999998}
-                  defaultValue={30000}
                   value={min_salary}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 
@@ -180,7 +179,6 @@ class JobPost extends React.Component {
                   step={10000}
                   min={0}
                   max={999999}
-                  defaultValue={70000}
                   value={max_salary}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
