@@ -21,10 +21,11 @@ from .models import User, JobPost, Membership, UserMembership, Subscription, Pay
 from .api import (
     JobPostSerializer,
     JobPreviewSerializer,
-    UserSerializer,
+    UserIDSerializer,
     UserRegistrationSerializer,
     MembershipSerializer,
-    PaymentViewSerializer
+    PaymentViewSerializer,
+    JWTSerializer
     )
 import stripe
 
@@ -32,11 +33,11 @@ import stripe
 def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
 
-# determines payload added to JWT, from UserSerializer
+# determines payload added to JWT
 def jwt_response_handler(token, user=None, request=None):
     return {
         'token': token,
-        'user': UserSerializer(user, context={'request': request}).data
+        'user': JWTSerializer(user, context={'request': request}).data
     }
 
 
@@ -97,38 +98,17 @@ class CreateJobPost(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-        company = self.request.user
-        request.data['company'] = company
-        print(company)
 
         if request.data['is_active'] is True:
             request.data['published_date'] = timezone.now()
-        # print(request.data)
-
+        # print('REQUEST>>>>', request.data)
         serializer = self.get_serializer(data=request.data)
+        # print('SERIALIZER>>>>>>', serializer)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        print(serializer.data)
+        # print('SERIALIZER.DATA>>>>>>', serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-    # def post(self, request):
-    #     print(request.data)
-    #     # is_active = request.POST.get('is_active', False)
-    #     if request.data['is_active'] is True:
-    #         # If published when created,
-    #         # add published_date to request data to then be serialized
-    #         request.data['published_date'] = timezone.now()
-    #         serializer_class = JobPostSerializer(data=request.data)
-    #         serializer_class.is_valid()
-    #         serializer_class.save()
-    #         return Response(status=status.HTTP_201_CREATED)
-    #     else:
-    #         serializer_class = JobPostSerializer(data=request.data)
-    #         serializer_class.is_valid()
-    #         serializer_class.save()
-    #         return Response(status=status.HTTP_201_CREATED)
 
 
 class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
