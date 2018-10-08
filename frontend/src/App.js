@@ -41,7 +41,7 @@ class App extends React.Component {
         })
         .catch(err => {
           this.logOut();
-          this.setState({ error: `Error processing request. Please log in or register.`});
+          this.setState({ error: `Authentication expired. Please log in again.`});
         });
     }
     else {
