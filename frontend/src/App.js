@@ -58,7 +58,7 @@ class App extends React.Component {
       message: null,
       token: data.token,
       employer: data.user.is_employer,
-      user: data.user.email
+      user: data.user.id
     });
     localStorage.setItem('token', data.token);
     // Redirect based on user type
