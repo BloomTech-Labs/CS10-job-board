@@ -1,7 +1,8 @@
 import React from "react";
 import { CompanyRegister } from ".";
 import "../css/CompanyLanding.css";
-import hero from "../assets/hero.svg";
+
+
 class CompanyLanding extends React.Component {
     constructor(props) {
         super(props)
@@ -10,8 +11,11 @@ class CompanyLanding extends React.Component {
     render() {
         return (
             <div className="company-landing">
-            <img src={hero} draggable={false} alt="hero illustration"/>
                 <div>
+                    <h1 className="landing-title">Open Jobs</h1>
+                    <h2 className="landing-copy">No Degree, No Problem.<br/>Post a job, change a life.</h2>
+                </div>
+                <div className="landing-form">
                     <CompanyRegister {...this.props}/>
                 </div>
             </div>

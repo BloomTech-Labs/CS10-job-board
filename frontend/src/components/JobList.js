@@ -17,6 +17,10 @@ class JobList extends React.Component {
     componentDidMount() {
         // Prevents calling a GET request every time component is rendered
         // jobs is inherited from App.js
+        const location = this.props.history.location;
+        if (location !== '/' && location !== '/jobs') {
+            this.props.history.push('/');
+        }
         if (!this.props.jobs) {
             this.fetchJobs();
         }
@@ -25,7 +29,7 @@ class JobList extends React.Component {
 
     fetchJobs = () => {
         this.setState({ loading: true });
-        axios.get(`${process.env.REACT_APP_API}/jobs`)
+        axios.get(`${process.env.REACT_APP_API}/jobs/`)
             .then(response => {
                 // setJobs is inherited from App.js
                 this.props.setJobs(response.data);

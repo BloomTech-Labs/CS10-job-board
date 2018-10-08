@@ -53,7 +53,7 @@ button {
 }
 
 button:hover {
-  background: #B0C9FF;
+  /* background: #B0C9FF; */
   cursor: pointer;
 }
 
@@ -61,29 +61,99 @@ button:hover {
   display: flex;
   flex-flow: column wrap;
   width: 100%;
-  margin: 0 auto;
   text-rendering: geometricPrecision;
   background: #C7D5E2;
   min-height: 100vh;
 }
 
-.App .company-register-link {
-  display: flex;
-  justify-content: flex-end;
+.nav-wrapper {
+  width: 100%;
 }
 
-.App .company-register-link > a {
+/* styling for pathname '/' */
+
+.home-navigation {
+  margin: 0 auto;
+  max-width: 1400px;
+}
+
+.home-navigation > div {
   display: flex;
   justify-content: space-between;
-  margin: 15px 30px;
+  width: 100%;
+  max-width: 1400px;
 }
+
+.home-navigation h1,
+.home-navigation h3 {
+  margin: 15px 20px;
+}
+
+.home-navigation h1 {
+  color: #604CB0;
+  font-weight: bold;
+  letter-spacing: -0.3px;
+}
+
+.home-navigation h3 {
+  color: rgb(49, 44, 75);
+  font-weight: bold;
+  letter-spacing: -0.2px;
+}
+
+.home-navigation a {
+  margin: 15px 20px;
+}
+
+/* Sytling for pathnames '/signin' and '/company' */
+
+.landing {
+  display: flex;
+  width: 100%;
+}
+
+.landing-title {
+  color: #604CB0;
+  font-size: 7rem;
+  font-weight: bold;
+  position: relative;
+  letter-spacing: -0.3px;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(245, 245, 245, 0.6);
+}
+
+.landing-copy {
+  color: rgb(49, 44, 75);
+  font-weight: bold;
+  font-size: 3.2rem;
+  position: relative;
+  letter-spacing: -0.2px;
+}
+
+.landing-form {
+  padding-top: 45px;
+  margin-left: 10px;
+}
+
+.landing a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main div wrapper for bottom half of app */
 
 .main {
   display: flex;
   width: 100%;
-  min-height: 95vh;
-  padding: 2% 3%;
+  margin: 0 auto;
+  min-height: 90vh;
+  padding: 0 3%;
+  max-width: 1250px;
 }
+
+/* Global Form & input styling */
+/* Can override in component specific css files */
 
 .form {
   text-align: center;
@@ -91,13 +161,14 @@ button:hover {
   display: flex;
   flex-flow: column wrap;
   width: 100%;
-  max-width: 300px;
+  max-width: 340px;
+  min-width: 280px;
   border-radius: 4px;
 }
 
 .form input {
   margin: 0 0 1rem;
-  padding: 7px;
+  padding: 20px 0;
   width: 100%;
   border: none;
   border-bottom: 1px solid rgba(120, 146, 184, 0);
@@ -107,7 +178,6 @@ button:hover {
 .form input:focus {
   outline: none;
   background: white;
-  /* border-bottom: 1px solid #7892EA; */
 }
 
 .form input[type=checkbox] {
@@ -126,10 +196,19 @@ button:hover {
   align-self: flex-end;
 }
 
+/* Message positioning */
+
 .message {
   position: absolute;
 }
 
+.whitespace {
+  flex-grow: 1;
+}
+
+/* CSS Boneyard */
+
+/* 
 .App .logged-out-heading {
   display: flex;
   flex-direction: row;
@@ -145,7 +224,7 @@ button:hover {
   padding-right: 600px;
   color: black;
   text-shadow: 2px 2px 4px rgba(96,76,176);
-}
+} */
 
 /* .tooltip {
   background: white;

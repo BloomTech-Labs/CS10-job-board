@@ -3,12 +3,11 @@
     align-items: baseline;
     justify-content: space-between;
     background: white;
-    height: 74px;
+    margin-bottom: 10px;
 }
 
 .nav-bar > * {
-    margin: 2% 2% 6px;
-    display: flex;
+    margin: 2% 2% 12px;
 }
 
 .nav-bar .anticon svg {
@@ -16,11 +15,8 @@
 }
 
 .nav-bar .ant-dropdown-link {
-    align-self: center;
-}
-
-.nav-bar .whitespace {
-    flex-grow: 1;
+    position: relative;
+    top: 5px;
 }
 
 /* Dropdown is not a child of nav, instead at root because of ant-d's choices,
