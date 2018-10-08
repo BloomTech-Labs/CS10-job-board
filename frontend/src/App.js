@@ -39,7 +39,12 @@ class App extends React.Component {
           this.logIn(response.data);
         })
         .catch(err => {
-          this.logOut(err, `Authentication expired. Please log in again.`);
+          if (err.message.includes('Network')) {
+            // Does not log user out if Internet connection or server is down.
+            this.setState({ error: `Problem connecting to server.`});
+          } else {
+            this.logOut(err, `Authentication expired. Please log in again.`);
+          }
         });
     }
     else {
