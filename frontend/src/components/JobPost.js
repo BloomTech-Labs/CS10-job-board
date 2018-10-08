@@ -57,6 +57,7 @@ class JobPost extends React.Component {
         .then(response => {
           this.setState({ message: `Job Posted!` });
           setTimeout(() => {
+            this.clearForm();
             this.setState({
               company_name: null,
               title: null,
@@ -80,7 +81,7 @@ class JobPost extends React.Component {
   clearForm = () => {
     document.getElementById("job-post-form").reset();
     let inputNums = document.querySelectorAll(".ant-input-number-input");
-    inputNums.forEach(elem => elem.value = "$");
+    inputNums.forEach(elem => elem.value = "0");
     let tags = document.querySelectorAll(".ant-tag");
     for (let i = 0; i < tags.length - 1; i++) {
       tags[i].remove();
