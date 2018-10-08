@@ -61,7 +61,6 @@ class UserLogoutAllView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
-        print(user)
         user.jwt_secret = uuid.uuid4()
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
