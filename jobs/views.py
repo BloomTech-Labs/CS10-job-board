@@ -74,7 +74,7 @@ class ListJobPost(generics.ListAPIView):
 
 # Returns preview list of Jobs posted by a company account
 class ListCompanyJobPosts(generics.ListAPIView):
-    serializer_class = JobPreviewSerializer
+    serializer_class = JobPostSerializer
     authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
