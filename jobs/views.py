@@ -30,8 +30,8 @@ from .api import (
 import stripe
 
 
-def jwt_get_secret_key(user_model):
-    return user_model.jwt_secret
+def jwt_get_secret_key(user):
+    return user.jwt_secret
 
 # determines payload added to JWT
 def jwt_response_handler(token, user=None, request=None):
@@ -61,6 +61,7 @@ class UserLogoutAllView(views.APIView):
 
     def post(self, request, *args, **kwargs):
         user = request.user
+        print(user)
         user.jwt_secret = uuid.uuid4()
         user.save()
         return Response(status=status.HTTP_204_NO_CONTENT)
