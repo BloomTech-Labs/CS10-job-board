@@ -33,7 +33,7 @@ const Navigation = props => {
             <div className="whitespace"></div>
             <Search />
             {employer ? (  
-                    <JobPost logOut={logOut} token={token} user={user}/>
+                    <JobPost logOut={logOut} token={token} company={user}/>
                 ) : (null)}
             <Dropdown overlay={menu} trigger={['hover']} placement="bottomRight">
                 <a className="ant-dropdown-link">
