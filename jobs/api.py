@@ -14,7 +14,7 @@ from taggit_serializer.serializers import (TagListSerializerField, TaggitSeriali
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'is_employer')
+        fields = ('email', 'is_employer')
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
