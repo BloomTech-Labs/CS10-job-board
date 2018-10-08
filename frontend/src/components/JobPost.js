@@ -57,7 +57,6 @@ class JobPost extends React.Component {
         .then(response => {
           this.setState({ message: `Job Posted!` });
           setTimeout(() => {
-            this.resetPublish();
             this.setState({
               message: null,
               error: null,
@@ -78,11 +77,6 @@ class JobPost extends React.Component {
           this.setState({ error: `Error processing request. Please try again.`})
         });
     }
-  }
-
-  resetPublish = () => {
-    let published = document.querySelector("span.ant-switch");
-    published.classList.remove("ant-switch-checked");
   }
 
   checkToken = (e, appToken, token) => {
@@ -193,7 +187,7 @@ class JobPost extends React.Component {
   
             <div className="flex">
               <FormItem label="Publish" id="publish">
-                <Switch onChange={this.togglePublish} value={is_active}/>
+                <Switch onChange={this.togglePublish} checked={is_active}/>
               </FormItem>
               <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
             </div>
