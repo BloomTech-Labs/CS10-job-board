@@ -41,21 +41,21 @@ def jwt_response_handler(token, user=None, request=None):
 
 
 class UserRegisterView(generics.CreateAPIView):
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class UserLogoutAllView(views.APIView):
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
     # Resets the jwt_secret, invalidating all token issued
 
     def post(self, request, *args, **kwargs):
@@ -74,12 +74,12 @@ class ListJobPost(generics.ListAPIView):
 
 class CreateJobPost(generics.CreateAPIView):
     serializer_class = JobPostSerializer
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
     # def post(self, request):
     #     print(request.data)
@@ -136,12 +136,12 @@ class MembershipSelectView(generics.ListAPIView):
     model = Membership
     queryset = Membership.objects.all()
     serializer_class = MembershipSerializer
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -181,12 +181,12 @@ class MembershipSelectView(generics.ListAPIView):
 class PaymentView(generics.CreateAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentViewSerializer
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
     
 # Tokenizes purchase
