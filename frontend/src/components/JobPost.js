@@ -17,7 +17,7 @@ class JobPost extends React.Component {
       message: null,
       error: null,
       visible: false,
-      company: this.props.user,
+      company: this.props.company,
       company_name: null,
       title: null,
       description: null,
@@ -57,8 +57,11 @@ class JobPost extends React.Component {
         .then(response => {
           this.setState({ message: `Job Posted!` });
           setTimeout(() => {
-            this.clearForm();
+            this.resetPublish();
             this.setState({
+              message: null,
+              error: null,
+              visible: false,
               company_name: null,
               title: null,
               description: null,
@@ -67,8 +70,7 @@ class JobPost extends React.Component {
               min_salary: null,
               max_salary: null,
               tags: [],
-              is_active: false,
-              visible: false
+              is_active: false
             });
           }, 2500);
         })
@@ -78,18 +80,9 @@ class JobPost extends React.Component {
     }
   }
 
-  clearForm = () => {
-    document.getElementById("job-post-form").reset();
-    let inputNums = document.querySelectorAll(".ant-input-number-input");
-    inputNums.forEach(elem => elem.value = "0");
-    let tags = document.querySelectorAll(".ant-tag");
-    for (let i = 0; i < tags.length - 1; i++) {
-      tags[i].remove();
-    }
+  resetPublish = () => {
     let published = document.querySelector("span.ant-switch");
     published.classList.remove("ant-switch-checked");
-    let messages = document.querySelectorAll(".ant-alert");
-    messages.forEach(elem => elem.remove());
   }
 
   checkToken = (e, appToken, token) => {
@@ -102,14 +95,15 @@ class JobPost extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
+  // ant-d passes e not as event, but value itself for non-standard elements
   togglePublish = e => {
     this.setState({ is_active: e });
   }
-
+  // ant-d passes e not as event, but value itself for non-standard elements
   updateMaxSalary = e => {
     this.setState({ max_salary: e });
   }
-
+  // ant-d passes e not as event, but value itself for non-standard elements
   updateMinSalary = e => {
     this.setState({ min_salary: e });
   }
@@ -119,7 +113,20 @@ class JobPost extends React.Component {
   }
 
   render() {
-    const { error, message, is_active, visible } = this.state;
+    const {
+      message,
+      error,
+      visible,
+      company_name,
+      title,
+      description,
+      location,
+      requirements,
+      min_salary,
+      max_salary,
+      tags,
+      is_active
+    } = this.state;
     return (
       <div>
         <Button type="secondary" onClick={this.showModal}>Post a Job</Button>
@@ -133,23 +140,23 @@ class JobPost extends React.Component {
           <Form className="job-post" id="job-post-form">
           
             <FormItem label="Company Name" >
-              <Input onChange={this.onChange} type="text" name="company_name" placeholder="e.g. Google" required />
+              <Input onChange={this.onChange} type="text" name="company_name" value={company_name} placeholder="e.g. Google" required />
             </FormItem>
           
             <FormItem label="Title" >
-              <Input onChange={this.onChange} type="text" name="title" placeholder="e.g. Software Engineer" required />
+              <Input onChange={this.onChange} type="text" name="title" value={title} placeholder="e.g. Software Engineer" required />
             </FormItem>
   
             <FormItem label="Description" >
-              <TextArea onChange={this.onChange} type="text" name="description" placeholder="Describe the responsibilities of this position."   required />
+              <TextArea onChange={this.onChange} type="text" name="description" value={description} placeholder="Describe the responsibilities of this position."   required />
             </FormItem>
   
             <FormItem label="Location" >
-              <Input onChange={this.onChange} type="text" name="job_location" placeholder="e.g. Philadelphia" required />
+              <Input onChange={this.onChange} type="text" name="location" value={location} placeholder="e.g. Philadelphia" required />
             </FormItem>
   
             <FormItem label="Requirements" >
-              <TextArea onChange={this.onChange} type="text" name="requirements" placeholder="Add skills/experience the applicant should have."   required />
+              <TextArea onChange={this.onChange} type="text" name="requirements" value={requirements} placeholder="Add skills/experience the applicant should have."   required />
             </FormItem>
   
             <div className="flex">
@@ -159,7 +166,8 @@ class JobPost extends React.Component {
                   step={10000}
                   min={0}
                   max={999998}
-                  defaultValue={0}
+                  defaultValue={30000}
+                  value={min_salary}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 
                   required
@@ -172,7 +180,8 @@ class JobPost extends React.Component {
                   step={10000}
                   min={0}
                   max={999999}
-                  defaultValue={0}
+                  defaultValue={70000}
+                  value={max_salary}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   required 
@@ -181,12 +190,12 @@ class JobPost extends React.Component {
             </div>
   
             <FormItem label="Tags" name="tags">
-              <TagCreate addTags={this.addTags}/>
+              <TagCreate addTags={this.addTags} tags={tags}/>
             </FormItem>
   
             <div className="flex">
               <FormItem label="Publish" id="publish">
-                <Switch onChange={this.togglePublish} />
+                <Switch onChange={this.togglePublish} value={is_active}/>
               </FormItem>
               <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
             </div>
