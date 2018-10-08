@@ -99,6 +99,7 @@ class CreateJobPost(generics.CreateAPIView):
 
     def post(self, request, *args, **kwargs):
 
+        # print('REQUEST>>>>', request.data)
         if request.data['is_active'] is True:
             request.data['published_date'] = timezone.now()
         # print('REQUEST>>>>', request.data)
