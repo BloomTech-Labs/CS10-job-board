@@ -71,7 +71,7 @@ class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = JobPost
         fields = (
-            # 'company',
+            'company',
             'company_name',
             'title',
             'description',
