@@ -37,7 +37,6 @@ class App extends React.Component {
       axios.post(`${process.env.REACT_APP_LOGIN_API}refresh/`, { token: token })
         .then(response => {
           this.logIn(response.data);
-          this.props.history.push('/jobs');
         })
         .catch(err => {
           this.logOut();
