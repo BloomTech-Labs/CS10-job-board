@@ -22,16 +22,16 @@ urlpatterns = [
     # re_path(r'^delete/$', views.UserDeleteView.as_view(), name='delete'),
 
     # Using Djoser to handle registration email/password reset
-    re_path('register/', djoser_views.UserCreateView.as_view(), name='register'),
+    path('register/', djoser_views.UserCreateView.as_view(), name='register'),
 
     # JWT API
-    re_path('login/', jwt_views.ObtainJSONWebToken.as_view(), name='login'),
+    path('login/', jwt_views.ObtainJSONWebToken.as_view(), name='login'),
     # Use to refresh token on login
-    re_path('login/refresh/', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
+    path('login/refresh/', jwt_views.RefreshJSONWebToken.as_view(), name='login-refresh'),
     # Use for account operations / billing charges
-    re_path('login/verify/', jwt_views.VerifyJSONWebToken.as_view(), name='login-verify'),
+    path('login/verify/', jwt_views.VerifyJSONWebToken.as_view(), name='login-verify'),
     # Use logout/all/ for password reset/sign out all sessions
-    re_path('logout/all/', views.UserLogoutAllView.as_view(), name='logout-all'),
+    path('logout/all/', views.UserLogoutAllView.as_view(), name='logout-all'),
 
     # Jobs API
     path('jobs/', views.ListJobPost.as_view()),
