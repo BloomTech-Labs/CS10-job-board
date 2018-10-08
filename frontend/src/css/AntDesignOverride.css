@@ -78,6 +78,11 @@
     color: #604CB0;
 }
 
+.ant-btn:active, .ant-btn:focus {
+    color: #604CB0;
+    border-color: #604CB0;
+}
+
 /* Job Post */
 .ant-input-number {
     width: 100%;

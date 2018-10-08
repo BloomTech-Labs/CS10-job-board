@@ -2,6 +2,8 @@
 # from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 # from django.core import serializers
 # from django.conf import settings, urls
+from django.utils import timezone
+
 from .models import JobPost, User, UserMembership, Membership, Payment
 from rest_framework import serializers
 from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
@@ -12,7 +14,7 @@ from taggit_serializer.serializers import (TagListSerializerField, TaggitSeriali
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'is_employer')
+        fields = ('email', 'is_employer')
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -48,10 +50,28 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
 
+    # def create(self, validated_data):
+    #     company = self.context['request'].user
+    #     request = self.context['request']
+    #     # is_active = hasattr(request.data, 'is_active')
+    #     is_active = request.data['is_active']
+    #     print(is_active, request.data)
+
+    #     if request.data['is_active'] is True:
+    #         request.data['published_date'] = timezone.now()
+    #         print(request.data['published_date'])
+
+    #     job_post = JobPost.objects.create(
+    #         company=company,
+    #         published_date=published_date,
+    #         **validated_data
+    #     )
+    #     return job_post
+
     class Meta:
         model = JobPost
         fields = (
-            'id',
+            # 'company',
             'company_name',
             'title',
             'description',

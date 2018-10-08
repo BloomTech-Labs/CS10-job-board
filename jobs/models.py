@@ -112,9 +112,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 #     def __str__(self):
 #         return '%s %s' % (self.first_name, self.last_name)
-default_company = 1
 
 class JobPost(models.Model):
+    # company = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     company_name = models.CharField(max_length=128, blank=True)
     title = models.CharField(max_length=200, blank=True)
     description = models.TextField(blank=True)

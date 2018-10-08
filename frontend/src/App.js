@@ -27,7 +27,7 @@ class App extends React.Component {
       token: null,
       jobs: null,
       employer: false,
-      clicked: false,
+      user: null
     }
   }
 
@@ -59,7 +59,8 @@ class App extends React.Component {
       error: null,
       message: null,
       token: data.token,
-      employer: data.user.is_employer
+      employer: data.user.is_employer,
+      user: data.user.email
     });
     localStorage.setItem('token', data.token);
     // Redirect based on user type
@@ -74,11 +75,12 @@ class App extends React.Component {
     localStorage.removeItem('token');
     this.setState({ 
       loggedIn: false,
-      // loggedOut: true,
-      jobs: null, 
-      token: null,
       error: error,
-      message: null
+      message: null,
+      token: null,
+      jobs: null,
+      employer: false,
+      user: null
     });
     this.props.history.push('/signin');
   }
@@ -88,7 +90,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { loggedIn, error, message, token, jobs, employer } = this.state;
+    const { loggedIn, error, message, token, jobs, employer, user } = this.state;
     let location = this.props.history.location.pathname;
     const home = location === '/';
     const company = location === '/company';
@@ -106,7 +108,7 @@ class App extends React.Component {
 
         {loggedIn ? (
           <div className="nav-wrapper">
-            <Navigation logOut={this.logOut} employer={employer}/>
+            <Navigation logOut={this.logOut} employer={employer} token={token} user={user}/>
           </div>
         ) : (
             // Navigation for unauthenticated users
@@ -148,12 +150,14 @@ class App extends React.Component {
 
         <div className="main">
           <Switch>
-            <Route exact path="/signin" render={() => <Landing logIn={this.logIn}/>} />
-            <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
+            {/* Landing Pages */}
             <Route exact path="/" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
+            <Route path="/signin" render={() => <Landing logIn={this.logIn}/>} />
+            <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
+            {/* Non-Auth Routes */}
             <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
             <Route path="/jobs/:id" render={() => <Job />} />
-            <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />
+            {/* Auth Routes */}
             {employer ? (
               <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />
               ) : (
