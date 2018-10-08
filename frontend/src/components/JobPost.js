@@ -55,10 +55,8 @@ class JobPost extends React.Component {
       const requestOptions = { headers: { Authorization: `JWT ${token}` }};
       axios.post(`${process.env.REACT_APP_API}addjob/`, this.state, requestOptions)
         .then(response => {
-          // console.log(response);
           this.setState({ message: `Job Posted!` });
           setTimeout(() => {
-            this.clearForm();
             this.setState({
               company_name: null,
               title: null,
@@ -70,11 +68,10 @@ class JobPost extends React.Component {
               tags: [],
               is_active: false,
               visible: false
-             });
+            });
           }, 2500);
         })
         .catch(err => {
-          // console.log(this.state, requestOptions, err);
           this.setState({ error: `Error processing request. Please try again.`})
         });
     }
@@ -82,16 +79,16 @@ class JobPost extends React.Component {
 
   clearForm = () => {
     document.getElementById("job-post-form").reset();
-    let min_salary = document.getElementById("min_salary");
-    let max_salary = document.getElementById("max_salary");
-    min_salary.value=0;
-    max_salary.value=0;
-    let tags = document.querySelectorAll(".ant-tag > i.anticon-close");
-    tags.forEach(tag => tag.remove());
+    let inputNums = document.querySelectorAll(".ant-input-number-input");
+    inputNums.forEach(elem => elem.value = "$");
+    let tags = document.querySelectorAll(".ant-tag");
+    for (let i = 0; i < tags.length - 1; i++) {
+      tags[i].remove();
+    }
     let published = document.querySelector("span.ant-switch");
     published.classList.remove("ant-switch-checked");
-    let message = document.querySelector(".ant-alert-success");
-    message.remove();
+    let messages = document.querySelectorAll(".ant-alert");
+    messages.forEach(elem => elem.remove());
   }
 
   checkToken = (e, appToken, token) => {
@@ -160,6 +157,8 @@ class JobPost extends React.Component {
                   onChange={this.updateMinSalary} name="min_salary" id="min_salary"
                   step={10000}
                   min={0}
+                  max={999998}
+                  defaultValue={0}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')} 
                   required
@@ -171,6 +170,8 @@ class JobPost extends React.Component {
                   onChange={this.updateMaxSalary} name="max_salary" id="max_salary"
                   step={10000}
                   min={0}
+                  max={999999}
+                  defaultValue={0}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
                   formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                   required 
