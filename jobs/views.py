@@ -72,6 +72,22 @@ class ListJobPost(generics.ListAPIView):
     serializer_class = JobPreviewSerializer
 
 
+# Returns preview list of Jobs posted by a company account
+class ListCompanyJobPosts(generics.ListAPIView):
+    serializer_class = JobPreviewSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get_queryset(self):
+        company = self.request.user
+        print(company)
+        return JobPost.objects.filter(company=company)
+
+
 class CreateJobPost(generics.CreateAPIView):
     serializer_class = JobPostSerializer
     authentication_classes = (
