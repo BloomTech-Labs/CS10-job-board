@@ -11,10 +11,16 @@ from taggit_serializer.serializers import (TagListSerializerField, TaggitSeriali
  
 # Serializers for API representation 
 
-class UserSerializer(serializers.ModelSerializer):
+class JWTSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('email', 'is_employer')
+        fields = ('id', 'is_employer')
+
+
+class UserIDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id',)
 
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
@@ -49,7 +55,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
-    company = UserSerializer()
+    # company = UserIDSerializer()
 
     # def create(self, validated_data):
     #     company = self.context['request'].user
@@ -117,7 +123,7 @@ class PaymentViewSerializer(serializers.ModelSerializer):
 # ViewSets for defining view behavior
 # class UserViewSet(viewsets.ModelViewSet):
 #     queryset = User.objects.all()
-#     serializer_class = UserSerializer
+#     serializer_class = UserIDSerializer
 
 
 # class JobPostViewSet(viewsets.ModelViewSet):
