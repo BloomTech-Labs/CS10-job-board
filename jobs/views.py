@@ -32,7 +32,7 @@ import stripe
 def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
 
-
+# determines payload added to JWT, from UserSerializer
 def jwt_response_handler(token, user=None, request=None):
     return {
         'token': token,
@@ -84,7 +84,6 @@ class ListCompanyJobPosts(generics.ListAPIView):
     
     def get_queryset(self):
         company = self.request.user
-        print(company)
         return JobPost.objects.filter(company=company)
 
 
@@ -96,6 +95,23 @@ class CreateJobPost(generics.CreateAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        company = self.request.user
+        request.data['company'] = company
+        print(company)
+
+        if request.data['is_active'] is True:
+            request.data['published_date'] = timezone.now()
+        # print(request.data)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
     # def post(self, request):
     #     print(request.data)
