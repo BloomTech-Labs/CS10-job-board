@@ -8,19 +8,27 @@ html {
   font-size: 62.5%;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1, .h1, h2, .h2 {
   font-family: 'Lora', 'Times New Roman', Times, serif;
+  font-weight: bold;
+  color: #4A4A4A;
 }
 
-h1 {
+h3, h4, h5, h6, .h3, .h4, .h5, .h6 {
+  font-family: 'Roboto', Verdana, Geneva, Tahoma, sans-serif;
+  font-weight: 400;
+  color: #4A4A4A;
+}
+
+h1, .h1 {
   font-size: 3.2rem;
 }
 
-h2 {
+h2, .h2 {
   font-size: 2.4rem;
 }
 
-h3 {
+h3, .h3 {
   font-size: 1.8rem;
 }
 
@@ -91,13 +99,11 @@ button:hover {
 
 .home-navigation h1 {
   color: #604CB0;
-  font-weight: bold;
   letter-spacing: -0.3px;
 }
 
 .home-navigation h3 {
   color: rgb(49, 44, 75);
-  font-weight: bold;
   letter-spacing: -0.2px;
 }
 
@@ -115,7 +121,6 @@ button:hover {
 .landing-title {
   color: #604CB0;
   font-size: 7rem;
-  font-weight: bold;
   position: relative;
   letter-spacing: -0.3px;
   margin: 0;
@@ -124,7 +129,6 @@ button:hover {
 
 .landing-copy {
   color: rgb(49, 44, 75);
-  font-weight: bold;
   font-size: 3.2rem;
   position: relative;
   letter-spacing: -0.2px;
@@ -190,6 +194,7 @@ button:hover {
 
 .form h3 {
   margin: 1rem;
+  color: #4A4A4A;
 }
 
 .form button {
@@ -210,6 +215,22 @@ button:hover {
 
 .flex {
   display: flex;
+}
+
+.column {
+  flex-flow: column wrap;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.space-around {
+  justify-content: space-around;
+}
+
+.flex-start {
+  align-self: flex-start;
 }
 
 /* CSS Boneyard */
