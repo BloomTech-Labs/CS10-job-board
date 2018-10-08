@@ -114,23 +114,3 @@ class PaymentViewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Payment
         fields = '__all__'
-
-
-
-
-# May not need these?
-
-# ViewSets for defining view behavior
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserIDSerializer
-
-
-# class JobPostViewSet(viewsets.ModelViewSet):
-#     queryset = JobPost.objects.all()
-#     serializer_class = JobPostSerializer
-
-
-# class UserMembershipViewSet(viewsets.ModelViewSet):
-#     queryset = UserMembership.objects.all()
-#     serializer_class = UserMembershipSerializer
