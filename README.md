@@ -66,9 +66,10 @@ To push the latest changes to Heroku, push from a local master branch of this re
 
 [Notes on models](jobs/notes/MODELS.md)
 
-- `/api/jobs` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (latest published first). It only accepts a GET request.
-- `/api/addjob` accepts a POST request to create a new Job.
-- `/api/jobs/:id` returns a specific job, and accepts PUT, and DELETE requests.
+- `/api/jobs/` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (most rencetly published is first). It only accepts a GET request.
+- `/api/addjob/` accepts a POST request to create a new Job.
+- `/api/jobs/:id/` returns a specific job, and accepts PUT, and DELETE requests.
+- `/api/company/jobs/` returns a a list of jobs posted by an authenticated company user, in descending order (most rencently published is first)
 
 ## Dependencies:
 

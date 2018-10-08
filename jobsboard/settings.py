@@ -166,8 +166,9 @@ REST_FRAMEWORK = {
     ),
 }
 
-# API slash addition settings: False means it will not add an extra /
-APPEND_SLASH = True
+# API slash addition settings: False means it will not add an extra /,
+#   meaning routes will not be duplicated with ' ' and '/' 
+APPEND_SLASH = False
 
 # Default JWT response handler
 JWT_AUTH = {

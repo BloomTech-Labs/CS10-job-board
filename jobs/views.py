@@ -32,7 +32,7 @@ import stripe
 def jwt_get_secret_key(user_model):
     return user_model.jwt_secret
 
-
+# determines payload added to JWT, from UserSerializer
 def jwt_response_handler(token, user=None, request=None):
     return {
         'token': token,
@@ -41,21 +41,21 @@ def jwt_response_handler(token, user=None, request=None):
 
 
 class UserRegisterView(generics.CreateAPIView):
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class UserLogoutAllView(views.APIView):
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
     # Resets the jwt_secret, invalidating all token issued
 
     def post(self, request, *args, **kwargs):
@@ -72,14 +72,46 @@ class ListJobPost(generics.ListAPIView):
     serializer_class = JobPreviewSerializer
 
 
-class CreateJobPost(generics.CreateAPIView):
+# Returns preview list of Jobs posted by a company account
+class ListCompanyJobPosts(generics.ListAPIView):
     serializer_class = JobPostSerializer
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
+    
+    def get_queryset(self):
+        company = self.request.user
+        return JobPost.objects.filter(company=company)
+
+
+class CreateJobPost(generics.CreateAPIView):
+    serializer_class = JobPostSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        company = self.request.user
+        request.data['company'] = company
+        print(company)
+
+        if request.data['is_active'] is True:
+            request.data['published_date'] = timezone.now()
+        # print(request.data)
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        print(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
     # def post(self, request):
     #     print(request.data)
@@ -136,12 +168,12 @@ class MembershipSelectView(generics.ListAPIView):
     model = Membership
     queryset = Membership.objects.all()
     serializer_class = MembershipSerializer
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -181,12 +213,12 @@ class MembershipSelectView(generics.ListAPIView):
 class PaymentView(generics.CreateAPIView):
     queryset = Payment.objects.all()
     serializer_class = PaymentViewSerializer
-    authentication_classes = [
+    authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    ]
-    permission_classes = [permissions.IsAuthenticated]
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
     
 # Tokenizes purchase
