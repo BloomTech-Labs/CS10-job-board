@@ -49,6 +49,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
+    company = UserSerializer()
 
     # def create(self, validated_data):
     #     company = self.context['request'].user
