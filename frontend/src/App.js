@@ -39,8 +39,7 @@ class App extends React.Component {
           this.logIn(response.data);
         })
         .catch(err => {
-          this.logOut();
-          this.setState({ error: `Authentication expired. Please log in again.`});
+          this.logOut(err, `Authentication expired. Please log in again.`);
         });
     }
     else {
