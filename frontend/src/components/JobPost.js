@@ -17,6 +17,7 @@ class JobPost extends React.Component {
       message: null,
       error: null,
       visible: false,
+      company: this.props.user,
       company_name: null,
       title: null,
       description: null,
@@ -57,7 +58,8 @@ class JobPost extends React.Component {
           // console.log(response);
           this.setState({ message: `Job Posted!` });
           setTimeout(() => {
-            this.setState({ 
+            this.clearForm();
+            this.setState({
               company_name: null,
               title: null,
               description: null,
@@ -76,6 +78,20 @@ class JobPost extends React.Component {
           this.setState({ error: `Error processing request. Please try again.`})
         });
     }
+  }
+
+  clearForm = () => {
+    document.getElementById("job-post-form").reset();
+    let min_salary = document.getElementById("min_salary");
+    let max_salary = document.getElementById("max_salary");
+    min_salary.value=0;
+    max_salary.value=0;
+    let tags = document.querySelectorAll(".ant-tag > i.anticon-close");
+    tags.forEach(tag => tag.remove());
+    let published = document.querySelector("span.ant-switch");
+    published.classList.remove("ant-switch-checked");
+    let message = document.querySelector(".ant-alert-success");
+    message.remove();
   }
 
   checkToken = (e, appToken, token) => {
@@ -116,7 +132,7 @@ class JobPost extends React.Component {
         onCancel={this.hideModal}
         footer={[null, null,]} >
 
-          <Form className="job-post">
+          <Form className="job-post" id="job-post-form">
           
             <FormItem label="Company Name" >
               <Input onChange={this.onChange} type="text" name="company_name" placeholder="e.g. Google" required />
@@ -141,7 +157,7 @@ class JobPost extends React.Component {
             <div className="flex">
               <FormItem label="Minimum Salary">
                 <InputNumber
-                  onChange={this.updateMinSalary} name="min_salary"
+                  onChange={this.updateMinSalary} name="min_salary" id="min_salary"
                   step={10000}
                   min={0}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
@@ -152,7 +168,7 @@ class JobPost extends React.Component {
   
               <FormItem label="Maximum Salary">
                 <InputNumber
-                  onChange={this.updateMaxSalary} name="max_salary"
+                  onChange={this.updateMaxSalary} name="max_salary" id="max_salary"
                   step={10000}
                   min={0}
                   parser={value => value.replace(/\$\s?|(,*)/g, '')}
@@ -162,12 +178,12 @@ class JobPost extends React.Component {
               </FormItem>
             </div>
   
-            <FormItem label="Tags">
+            <FormItem label="Tags" name="tags">
               <TagCreate addTags={this.addTags}/>
             </FormItem>
   
             <div className="flex">
-              <FormItem label="Publish">
+              <FormItem label="Publish" id="publish">
                 <Switch onChange={this.togglePublish} />
               </FormItem>
               <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
