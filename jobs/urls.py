@@ -38,7 +38,7 @@ urlpatterns = [
     # Invidual job view
     path('jobs/<int:pk>/', views.DetailJobPost.as_view()),
     # Jobs posted by a user
-    path('jobs/user/<int:pk>', views.ListJobPost.as_view()),
+    path('company/jobs/', views.ListCompanyJobPosts.as_view()),
     path('addjob/', views.CreateJobPost.as_view()),
     # path('memberships/', (name='membership')),
 
