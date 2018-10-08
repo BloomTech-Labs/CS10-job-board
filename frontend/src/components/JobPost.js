@@ -17,7 +17,6 @@ class JobPost extends React.Component {
       message: null,
       error: null,
       visible: false,
-      company: this.props.user,
       company_name: null,
       title: null,
       description: null,
