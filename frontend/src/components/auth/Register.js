@@ -36,24 +36,21 @@ class Register extends React.Component {
         } else {
             axios.post(`${process.env.REACT_APP_REGISTER_API}`, this.state)
                 .then(response => {
-                    // #TODO: how Djoser handles registration tokens/confirmation emails
-                    // localStorage.setItem('token', response.data.token);
-                    
-                    // BELOW: axios post for dev purposes
-                    axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email, password })
-                        .then(response => {
-                            this.setState({ error: `Success`});
-                            localStorage.setItem('token', response.data.token);
-                            this.props.logIn(response.data.token);
-                            this.props.history.push('/jobs'); 
-                            // once jobs component is built, need to incorporate withRouter() from react-router-dom to access history object
-                        })
-                        .catch(err => {
-                            this.setState({ error: `Error logging in. Please log in.`});
-                        })
+                    this.setState({ message: `Account Created! Redirecting... `});
+                    setTimeout(() => {                        
+                        axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email, password })
+                            .then(response => {
+                                localStorage.setItem('token', response.data.token);
+                                this.props.logIn(response.data);
+                            })
+                            .catch(err => {
+                                this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
+                            });
+                    }, 2000);
                 })
                 .catch(err => {
-                    this.setState({ error: `Error processing your request. Please try again.`})
+
+                    this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
                 });
         }
     }

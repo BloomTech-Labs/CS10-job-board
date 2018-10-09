@@ -8,7 +8,6 @@ class TagCreate extends React.Component {
   constructor(props) {
     super(props)
       this.state = {
-      tags: [],
       inputVisible: false,
       inputValue: '',
     }
@@ -28,25 +27,24 @@ class TagCreate extends React.Component {
   }
 
   handleInputConfirm = () => {
-    const state = this.state;
-    const inputValue = state.inputValue;
-    let tags = state.tags;
+    const { inputValue } = this.state;
+    let tags = this.props.tags;
     if (inputValue && tags.indexOf(inputValue) === -1) {
       tags = [...tags, inputValue];
     }
     this.setState({
-      tags,
       inputVisible: false,
       inputValue: '',
     });
     // Sets tags on state of JobPost
-    this.props.addTags(this.state.tags);
+    this.props.addTags(tags);
   }
 
   saveInputRef = input => this.input = input;
 
   render() {
-    const { tags, inputVisible, inputValue } = this.state;
+    const { tags } = this.props;
+    const { inputVisible, inputValue } = this.state;
     return (
       <div className="tag">
         {tags.map((tag, index) => {

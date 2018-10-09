@@ -7,4 +7,6 @@ jobs/migrations
 # Frontend ignore
 frontend/.env
 
+
 media/sendgrid.env
+

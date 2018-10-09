@@ -3,6 +3,7 @@ import axios from "axios";
 import { Alert } from "antd";
 import { withRouter } from "react-router-dom";
 import { Form, Icon, Input, Button } from 'antd';
+import "../../css/Login.css";
 
 const FormItem = Form.Item;
 
@@ -10,8 +11,8 @@ class Login extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            email: '',
-            password: '',
+            email: 'test@test.com',
+            password: 'TESTACCOUNT',
             message: null,
             error: null
         }
@@ -26,15 +27,10 @@ class Login extends React.Component {
         axios.post(`${process.env.REACT_APP_LOGIN_API}`, this.state)
             .then(response => {
                 this.setState({ error: null });
-                localStorage.setItem('token', response.data.token);
-                // if user is an employee
-                this.props.logIn(response.data.token);
-                this.props.history.push('/jobs');
-                // if use is an employer
-                // this.props.history.push('/dashboard');
+                this.props.logIn(response.data);
             })
             .catch(err => {
-                this.setState({ error: `Error processing your request. Please try again.`});
+                this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
             });
     }
 
@@ -48,13 +44,13 @@ class Login extends React.Component {
                 {message ? (
                     <Alert message={message} type="success" closable showIcon />
                     ) : (null)}
+                
                 <h3>Login</h3>
-
                 <FormItem>
-                    <Input type="text" name="email" prefix={<Icon type="user" />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />
+                <Input type="text" name="email" prefix={<Icon type="user" />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />
                 </FormItem>
                 <FormItem>
-                    <Input type="password" name="password" prefix={<Icon type="lock" />} value={password} autoComplete="password" placeholder="Password" onChange={this.handleChange} />
+                <Input type="password" name="password" prefix={<Icon type="lock" />} value={password} autoComplete="password" placeholder="Password" onChange={this.handleChange} />
                 </FormItem>
 
                 <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.handleSubmit}>Sign In</Button>

@@ -54,6 +54,35 @@
     font-size: 1.55rem;
 }
 
+.ant-btn-primary {
+    background-color: #604CB0;
+    border-color: #D8D5EA;
+}
+
+.ant-btn-primary:hover {
+    background-color: #c3b9ff;
+    border-color: #896cff;
+    color: black;
+}
+
+.ant-btn-secondary {
+    border-color: #604CB0;
+    background: none;
+    color: #604CB0;
+}
+
+.ant-btn-secondary:hover {
+    border-color: #604CB0;
+    box-shadow: 0 0.55px 0.1px 0.1px;
+    background: white;
+    color: #604CB0;
+}
+
+.ant-btn:active, .ant-btn:focus {
+    color: #604CB0;
+    border-color: #604CB0;
+}
+
 /* Job Post */
 .ant-input-number {
     width: 100%;

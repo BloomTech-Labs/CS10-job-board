@@ -10,15 +10,23 @@ function getBase64(img, callback) {
 }
 
 function beforeUpload(file) {
-  const isJPG = file.type === 'image/jpeg';
-  if (!isJPG) {
-    message.error('You can only upload JPG file!');
+  const isJPG = file.type === 'image/jpg';
+  const isPNG = file.type === 'image/png';
+  const isSVG = file.type === 'image/svg';
+  if (!isJPG && !isPNG && !isSVG) {
+    message.error('You can only upload a .jpg, .png, or .svg file!');
   }
   const isLt2M = file.size / 1024 / 1024 < 2;
   if (!isLt2M) {
     message.error('Image must smaller than 2MB!');
   }
-  return isJPG && isLt2M;
+  if (isJPG) {
+    return isJPG && isLt2M;
+  } else if (isPNG) {
+    return isPNG && isLt2M;
+  } else {
+    return isSVG && isLt2M;
+  }
 }
 
 class Avatar extends React.Component {
@@ -44,7 +52,7 @@ class Avatar extends React.Component {
       <div>
         <Icon type={this.state.loading ? 'loading' : 'plus'} />
         
-        <div className="ant-upload">Upload Avatar</div>
+        <div className="ant-upload">Upload</div>
       </div>
     );
     const imageUrl = this.state.imageUrl;

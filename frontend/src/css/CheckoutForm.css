@@ -1,0 +1,7 @@
+.checkout-form {
+    display: flex;
+    flex-flow: column wrap;
+    width: 100%;
+}
+
+/* .checkout-form  */
