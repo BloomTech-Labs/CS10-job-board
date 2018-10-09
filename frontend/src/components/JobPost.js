@@ -261,6 +261,8 @@ class JobPost extends React.Component {
               </FormItem>
               <Button type="ghost" onClick={this.toggleResetFieldsModal}>Reset all fields</Button>
               <Modal
+              okText="Delete all fields"
+              okType="danger"
               visible={resetFieldsModal}
               onCancel={this.toggleResetFieldsModal}
               onOk={this.clearForm}
