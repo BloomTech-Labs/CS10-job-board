@@ -24,6 +24,8 @@ from rest_framework.routers import DefaultRouter
 
 from jobs.urls import urlpatterns
 
+from jobs.views import UserLogoutAllView,send_email
+
 # Routers for automatically determining the URL configuration
 router = DefaultRouter()
 
@@ -39,5 +41,8 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/', include('jobs.urls')),
+    path('memberships/', include('jobs.urls', namespace='membership')),
+    # Configure sendgrid 
+    re_path(r'^sendgrid/', send_email, name='sendgrid'),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

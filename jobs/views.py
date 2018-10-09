@@ -1,8 +1,22 @@
+import os 
 import uuid
-#from djoser.views import UserView, UserDeleteView
-# from djoser import serializers
-# from django.shortcuts import render
+
 from django.conf import settings
+from django.http import HttpResponse 
+
+import sendgrid 
+from sendgrid.helpers.mail import * 
+
+from djoser.views import UserView, UserDeleteView
+from djoser import serializers
+
+from rest_framework import views, permissions, status
+from rest_framework.response import Response
+from rest_framework import views, permissions, status, generics
+from .models import User, JobPost, Membership, UserMembership, Subscription
+
+from django.shortcuts import render
+
 from django.utils import timezone
 from django.views.generic import ListView
 from django.urls import reverse
@@ -135,6 +149,24 @@ def get_user_subscription(request):
     return None
 
 
+def send_email(request):
+    sg = sendgrid.SendGridAPIClient(
+        apikey=os.environ.get('SENDGRID_API_KEY')
+    )
+    from_email = Email('test@example.com')
+    to_email = Email('cs10jobboard@gmail.com')
+    subject = 'Testing!'
+    content = Content(
+        'text/plain',
+        'hello, world'
+    )
+    mail = Mail(from_email, subject, to_email, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+
+    return HttpResponse('Email sent!')
+
+
+
 def get_selected_membership(request):
 	membership_type = request.session['selected_membership_type']
 	selected_membership_qs = Membership.objects.filter(
@@ -142,6 +174,7 @@ def get_selected_membership(request):
 	if selected_membership_qs.exists():
 		return selected_membership_qs.first()
 	return None
+
 
 
 # for selecting a paid membership
