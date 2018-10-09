@@ -38,6 +38,9 @@ To overwrite an ant-design class, use the `AntDesignOverride.css` file in `front
 For ant-design inline styles use `camelCase` (ie. `marginTop`, `fontSize`)
 refer to https://reactjs.org/docs/dom-elements.html#style
 
+#### Forms & React in ant-design:
+> If <FormInput> is wrapped in { getFieldDecorator }, must use ant-d this.props.form.setFields() to control state. 
+
 # Backend
 
 [Deployed database](https://job-board-backend.herokuapp.com/)
