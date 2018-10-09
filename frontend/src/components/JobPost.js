@@ -21,7 +21,7 @@ class JobPost extends React.Component {
       company_name: null,
       title: null,
       description: null,
-      location: null,
+      job_location: null,
       requirements: null,
       min_salary: null,
       max_salary: null,
@@ -44,28 +44,40 @@ class JobPost extends React.Component {
 
   handleJobPost = e => {
     e.preventDefault();
+    const { min_salary, max_salary, tags, is_active } = this.state;
     this.setState({ error: null, message: null});
-    // Verification
+    // Authentication
     const token = localStorage.getItem('token');
     this.checkToken(e, this.props.token, token);
-    if (this.state.min_salary > this.state.max_salary) {
+    // Validation
+    if (min_salary > max_salary) {
       this.setState({ error: `Maximum Salary is less than Minimum Salary`});
+    } else if (tags.length > 50) {
+      this.setState({ error: `No more than 50 tags`});
     } else {
       // POST Request
       const requestOptions = { headers: { Authorization: `JWT ${token}` }};
       axios.post(`${process.env.REACT_APP_API}addjob/`, this.state, requestOptions)
         .then(response => {
-          this.setState({ message: `Job Posted!` });
+          if (is_active) {
+            this.setState({ message: `Draft Saved!`});
+          } else {
+            this.setState({ message: `Job Posted!` });
+          }
           setTimeout(() => {
+            // Ant-Design form method to reset state with components wrapped in getFieldDecorator
+            this.props.form.setFields({
+              company_name: null,
+              title: null,
+              description: null,
+              job_location: null,
+              requirements: null
+            });
+            // Reset items not controlled by getFieldDecorator
             this.setState({
               message: null,
               error: null,
               visible: false,
-              company_name: null,
-              title: null,
-              description: null,
-              location: null,
-              requirements: null,
               min_salary: null,
               max_salary: null,
               tags: [],
@@ -111,16 +123,14 @@ class JobPost extends React.Component {
       message,
       error,
       visible,
-      company_name,
-      title,
-      description,
-      location,
-      requirements,
       min_salary,
       max_salary,
       tags,
       is_active
     } = this.state;
+    // Ant-d property from Form.create()
+    const { getFieldDecorator } = this.props.form;
+
     return (
       <div>
         <Button type="secondary" onClick={this.showModal}>Post a Job</Button>
@@ -131,26 +141,77 @@ class JobPost extends React.Component {
         onCancel={this.hideModal}
         footer={[null, null,]} >
 
-          <Form className="job-post" id="job-post-form">
+          <Form className="job-post" id="job-post-form" hideRequiredMark={true}>
           
             <FormItem label="Company Name" >
-              <Input onChange={this.onChange} type="text" name="company_name" value={company_name} placeholder="e.g. Google" required />
+              {getFieldDecorator('company_name', {
+                rules: [{
+                  required: true,
+                  message: `Please provide a company name`,
+                  min: 1,
+                  max: 200,
+                  hasFeedback: true,
+                }]
+              })(
+                <Input type="text" placeholder="e.g. Google" name="company_name" onChange={this.onChange}/>
+              )}
             </FormItem>
           
             <FormItem label="Title" >
-              <Input onChange={this.onChange} type="text" name="title" value={title} placeholder="e.g. Software Engineer" required />
+            {getFieldDecorator('title', {
+              rules: [{
+                required: true,
+                message: `Please provide a title, (200 chars max)`,
+                min: 2,
+                max: 200, 
+                hasFeedback: true,
+              }]
+            })(
+              <Input type="text" placeholder="e.g. Software Engineer" name="title" onChange={this.onChange}/>
+            )}
             </FormItem>
   
             <FormItem label="Description" >
-              <TextArea onChange={this.onChange} type="text" name="description" value={description} placeholder="Describe the responsibilities of this position."   required />
+              {getFieldDecorator('description', {
+                rules: [{
+                  required: true,
+                  message: `At least a few words, no more than 2,000`,
+                  min: 1,
+                  max: 12000,
+                  hasFeedback: true,
+                }]
+              })(
+                <TextArea type="text" placeholder="Describe the responsibilities of this position." name="description" onChange={this.onChange}/>
+              )}
             </FormItem>
   
             <FormItem label="Location" >
-              <Input onChange={this.onChange} type="text" name="location" value={location} placeholder="e.g. Philadelphia" required />
+              {getFieldDecorator('job_location', {
+                rules: [{
+                  required: true,
+                  message: `Please provide a location`,
+                  min: 2,
+                  max: 200,
+                  hasFeedback: true,
+                }]
+              })(
+                <Input type="text" placeholder="e.g. Philadelphia" name="job_location" onChange={this.onChange}/>
+              )}
             </FormItem>
   
             <FormItem label="Requirements" >
-              <TextArea onChange={this.onChange} type="text" name="requirements" value={requirements} placeholder="Add skills/experience the applicant should have."   required />
+              {getFieldDecorator('requirements', {
+              rules: [{
+                required: true,
+                message: `Please provide job requirements`,
+                min: 1,
+                max: 12000,
+                hasFeedback: true,
+                help: `About 2000 words maximum`
+              }]
+            })(
+              <TextArea type="text" placeholder="Add skills/experience the applicant should have." name="requirements" onChange={this.onChange}/>
+            )}
             </FormItem>
   
             <div className="flex">
@@ -191,7 +252,7 @@ class JobPost extends React.Component {
               </FormItem>
               <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
             </div>
-            
+            <br />
             {/* Error / Success messages */}
             {error ? (
               <Alert message={error} type="error" closable showIcon />
