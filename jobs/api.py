@@ -81,6 +81,7 @@ class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
             'company',
             'company_name',
             'title',
+            'company_logo',
             'description',
             'job_location',
             'requirements',

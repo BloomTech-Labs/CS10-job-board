@@ -13,8 +13,6 @@ class CompanyRegister extends React.Component {
             email: '',
             password: '',
             repeatpassword: '',
-            firstName: '',
-            lastName: '',
             is_employer: true,
             error: null,
             message: null
@@ -95,8 +93,6 @@ class CompanyRegister extends React.Component {
                         <Input type="password" name="repeatpassword" prefix={<Icon type="lock" />}  autoComplete="off" value={repeatpassword} placeholder="repeat password" onChange={this.passwordChange2} required/>
                     </Tooltip>
                 </FormItem>
-                <Input type="text" name="firstName" prefix={<Icon type="idcard" />} autoComplete="given-name" value={firstName} placeholder="First Name" onChange={this.onChange}/>
-                <Input type="text" name="lastName" prefix={<Icon type="idcard" />} autoComplete="family-name" value={lastName} placeholder="Last Name" onChange={this.onChange}/>
                 <Button type="primary" htmlType="submit" className="login-form-button" onClick={this.handleSubmit}>Sign Up</Button>
             </Form>
         );

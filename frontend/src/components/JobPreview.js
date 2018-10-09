@@ -15,7 +15,7 @@ const JobPreview = props => {
         <div>
             <div className="job-preview">
                 <h2>{job.title}</h2>
-                <h3>{numeral(job.min_salary).format('($0.00a)')} - {numeral(job.max_salary).format('($0.00a)')}</h3>
+                <h3>{numeral(job.min_salary).format('($0a)')} - {numeral(job.max_salary).format('($0a)')}</h3>
                 <p>{job.description}</p>
             </div>
             <StylelizedLine />

@@ -1,5 +1,5 @@
 import uuid
-# from djoser.views import UserView, UserDeleteView
+#from djoser.views import UserView, UserDeleteView
 # from djoser import serializers
 # from django.shortcuts import render
 from django.conf import settings

@@ -13,8 +13,6 @@ router = DefaultRouter()
 User = get_user_model()
 
 
-app_name = 'memberships'
-
 # Assign custom paths for views
 
 urlpatterns = [

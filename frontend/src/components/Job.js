@@ -45,7 +45,7 @@ class Job extends React.Component {
                             <p>{job.company_desc}</p>
                         </div>
                         <h2>{job.title}</h2>
-                        <h3>{numeral(job.min_salary).format('($0.00a)')} - {numeral(job.max_salary).format('($0.00a)')}</h3>
+                        <h3>{numeral(job.min_salary).format('($0a)')} - {numeral(job.max_salary).format('($0a)')}</h3>
                         <h3>Job Description</h3>
                         <p>{job.description}</p>
                         <h3>Requirements</h3>
