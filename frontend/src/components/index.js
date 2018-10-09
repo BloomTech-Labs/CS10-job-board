@@ -18,6 +18,7 @@ export { default as JobPostCounter } from "./dashboard/JobPostCounter.js";
 
 // root
 export { default as Account } from "./Account.js";
+export { default as CompanyDashboard } from "./CompanyDashboard.js";
 export { default as Dashboard } from "./Dashboard.js";
 export { default as Job } from "./Job.js";
 export { default as JobList } from "./JobList.js";

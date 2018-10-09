@@ -7,6 +7,7 @@ import './css/App.css';
 import { Account,
   Billing,
   CompanyLanding,
+  CompanyDashboard,
   Dashboard,
   Job,
   JobList,
@@ -17,7 +18,8 @@ import { Account,
   EmployerProfile,
   JobPostCounter,
   PostedJobs,
-  PostedPreview } from "./components";
+  PostedPreview, 
+  } from "./components";
 import { Alert, Button} from "antd";
 
 class App extends React.Component {
@@ -168,11 +170,15 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />
+              <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />            
               ) : (
               <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
             )}
-            <Route path="/dashboard" render={() => <Dashboard token={token} logOut={this.logOut}/>} />
+            {employer ? (
+              <Route exact path="/dashboard" render={() => <CompanyDashboard token={token} logOut={this.logOut}/>} />
+            ) : (
+              <Route exact path="/dashboard" render={() => <Dashboard token={token} logOut={this.logOut}/>} />
+            )}
             <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} />
             <Route component={NoMatch} />
           </Switch>

@@ -1,23 +1,21 @@
-import React, { Component } from "react";
-import axios from "axios";
-import "../css/Dashboard.css";
-import Counter from './dashboard/JobPostCounter';
-import PostedJobs from "./dashboard/PostedJobs";
-import { withRouter, NavLink } from 'react-router-dom';
+import React from "react";
+import { withRouter } from "react-router-dom";
 
-class Dashboard extends Component {
-    render(){
+class Dashboard extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+
+        }
+    }
+
+    render() {
         return (
-            <div className="dashboard container">
-                <div className="row">
-                    <div className="col s12 m6"></div>
-                    <div className="col s12 m5 offset-m1"></div>
-                    <Counter />
-                    <PostedJobs />
-                </div>
+            <div>
+                <h1>Job Seeker Dashboard</h1>
             </div>
-        )
+        );
     }
 }
 
-export default Dashboard;
+export default withRouter(Dashboard);
