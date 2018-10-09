@@ -117,7 +117,7 @@ class JobPost(models.Model):
     company = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     company_name = models.CharField(max_length=128, blank=True)
     title = models.CharField(max_length=200, blank=True)
-    description = models.CharField(max_length=12000, blank=True, max)
+    description = models.CharField(max_length=12000, blank=True)
     job_location = models.CharField(max_length=128, blank=True)
     requirements = models.CharField(max_length=12000, null=True, blank=True)
     min_salary = models.IntegerField(null=True, blank=True)
