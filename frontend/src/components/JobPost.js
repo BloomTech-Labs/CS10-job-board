@@ -175,7 +175,7 @@ class JobPost extends React.Component {
               {getFieldDecorator('description', {
                 rules: [{
                   required: true,
-                  message: `At least a few words, no more than 2,000`,
+                  message: `Please provide a job description, no more than 2,000 words`,
                   min: 1,
                   max: 12000,
                   hasFeedback: true,
@@ -203,7 +203,7 @@ class JobPost extends React.Component {
               {getFieldDecorator('requirements', {
               rules: [{
                 required: true,
-                message: `Please provide job requirements`,
+                message: `Please provide job requirements, no more than 2,000 words`,
                 min: 1,
                 max: 12000,
                 hasFeedback: true,
