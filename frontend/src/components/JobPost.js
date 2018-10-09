@@ -44,50 +44,55 @@ class JobPost extends React.Component {
 
   handleJobPost = e => {
     e.preventDefault();
-    const { min_salary, max_salary, tags, is_active } = this.state;
+    const { company_name, title, description, job_location, requirements, min_salary, max_salary, tags, is_active } = this.state;
     this.setState({ error: null, message: null});
     // Authentication
     const token = localStorage.getItem('token');
     this.checkToken(e, this.props.token, token);
     // Validation
-    if (min_salary > max_salary) {
-      this.setState({ error: `Maximum Salary is less than Minimum Salary`});
-    } else if (tags.length > 50) {
-      this.setState({ error: `No more than 50 tags`});
+    if (company_name && title && description && job_location && requirements && min_salary && max_salary) {
+      
+      if (min_salary > max_salary) {
+        this.setState({ error: `Maximum Salary is less than Minimum Salary`});
+      } else if (tags.length > 50) {
+        this.setState({ error: `No more than 50 tags`});
+      } else {
+        // POST Request
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        axios.post(`${process.env.REACT_APP_API}addjob/`, this.state, requestOptions)
+          .then(response => {
+            if (is_active) {
+              this.setState({ message: `Draft Saved!`});
+            } else {
+              this.setState({ message: `Job Posted!` });
+            }
+            setTimeout(() => {
+              // Ant-Design form method to reset state with components wrapped in getFieldDecorator
+              this.props.form.setFields({
+                company_name: null,
+                title: null,
+                description: null,
+                job_location: null,
+                requirements: null
+              });
+              // Reset items not controlled by getFieldDecorator
+              this.setState({
+                message: null,
+                error: null,
+                visible: false,
+                min_salary: null,
+                max_salary: null,
+                tags: [],
+                is_active: false
+              });
+            }, 2500);
+          })
+          .catch(err => {
+            this.setState({ error: `Error processing request. Please try again.`})
+          });
+      }
     } else {
-      // POST Request
-      const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-      axios.post(`${process.env.REACT_APP_API}addjob/`, this.state, requestOptions)
-        .then(response => {
-          if (is_active) {
-            this.setState({ message: `Draft Saved!`});
-          } else {
-            this.setState({ message: `Job Posted!` });
-          }
-          setTimeout(() => {
-            // Ant-Design form method to reset state with components wrapped in getFieldDecorator
-            this.props.form.setFields({
-              company_name: null,
-              title: null,
-              description: null,
-              job_location: null,
-              requirements: null
-            });
-            // Reset items not controlled by getFieldDecorator
-            this.setState({
-              message: null,
-              error: null,
-              visible: false,
-              min_salary: null,
-              max_salary: null,
-              tags: [],
-              is_active: false
-            });
-          }, 2500);
-        })
-        .catch(err => {
-          this.setState({ error: `Error processing request. Please try again.`})
-        });
+      this.setState({ error: `Please fill out all the fields`});
     }
   }
 
@@ -141,7 +146,7 @@ class JobPost extends React.Component {
         onCancel={this.hideModal}
         footer={[null, null,]} >
 
-          <Form className="job-post" id="job-post-form" hideRequiredMark={true}>
+          <Form className="job-post" id="job-post-form" >
           
             <FormItem label="Company Name" >
               {getFieldDecorator('company_name', {
