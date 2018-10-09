@@ -16,7 +16,7 @@ class JobPost extends React.Component {
     this.state = {
       message: null,
       error: null,
-      visible: false,
+      formModal: false,
       company: this.props.company,
       company_name: null,
       title: null,
@@ -26,21 +26,11 @@ class JobPost extends React.Component {
       min_salary: null,
       max_salary: null,
       tags: [],
-      is_active: false
+      is_active: false,
+      resetFieldsModal: false
     };
   }
 
-  showModal = () => {
-    this.setState({
-      visible: true,
-    });
-  }
-
-  hideModal = () => {
-    this.setState({
-      visible: false,
-    });
-  }
 
   handleJobPost = e => {
     e.preventDefault();
@@ -67,24 +57,8 @@ class JobPost extends React.Component {
               this.setState({ message: `Job Posted!` });
             }
             setTimeout(() => {
-              // Ant-Design form method to reset state with components wrapped in getFieldDecorator
-              this.props.form.setFields({
-                company_name: null,
-                title: null,
-                description: null,
-                job_location: null,
-                requirements: null
-              });
-              // Reset items not controlled by getFieldDecorator
-              this.setState({
-                message: null,
-                error: null,
-                visible: false,
-                min_salary: null,
-                max_salary: null,
-                tags: [],
-                is_active: false
-              });
+              this.clearForm();
+              this.toggleFormModal();
             }, 2500);
           })
           .catch(err => {
@@ -92,8 +66,37 @@ class JobPost extends React.Component {
           });
       }
     } else {
-      this.setState({ error: `Please fill out all the fields`});
+      this.setState({ error: `Please fill out all of the required fields`});
     }
+  }
+
+  clearForm = () => {
+    // Ant-Design form method to reset state with components wrapped in {getFieldDecorator}
+    this.props.form.setFields({
+      company_name: null,
+      title: null,
+      description: null,
+      job_location: null,
+      requirements: null
+    });
+    // Reset items /not/ controlled by {getFieldDecorator}
+    this.setState({
+      message: null,
+      error: null,
+      min_salary: null,
+      max_salary: null,
+      tags: [],
+      is_active: false,
+      resetFieldsModal: false
+    });
+  }
+
+  toggleFormModal = () => {
+    this.setState({ formModal: !this.state.formModal });
+  }
+
+  toggleResetFieldsModal = () => {
+    this.setState({ resetFieldsModal: !this.state.resetFieldsModal});
   }
 
   checkToken = (e, appToken, token) => {
@@ -127,23 +130,24 @@ class JobPost extends React.Component {
     const {
       message,
       error,
-      visible,
+      formModal,
       min_salary,
       max_salary,
       tags,
-      is_active
+      is_active,
+      resetFieldsModal
     } = this.state;
     // Ant-d property from Form.create()
     const { getFieldDecorator } = this.props.form;
 
     return (
       <div>
-        <Button type="secondary" onClick={this.showModal}>Post a Job</Button>
+        <Button type="secondary" onClick={this.toggleFormModal}>Post a Job</Button>
 
 
         <Modal title="Post A Job"
-        visible={visible}
-        onCancel={this.hideModal}
+        visible={formModal}
+        onCancel={this.toggleFormModal}
         footer={[null, null,]} >
 
           <Form className="job-post" id="job-post-form" >
@@ -220,7 +224,7 @@ class JobPost extends React.Component {
             </FormItem>
   
             <div className="flex">
-              <FormItem label="Minimum Salary">
+              <FormItem label="Minimum Salary" className="ant-form-item-required">
                 <InputNumber
                   onChange={this.updateMinSalary} name="min_salary" id="min_salary"
                   step={10000}
@@ -233,7 +237,7 @@ class JobPost extends React.Component {
                 />
               </FormItem>
   
-              <FormItem label="Maximum Salary">
+              <FormItem label="Maximum Salary" className="ant-form-item-required">
                 <InputNumber
                   onChange={this.updateMaxSalary} name="max_salary" id="max_salary"
                   step={10000}
@@ -255,6 +259,16 @@ class JobPost extends React.Component {
               <FormItem label="Publish" id="publish">
                 <Switch onChange={this.togglePublish} checked={is_active}/>
               </FormItem>
+              <Button type="ghost" onClick={this.toggleResetFieldsModal}>Reset all fields</Button>
+              <Modal
+              okText="Delete all fields"
+              okType="danger"
+              visible={resetFieldsModal}
+              onCancel={this.toggleResetFieldsModal}
+              onOk={this.clearForm}
+              >
+                <p>Are you sure you want to delete all fields?</p>
+              </Modal>
               <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
             </div>
             <br />
