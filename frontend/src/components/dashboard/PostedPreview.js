@@ -1,6 +1,7 @@
 import React from "react";
+import axios from "axios";
 import numeral from "numeral";
-import '../css/JobPreview.css';
+// import '../css/JobPreview.css';
 
 const StylelizedLine = () => {
     return (
@@ -9,18 +10,19 @@ const StylelizedLine = () => {
     )
 };
 
-const JobPreview = props => {
+const PostedPreview = props => {
     const { job } = props;
     return (
         <div>
             <div className="job-preview">
                 <h2>{job.title}</h2>
-                <h3>{numeral(job.min_salary).format('($0a)')} - {numeral(job.max_salary).format('($0a)')}</h3>
-                <p>{job.description}</p>
+                <p>{job.created_date}</p>
+                {/* <h3>{numeral(job.min_salary).format('($0.00a)')} - {numeral(job.max_salary).format('($0.00a)')}</h3> */}
+                {/* <p>{job.description}</p> */}
             </div>
             <StylelizedLine />
         </div>
     );
 }
 
-export default JobPreview;
+export default PostedPreview;

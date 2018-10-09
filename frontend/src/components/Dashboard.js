@@ -1,12 +1,21 @@
 import React from "react";
-import "../css/Dashboard.css";
+import { withRouter } from "react-router-dom";
 
-const Dashboard = props => {
-    return (
-         <div className="dashboard">
-             <h2>Dashboard</h2>
-         </div>
-    );
+class Dashboard extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <h1>Job Seeker Dashboard</h1>
+            </div>
+        );
+    }
 }
 
-export default Dashboard;
+export default withRouter(Dashboard);

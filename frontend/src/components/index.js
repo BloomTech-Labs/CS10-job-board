@@ -11,8 +11,14 @@ export { default as Search } from "./utility/Search.js";
 // Billing
 export { default as Billing } from "./billing/Billing.js";
 export { default as CheckoutForm } from "./billing/CheckoutForm.js";
+//Dashboard Components
+export { default as PostedJobs } from "./dashboard/PostedJobs.js";
+export { default as PostedPreview } from "./dashboard/PostedPreview.js";
+export { default as JobPostCounter } from "./dashboard/JobPostCounter.js";
+
 // root
 export { default as Account } from "./Account.js";
+export { default as CompanyDashboard } from "./CompanyDashboard.js";
 export { default as Dashboard } from "./Dashboard.js";
 export { default as Job } from "./Job.js";
 export { default as JobList } from "./JobList.js";
