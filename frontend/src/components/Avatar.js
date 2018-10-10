@@ -1,6 +1,6 @@
 import React from "react";
 import { Upload, Icon, message } from 'antd';
-import "../css/EmployerProfile.css";
+import "../css/CompanyProfile.css";
 
 
 function getBase64(img, callback) {

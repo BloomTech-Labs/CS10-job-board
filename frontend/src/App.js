@@ -15,7 +15,7 @@ import { Account,
   Landing,
   Navigation,
   NoMatch,
-  EmployerProfile,
+  CompanyProfile,
   JobPostCounter,
   PostedJobs,
   PostedPreview, 
@@ -170,7 +170,7 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />            
+              <Route path="/account" render={() => <CompanyProfile token={token} logOut={this.logOut}/>} />            
               ) : (
               <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
             )}
