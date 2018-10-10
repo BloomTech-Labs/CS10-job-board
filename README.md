@@ -19,7 +19,7 @@ _A Job board for people without college degrees_
 
 ## Contributing
 
-If you'd like to add to the project, take a look at our currently opened [issues](https://github.com/Lambda-School-Labs/CS10-job-board/issues), or submit an issue.
+If you would like to add to the project, take a look at our currently opened [issues](https://github.com/Lambda-School-Labs/CS10-job-board/issues), or submit an issue.
 
     Development Environment:
     pip 18.0
@@ -32,27 +32,30 @@ A full list of server dependencies can be found in [requirements.txt](https://gi
 Client dependencies can be found in [package.json](https://github.com/Lambda-School-Labs/CS10-job-board/blob/master/frontend/package.json)
 
 ### Workflow in Django
-> Run `pipenv install`, `pipenv shell` to create virtual env  
-  Run \
+> 1. Run `pipenv install`, `pipenv shell` to create a virtual environment
+  2. Run inside virtural environment: \
   `./manage.py makemgrations` \
   `/.manage.py makemigrations jobs`\
   `/.manage.py migrate` \
-  to create tables in sqllite3 databse file \
-  Run `/manage.py runserver` to start development server
+  to create tables in SQLite3 databse file `db.sqlite3` \
+  3. Run `/manage.py runserver` to start the development server
 
 
-NB:
+**NB:**
 
-> Make sure pipenv python version is 3.6.6 with `pipenv install --python3.6.6`
+Python 3.6.6:
+> Make sure pipenv python version is 3.6.6 by running `python --version` inside virtual environment
+> - If python version is different, you can install 3.6.6 with `pipenv install --python3.6.6`. Make sure to have python3.6.6 installed on your local machine before attempting this command. [Download Python3.6.6](https://www.python.org/downloads/release/python-366/)
+
+Adding Dependencies:
 
 >When adding dependencies with `pip install`, make sure to add the dependency to the `requirements.txt`, with a specific version.
 
 #### When downloading a newer version of the app with modified dependencies:
 1.  delete the `Pipfile` and `Pipfile.lock`
 2.  use the command `pipenv install -r requirements.txt`
-3.  Manually change the `python_version` in the newly generated `Pipfile` to `3.6.6` 
-4.  Run `pipenv install` to update the lock file
-5.  Run python migration commands in `pipenv shell`:
+3.  Check the `python_version` in the newly generated `Pipfile` to make sure it is `3.6.6`. If not manually change it, and run `pipenv install` to update the lock file.
+4.  Run python migration commands in `pipenv shell`:
 
     `./manage.py makemigrations` \
     `./manage.py makemigrations jobs` \
@@ -67,7 +70,35 @@ NB:
 
 
 Netlify is configured to deploy from the master branch of this repo.
-Any merge into the master will be tested by Netlify's CI.
+Any pull request made to the project will be tested by Netlify's CI.
+
+### Architecture & Components
+
+#### Export / Import
+##### Components
+- All components are exported from `src/components/index.js`
+- To import a component inside another component, import directly from this `index.js` file. ie. `import { Example } from '../'`. If components are in the same directly, still import from index.js instead of `'./'`.
+- Avoid nesting folders more than one level inside `src/components/`
+ ##### CSS
+- All CSS files are imported into `src/css/index.css`
+- `index.css` is then imported into `App.js`
+- _No need to import CSS files directly into a component at all._
+
+#### Naming Convention
+- Avoid plural component names, i.e. `Jobs`; instead add a qualifier or none at all. For `Jobs`, instead choose `JobList`.
+- Avoid using `View` qualifier, if possible, because it is too vague. For `JobView`, choose `Job` instead. \
+ **Exception:** `TagView` is used in this project because ant-design has an existing `Tag` Component we are using, and you cannot have duplicate component names.
+- Folder names correspond to use case or user type.
+- Any component relating to only a company user, should begin with `Company`
+- Naming convention:
+    - `Thing` 
+    
+        > _Choose a default name (unqualified name) wisely - good rule of thumb is make the default view the most complete view, in terms of data._ 
+    - `ThingView` if multiple views exist of a `Thing` 
+        > ie `Job` and `JobList`/ `JobPreview`
+    - `UserThing` in the case of `Company`. 
+        > _The default user for this project is a Job Seeker; a component without a `User` is assumed to be the default_
+    - `UserThingView` if multiple views exist of a `UserThing`
 
 ### Numeral.js | [docs](http://numeraljs.com/)
 
@@ -105,12 +136,13 @@ To push the latest changes to Heroku, push from a local master branch of this re
 >1. Make sure you are deploying from the master branch 
 >2. If you want to deploy from a branch, run:
 `git push heroku branchname:master`.
->3. Start a heroku bash: `heroku run bash`: \
+>3. Start a heroku bash: `heroku run bash`: 
 >
 >    `./manage.py makemigrations` \
 >    `./manage.py makemigrations jobs` \
 >    `./manage.py migrate` \
->    _To create Faker data_ in Heroku shell: \
+
+>    - _To create Faker data in Heroku shell:_ \
 >    `/manage.py shell` \
 >    `/manage.py import seeder`
 

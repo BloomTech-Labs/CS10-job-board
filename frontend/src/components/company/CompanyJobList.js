@@ -2,10 +2,9 @@ import React from "react";
 import axios from "axios";
 import { Button, Alert, Icon, Input } from "antd";
 import { Link, withRouter } from "react-router-dom";
-import PostedPreview from "./PostedPreview";
-import '../../css/JobList.css'
+import { JobPreview } from "../";
 
-class PostedJobs extends React.Component {
+class CompanyJobList extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -68,7 +67,7 @@ t
                                 {jobs.map(job => {
                                 return (
                                     <Link key={job.created_date} to={`/dashboard/${job.id}`}>
-                                        <PostedPreview job={job}/>
+                                        <JobPreview job={job}/>
                                     </Link>
                                 );
                             })}
@@ -79,4 +78,4 @@ t
     }
 }
 
-export default withRouter(PostedJobs);
+export default withRouter(CompanyJobList);

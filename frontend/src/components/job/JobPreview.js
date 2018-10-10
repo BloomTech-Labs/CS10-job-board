@@ -1,6 +1,5 @@
 import React from "react";
 import numeral from "numeral";
-import '../css/JobPreview.css';
 
 const StylelizedLine = () => {
     return (

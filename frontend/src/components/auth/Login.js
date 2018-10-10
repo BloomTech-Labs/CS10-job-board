@@ -3,7 +3,6 @@ import axios from "axios";
 import { Alert } from "antd";
 import { withRouter } from "react-router-dom";
 import { Form, Icon, Input, Button } from 'antd';
-import "../../css/Login.css";
 
 const FormItem = Form.Item;
 

@@ -1,7 +1,5 @@
 import React from "react";
-import { CompanyRegister } from ".";
-import "../css/CompanyLanding.css";
-
+import { CompanyRegister } from "../";
 
 class CompanyLanding extends React.Component {
     constructor(props) {

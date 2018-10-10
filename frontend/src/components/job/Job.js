@@ -3,8 +3,7 @@ import axios from "axios";
 import { withRouter } from "react-router-dom";
 import { Alert, Icon } from "antd";
 import numeral from "numeral";
-import { TagView } from "./";
-import '../css/Job.css';
+import { TagView } from "../";
 
 class Job extends React.Component {
     constructor(props) {

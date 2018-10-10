@@ -2,7 +2,6 @@ import React from 'react';
 import axios from "axios";
 import { Alert } from "antd";
 import { CardElement, injectStripe } from 'react-stripe-elements';
-import "../../css/CheckoutForm.css";
 
 class CheckoutForm extends React.Component {
   constructor(props) {

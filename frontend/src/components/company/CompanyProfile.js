@@ -1,15 +1,14 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { Avatar } from "./";
+import { Avatar } from "../";
 import { Form, Input, Button, Divider, Collapse } from 'antd';
-import "../css/EmployerProfile.css"
 
 const FormItem = Form.Item;
 
 const { TextArea } = Input;
 const Panel = Collapse.Panel;
 
-class EmployerProfile extends React.Component {
+class CompanyProfile extends React.Component {
   state = {
     confirmDirty: false,
     autoCompleteResult: [],
@@ -225,4 +224,4 @@ class EmployerProfile extends React.Component {
   }
 }
 
-export default EmployerProfile = Form.create()(withRouter(EmployerProfile));
+export default CompanyProfile = Form.create()(withRouter(CompanyProfile));

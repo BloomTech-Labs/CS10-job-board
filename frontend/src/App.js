@@ -1,9 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Route, Switch, withRouter, NavLink } from "react-router-dom";
-// Do not change the order of imports on lines 6 - 8 to preserve styling specificty
-import './css/AntDesignOverride.css';
-import './css/App.css';
+import './css/index.css';
 import { Account,
   Billing,
   CompanyLanding,
@@ -15,9 +13,9 @@ import { Account,
   Landing,
   Navigation,
   NoMatch,
-  EmployerProfile,
-  JobPostCounter,
-  PostedJobs,
+  CompanyProfile,
+  CompanyJobCounter,
+  CompanyJobList,
   PostedPreview, 
   } from "./components";
 import { Alert, Button} from "antd";
@@ -170,7 +168,7 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />            
+              <Route path="/account" render={() => <CompanyProfile token={token} logOut={this.logOut}/>} />            
               ) : (
               <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
             )}

@@ -1,7 +1,5 @@
 import React from "react";
 import { Upload, Icon, message } from 'antd';
-import "../css/EmployerProfile.css";
-
 
 function getBase64(img, callback) {
   const reader = new FileReader();

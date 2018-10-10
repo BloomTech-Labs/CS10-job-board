@@ -179,16 +179,6 @@ def get_selected_membership(request):
 	return None
 
 
-def get_selected_membership(request):
-	membership_type = request.session['selected_membership_type']
-	selected_membership_qs = Membership.objects.filter(
-            membership_type=membership_type)
-	if selected_membership_qs.exists():
-		return selected_membership_qs.first()
-	return None
-
-
-
 # for selecting a paid membership
 class MembershipSelectView(generics.ListAPIView):
     model = Membership

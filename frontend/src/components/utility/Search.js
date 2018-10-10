@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import { Icon } from "antd";
-import '../../css/Search.css';
 
 class Search extends React.Component {
     state = {
