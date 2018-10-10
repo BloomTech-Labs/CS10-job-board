@@ -24,8 +24,9 @@ class CompanyRegister extends React.Component {
     }
 
     handleSubmit = e => {
-        const { email, password, repeatpassword } = this.state;
         e.preventDefault();
+        const { email, password, repeatpassword } = this.state;
+        this.setState({ error: null, message: null });
         if (!email.includes('@' && '.') || email.length < 6) {
             this.setState({ error: 'Please provide a valid email address.'});
         } else if (password.length < 8 || repeatpassword.length < 8) {
