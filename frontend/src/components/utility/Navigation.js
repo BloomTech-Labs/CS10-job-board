@@ -35,7 +35,7 @@ const Navigation = props => {
             {employer ? (  
                     <JobPost logOut={logOut} token={token} company={user}/>
                 ) : (null)}
-            <Dropdown overlay={menu} trigger={['hover']} placement="bottomRight">
+            <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
                 <a className="ant-dropdown-link">
                   <Icon type="setting" />
                 </a>
