@@ -50,9 +50,9 @@ class JobPost extends React.Component {
         axios.post(`${process.env.REACT_APP_API}addjob/`, this.state, requestOptions)
           .then(response => {
             if (is_active) {
-              this.setState({ message: `Draft Saved!`});
-            } else {
               this.setState({ message: `Job Posted!` });
+            } else {
+              this.setState({ message: `Draft Saved!`});
             }
             setTimeout(() => {
               this.clearForm();
