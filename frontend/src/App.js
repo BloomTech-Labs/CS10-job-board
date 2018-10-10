@@ -1,9 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Route, Switch, withRouter, NavLink } from "react-router-dom";
-// Do not change the order of the imports below this comment to preserve styling specificity
-import './css/AntDesignOverride.css';
-import './css/App.css';
+import './css/index.css';
 import { Account,
   Billing,
   CompanyLanding,
@@ -16,8 +14,8 @@ import { Account,
   Navigation,
   NoMatch,
   CompanyProfile,
-  JobPostCounter,
-  PostedJobs,
+  CompanyJobCounter,
+  CompanyJobList,
   PostedPreview, 
   } from "./components";
 import { Alert, Button} from "antd";
