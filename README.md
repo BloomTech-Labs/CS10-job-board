@@ -77,7 +77,7 @@ Any pull request made to the project will be tested by Netlify's CI.
 #### Export / Import
 ##### Components
 - All components are exported from `src/components/index.js`
-- To import a component inside another component, import directly from this `index.js` file. ie. `import { Example } from '../'`. If components are in the same directly, still import from index.js instead of `'./'`.
+- To import a component inside another component, import directly from this `index.js` file. ie. `import { Example } from '../'`. If components are in the same directory, still import from index.js instead of `'./'`.
 - Avoid nesting folders more than one level inside `src/components/`
  ##### CSS
 - All CSS files are imported into `src/css/index.css`
