@@ -3,6 +3,8 @@
 db.sqlite3
 jobs/migrations
 .vscode
+Pipfile
+Pipfile.lock
 
 # Frontend ignore
 frontend/.env
