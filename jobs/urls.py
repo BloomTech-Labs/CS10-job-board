@@ -1,4 +1,3 @@
-from django.conf.urls import re_path
 from django.urls import path
 from django.contrib.auth import get_user_model
 from djoser import views as djoser_views
@@ -34,7 +33,7 @@ urlpatterns = [
     # Jobs API
     path('jobs/', views.ListJobPost.as_view()),
     # Invidual job view
-    path('jobs/<int:pk>/', views.DetailJobPost.as_view()),
+    path('jobs/<int:pk>/', views.ViewJobPost.as_view()),
     # Jobs posted by a user
     path('company/jobs/', views.ListCompanyJobPosts.as_view()),
     path('addjob/', views.CreateJobPost.as_view()),
