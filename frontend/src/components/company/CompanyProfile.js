@@ -1,8 +1,7 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { Avatar } from ".";
+import { Avatar } from "../";
 import { Form, Input, Button, Divider, Collapse } from 'antd';
-import "../css/CompanyProfile.css"
 
 const FormItem = Form.Item;
 

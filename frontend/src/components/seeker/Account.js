@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import '../css/Account.css';
 
 class Account extends React.Component {
     constructor(props) {

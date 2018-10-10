@@ -1,9 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
-import { TagCreate } from "./";
-import "../css/JobPost.css"
-
+import { TagCreate } from "../";
 import { Alert, Form, Input, InputNumber, Button, Switch, Modal } from 'antd';
 
 const FormItem = Form.Item;

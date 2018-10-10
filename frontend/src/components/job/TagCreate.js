@@ -1,8 +1,5 @@
 import React from 'react';
 import { Tag, Tooltip, Input, Icon } from 'antd';
-import 'antd/dist/antd.css';
-import '../css/JobPost.css';
-
 
 class TagCreate extends React.Component {
   constructor(props) {

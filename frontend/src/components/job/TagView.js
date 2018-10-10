@@ -1,6 +1,5 @@
 import React from "react";
 import { Tag, Tooltip } from "antd";
-import '../css/Tag.css';
 
 const TagView = props => {
     const { tag } = props;
