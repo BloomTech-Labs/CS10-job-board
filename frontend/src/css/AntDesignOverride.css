@@ -88,3 +88,7 @@
     width: 100%;
     max-width: 150px;
 }
+
+.ant-switch-checked {
+    background-color: #604CB0;
+}

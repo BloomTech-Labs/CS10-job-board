@@ -3,20 +3,25 @@ import uuid
 
 from django.conf import settings
 from django.http import HttpResponse 
+from decouple import config 
 
+# Email 
 import sendgrid 
 from sendgrid.helpers.mail import * 
 
 from djoser.views import UserView, UserDeleteView
 from djoser import serializers
 
-from rest_framework import views, permissions, status
 from rest_framework.response import Response
 from rest_framework import views, permissions, status, generics
 from .models import User, JobPost, Membership, UserMembership, Subscription
 
 from django.shortcuts import render
 
+#from djoser.views import UserView, UserDeleteView
+# from djoser import serializers
+# from django.shortcuts import render
+from django.conf import settings
 from django.utils import timezone
 from django.views.generic import ListView
 from django.urls import reverse
@@ -42,7 +47,6 @@ from .api import (
     JWTSerializer
     )
 import stripe
-
 
 def jwt_get_secret_key(user):
     return user.jwt_secret
@@ -151,9 +155,9 @@ def get_user_subscription(request):
 
 def send_email(request):
     sg = sendgrid.SendGridAPIClient(
-        apikey=os.environ.get('SENDGRID_API_KEY')
+        apikey=config('SENDGRID_API_KEY')
     )
-    from_email = Email('test@example.com')
+    from_email = Email('openjobs@openjobsource.com')
     to_email = Email('cs10jobboard@gmail.com')
     subject = 'Testing!'
     content = Content(
@@ -165,6 +169,14 @@ def send_email(request):
 
     return HttpResponse('Email sent!')
 
+
+def get_selected_membership(request):
+	membership_type = request.session['selected_membership_type']
+	selected_membership_qs = Membership.objects.filter(
+            membership_type=membership_type)
+	if selected_membership_qs.exists():
+		return selected_membership_qs.first()
+	return None
 
 
 def get_selected_membership(request):
