@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Route, Switch, withRouter, NavLink } from "react-router-dom";
-// Do not change the order of imports on lines 6 - 8 to preserve styling specificty
+// Do not change the order of the imports below this comment to preserve styling specificity
 import './css/AntDesignOverride.css';
 import './css/App.css';
 import { Account,
