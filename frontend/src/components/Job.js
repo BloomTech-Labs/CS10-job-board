@@ -16,13 +16,11 @@ class Job extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchJob();
+        this.fetchJob(this.props.match.params.id);
     }
 
-    fetchJob = () => {
-        const token = localStorage.getItem('token');
-        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        axios.get(`${process.env.REACT_APP_API}${this.props.history.location.pathname}`, requestOptions)
+    fetchJob = id => {
+        axios.get(`${process.env.REACT_APP_API}jobs/${id}/`)
             .then(response => {
                 this.setState({ job: response.data });
             })
@@ -47,7 +45,7 @@ class Job extends React.Component {
                             <p>{job.company_desc}</p>
                         </div>
                         <h2>{job.title}</h2>
-                        <h3>{numeral(job.min_salary).format('($0.00a)')} - {numeral(job.max_salary).format('($0.00a)')}</h3>
+                        <h3>{numeral(job.min_salary).format('($0a)')} - {numeral(job.max_salary).format('($0a)')}</h3>
                         <h3>Job Description</h3>
                         <p>{job.description}</p>
                         <h3>Requirements</h3>

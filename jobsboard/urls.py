@@ -23,8 +23,8 @@ from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
 
 from jobs.urls import urlpatterns
-from jobs.views import UserLogoutAllView,send_email
 
+from jobs.views import UserLogoutAllView,send_email
 
 # Routers for automatically determining the URL configuration
 router = DefaultRouter()

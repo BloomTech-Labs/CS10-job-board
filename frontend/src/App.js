@@ -1,11 +1,13 @@
 import React from "react";
 import axios from "axios";
-import { Route, Switch, withRouter } from "react-router-dom";
-// Do not change the order of lines 4 - 6 to preserve styling logic
+import { Route, Switch, withRouter, NavLink } from "react-router-dom";
+// Do not change the order of imports on lines 6 - 8 to preserve styling specificty
 import './css/AntDesignOverride.css';
 import './css/App.css';
 import { Account,
   Billing,
+  CompanyLanding,
+  CompanyDashboard,
   Dashboard,
   Job,
   JobList,
@@ -13,8 +15,12 @@ import { Account,
   Landing,
   Navigation,
   NoMatch,
-  EmployerProfile } from "./components";
-import { Alert } from "antd";
+  EmployerProfile,
+  JobPostCounter,
+  PostedJobs,
+  PostedPreview, 
+  } from "./components";
+import { Alert, Button} from "antd";
 
 class App extends React.Component {
   constructor(props) {
@@ -25,7 +31,8 @@ class App extends React.Component {
       message: null,
       token: null,
       jobs: null,
-      employer: true
+      employer: false,
+      user: null
     }
   }
 
@@ -34,32 +41,59 @@ class App extends React.Component {
     if (token) {
       axios.post(`${process.env.REACT_APP_LOGIN_API}refresh/`, { token: token })
         .then(response => {
-          this.logIn(response.data.token);
-          this.props.history.push('/jobs');
+          this.logIn(response.data);
         })
         .catch(err => {
-          this.logOut();
-          this.setState({ error: `Error processing request. Please log in or register.`});
+          if (err.message.includes('Network')) {
+            // Does not log user out if Internet connection or server is down.
+            this.setState({ error: `Problem connecting to server.`});
+          } else {
+            this.logOut(err, `Authentication expired. Please log in again.`);
+          }
         });
     }
     else {
       let path = this.props.history.location.pathname;
       this.props.history.push('/');
-      if (path !== '/') {
+      if (path !== '/' && path !== '/signin' && path !== '/company') {
         this.setState({ error: `Please log in or register.`});
       }
     }
   }
 
-  
-  logIn = token => {
-    this.setState({ loggedIn: true, error: null, message: null, token: token });
+  logIn = (data, registerCompany) => {
+    this.setState({ 
+      loggedIn: true,
+      error: null,
+      message: null,
+      token: data.token,
+      employer: data.user.is_employer,
+      user: data.user.id
+    });
+    localStorage.setItem('token', data.token);
+    // Redirect based on user type
+    if (registerCompany) {
+      this.props.history.push('/account');
+      this.setState({ message: `Please complete your company profile.`});
+    } else if (data.user.is_employer) {
+      this.props.history.push('/dashboard');
+    } else {
+      this.props.history.push('/jobs');
+    }
   }
 
-  logOut = () => {
+  logOut = (e, error) => {
     localStorage.removeItem('token');
-    this.setState({ loggedIn: false, token: null, error: null, message: null, jobs: null });
-    this.props.history.push('/');
+    this.setState({ 
+      loggedIn: false,
+      error: error,
+      message: null,
+      token: null,
+      jobs: null,
+      employer: false,
+      user: null
+    });
+    this.props.history.push('/signin');
   }
 
   setJobs = jobs => {
@@ -67,7 +101,12 @@ class App extends React.Component {
   }
 
   render() {
-    const { loggedIn, error, message, token, jobs, employer } = this.state;
+    const { loggedIn, error, message, token, jobs, employer, user } = this.state;
+    let location = this.props.history.location.pathname;
+    const home = location === '/';
+    const company = location === '/company';
+    const signin = location === '/signin';
+
     return (
       <div className="App">
 
@@ -79,22 +118,68 @@ class App extends React.Component {
         ) : (null)}
 
         {loggedIn ? (
-          <Navigation logOut={this.logOut} employer={employer}/>
-          ) : (null)}
+          <div className="nav-wrapper">
+            <Navigation logOut={this.logOut} employer={employer} token={token} user={user}/>
+          </div>
+        ) : (
+            // Navigation for unauthenticated users
+            <div className="nav-wrapper">
+
+              {home ? (
+                <div className="home-navigation">
+                  <div>
+                    <h1>Open Jobs</h1>
+                    <h3>No Degree, No Problem.<br/>Your next job is just a click away.</h3>
+                    <div className="whitespace"></div>
+                    <NavLink to='/company'><Button type="secondary">Post a Job</Button></NavLink>
+                    <NavLink to='/signin'><Button type="primary">Sign In</Button></NavLink>
+                  </div>
+                </div>
+              ) : (null)}
+
+              {company ? (
+                <div className="home-navigation">
+                  <div>
+                    <div className="whitespace"></div>
+                    <NavLink to='/'><Button type="secondary">Job Seeker</Button></NavLink>
+                    <NavLink to='/signin'><Button type="primary">Sign In</Button></NavLink>
+                  </div>
+                </div>
+              ) : (null)}
+
+              {signin ? (
+                <div className="home-navigation">
+                  <div>
+                    <div className="whitespace"></div>
+                    <NavLink to='/company'><Button type="secondary">Post a Job</Button></NavLink>
+                  </div>
+                </div>
+              ) : (null)}
+
+            </div>
+        )}
 
         <div className="main">
           <Switch>
-            <Route exact path="/" render={() => <Landing logIn={this.logIn}/>} />
+            {/* Landing Pages */}
+            <Route exact path="/" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
+            <Route path="/signin" render={() => <Landing logIn={this.logIn}/>} />
+            <Route path="/company" render={() => <CompanyLanding logIn={this.logIn}/>} />
+            {/* Non-Auth Routes */}
             <Route exact path="/jobs" render={() => <JobList jobs={jobs} setJobs={this.setJobs}/>} />
-            <Route path="/jobs/:id" component={Job} />
-            <Route path="/addjob" render={() => <JobPost token={token} logOut={this.logOut}/>} />  
+            <Route path="/jobs/:id" render={() => <Job />} />
+            {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />
+              <Route path="/account" render={() => <EmployerProfile token={token} logOut={this.logOut}/>} />            
               ) : (
               <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
             )}
+            {employer ? (
+              <Route exact path="/dashboard" render={() => <CompanyDashboard token={token} logOut={this.logOut}/>} />
+            ) : (
+              <Route exact path="/dashboard" render={() => <Dashboard token={token} logOut={this.logOut}/>} />
+            )}
             <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} />
-            <Route path="/dashboard" component={Dashboard} />
             <Route component={NoMatch} />
           </Switch>
         </div>

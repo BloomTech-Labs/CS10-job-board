@@ -12,7 +12,6 @@ from sendgrid.helpers.mail import *
 from djoser.views import UserView, UserDeleteView
 from djoser import serializers
 
-from rest_framework import views, permissions, status
 from rest_framework.response import Response
 from rest_framework import views, permissions, status, generics
 from .models import User, JobPost, Membership, UserMembership, Subscription
@@ -48,7 +47,6 @@ from .api import (
     JWTSerializer
     )
 import stripe
-
 
 def jwt_get_secret_key(user):
     return user.jwt_secret
@@ -154,6 +152,7 @@ def get_user_subscription(request):
         return user_subscription
     return None
 
+
 def send_email(request):
     sg = sendgrid.SendGridAPIClient(
         apikey=config('SENDGRID_API_KEY')
@@ -178,6 +177,16 @@ def get_selected_membership(request):
 	if selected_membership_qs.exists():
 		return selected_membership_qs.first()
 	return None
+
+
+def get_selected_membership(request):
+	membership_type = request.session['selected_membership_type']
+	selected_membership_qs = Membership.objects.filter(
+            membership_type=membership_type)
+	if selected_membership_qs.exists():
+		return selected_membership_qs.first()
+	return None
+
 
 
 # for selecting a paid membership
