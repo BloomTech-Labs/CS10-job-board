@@ -1,8 +1,7 @@
 import React from 'react';
-import { Login, Register } from './';
+import { Login, Register } from '../';
 import { Button } from 'antd';
 import { withRouter, NavLink } from 'react-router-dom';
-import '../css/Landing.css';
 
 class Landing extends React.Component {
     constructor(props) {
