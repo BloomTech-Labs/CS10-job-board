@@ -31,7 +31,7 @@ urlpatterns = [
     path('logout/all/', views.UserLogoutAllView.as_view(), name='logout-all'),
 
     # Jobs API
-    path('jobs/', views.ListJobPosts.as_view()),
+    path('jobs/', views.ListJobPost.as_view()),
     # Invidual job view
     path('jobs/<int:pk>/', views.ViewJobPost.as_view()),
     # Jobs posted by a company user
