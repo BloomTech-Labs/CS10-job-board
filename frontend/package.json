@@ -1,26 +1,63 @@
 {
-  "name": "job-board",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@types/numeral": "^0.0.25",
-    "antd": "3.9.3",
-    "axios": "0.18.0",
-    "chai": "^4.2.0",
-    "enzyme": "^3.0.0",
-    "enzyme-adapter-react-16": "^1.5.0",
-    "immutable": "^3.7.4",
-    "numeral": "^2.0.6",
-    "react": "16.5.0",
-    "react-dom": "16.5.0",
-    "react-router-dom": "4.3.1",
-    "react-scripts": "1.1.5",
-    "react-stripe-elements": "2.0.1"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
-  }
+	"name": "job-board",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@babel/polyfill": "^7.0.0",
+		"@types/numeral": "^0.0.25",
+		"antd": "3.9.3",
+		"axios": "0.18.0",
+		"immutable": "^3.7.4",
+		"numeral": "^2.0.6",
+		"react": "16.5.0",
+		"react-dom": "16.5.0",
+		"react-router-dom": "4.3.1",
+		"react-scripts": "1.1.5",
+		"react-stripe-elements": "2.0.1"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:coverage": "jest --coverage",
+  		"eject": "react-scripts eject"
+  	},
+	"jest": {
+		"setupFiles": [
+			"./jestsetup.js"
+		],
+		"snapshotSerializers": [
+			"enzyme-to-json/serializer"
+		],
+		"moduleNameMapper": {
+			"^.+\\.(css|scss)$": "identity-obj-proxy"
+		},
+		"setupTestFrameworkScriptFile": "jest-enzyme",
+		"testEnvironment": "enzyme",
+		"testEnvironmentOptions": {
+			"enzymeAdapter": "react16"
+		}
+	},
+	"devDependencies": {
+		"@types/jest": "^23.3.5",
+		"babel-core": "^6.26.3",
+		"babel-jest": "^23.6.0",
+		"enzyme": "^3.7.0",
+		"enzyme-adapter-react-16": "^1.6.0",
+		"enzyme-to-json": "^3.3.4",
+		"identity-obj-proxy": "^3.0.0",
+		"jest": "^23.6.0",
+		"jest-environment-enzyme": "^7.0.0",
+		"jest-enzyme": "^7.0.0",
+		"react-test-renderer": "^16.5.2",
+		"ts-jest": "^23.10.4",
+		"typescript": "^3.1.2"
+	},
+	"transform": {
+		"^.+\\.jsx?$": "babel-jest"
+	},
+	"transformIgnorePatterns": [
+		"/node_modules/"
+	]
 }
