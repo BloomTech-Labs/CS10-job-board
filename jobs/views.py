@@ -2,8 +2,8 @@ import os
 import uuid
 
 from django.conf import settings
-from django.http import HttpResponse 
-from decouple import config 
+from django.http import HttpResponse
+from decouple import config
 
 # Email 
 import sendgrid 
@@ -41,7 +41,6 @@ from .api import (
     JobPostSerializer,
     JobPreviewSerializer,
     UserIDSerializer,
-    UserRegistrationSerializer,
     MembershipSerializer,
     PaymentViewSerializer,
     JWTSerializer
@@ -57,15 +56,6 @@ def jwt_response_handler(token, user=None, request=None):
         'token': token,
         'user': JWTSerializer(user, context={'request': request}).data
     }
-
-
-class UserRegisterView(generics.CreateAPIView):
-    authentication_classes = (
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permission_classes = (permissions.IsAuthenticated,)
 
 
 class UserLogoutAllView(views.APIView):
@@ -84,15 +74,21 @@ class UserLogoutAllView(views.APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# setting up views for HTTP requests
-class ListJobPost(generics.ListAPIView):
+class ListJobPosts(generics.ListAPIView):
     # returns first 10 most recently published jobs
     queryset = JobPost.objects.exclude(published_date=None)[:10]
     serializer_class = JobPreviewSerializer
 
 
-# Returns preview list of Jobs posted by a company account
-class ListCompanyJobPosts(generics.ListAPIView):
+class ViewJobPost(generics.ListAPIView):
+    serializer_class = JobPostSerializer
+
+    # Override queryset: returns object whose id matches int passed in url params (self.kwargs)
+    def get_queryset(self):
+        return JobPost.objects.filter(id=self.kwargs['pk'])
+
+
+class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = JobPostSerializer
     authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
@@ -100,24 +96,81 @@ class ListCompanyJobPosts(generics.ListAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
+
+    # Methods update, perform_update, partial_update, destroy, perform_destory
+    #   all from Django REST Framework source-code mixins:
+    # https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py
+    # To customize, must overwrite but also add in default source-code.
+
+    # Override queryset: returns object whose id matches int passed in url params (self.kwargs)
+    def get_queryset(self):
+        return JobPost.objects.filter(id=self.kwargs['pk'])
+
+    def update(self, request, *args, **kwargs):
+        job = self.get_object()
+        # Check job company id matches user id
+        if job.company.pk is not self.request.user.pk:
+            message = {'FORBIDDEN'}
+            return Response(message, status=status.HTTP_403_FORBIDDEN)
+
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
+
+        return Response(serializer.data)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        job = self.get_object()
+        # Checks job id on request == user id making delete request:
+        #   (prevents company 1 deleting for company 2)
+        if job.company.pk is not self.request.user.pk:
+            message = {'FORBIDDEN'}
+            return Response(message, status=status.HTTP_403_FORBIDDEN)
+        self.perform_destroy(job)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def perform_destroy(self, instance):
+        instance.delete()
+
+
+# Returns preview list of Jobs posted by a company account
+class ListCompanyJobPosts(generics.ListCreateAPIView):
+    serializer_class = JobPostSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
+    # lookup_field = "company"
     
     def get_queryset(self):
         company = self.request.user
         return JobPost.objects.filter(company=company)
 
-
-class CreateJobPost(generics.CreateAPIView):
-    serializer_class = JobPostSerializer
-    authentication_classes = (
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permission_classes = (permissions.IsAuthenticated,)
-
     def post(self, request, *args, **kwargs):
+        # print('REQUEST>>>>', request.user.pk)
 
-        # print('REQUEST>>>>', request.data)
+        # Checks company id on request == user id making post request:
+        #   (prevents company 1 posting for company 2)
+        if request.data['company'] is not self.request.user.pk:
+            message = {'FORBIDDEN'}
+            return Response(message, status=status.HTTP_403_FORBIDDEN)
+        # If job post is published, set published_date to current time
         if request.data['is_active'] is True:
             request.data['published_date'] = timezone.now()
         # print('REQUEST>>>>', request.data)
@@ -128,11 +181,6 @@ class CreateJobPost(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         # print('SERIALIZER.DATA>>>>>>', serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
-    queryset = JobPost.objects.all()
-    serializer_class = JobPostSerializer
 
 
 ########### Membership Views and Methods ###########

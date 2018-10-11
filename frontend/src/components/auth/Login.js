@@ -23,6 +23,7 @@ class Login extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
+        this.setState({ error: null, message: null });
         axios.post(`${process.env.REACT_APP_LOGIN_API}`, this.state)
             .then(response => {
                 this.setState({ error: null });

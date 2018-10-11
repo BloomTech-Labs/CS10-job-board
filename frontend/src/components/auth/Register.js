@@ -25,8 +25,9 @@ class Register extends React.Component {
     }
 
     handleSubmit = e => {
-        const { email, password, repeatpassword } = this.state;
         e.preventDefault();
+        this.setState({ error: null, message: null });
+        const { email, password, repeatpassword } = this.state;
         if (!email.includes('@' && '.') || email.length < 6) {
             this.setState({ error: 'Please provide a valid email address.'});
         } else if (password.length < 8 || repeatpassword.length < 8) {

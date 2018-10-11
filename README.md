@@ -77,7 +77,7 @@ Any pull request made to the project will be tested by Netlify's CI.
 #### Export / Import
 ##### Components
 - All components are exported from `src/components/index.js`
-- To import a component inside another component, import directly from this `index.js` file. ie. `import { Example } from '../'`. If components are in the same directly, still import from index.js instead of `'./'`.
+- To import a component inside another component, import directly from this `index.js` file. ie. `import { Example } from '../'`. If components are in the same directory, still import from index.js instead of `'./'`.
 - Avoid nesting folders more than one level inside `src/components/`
  ##### CSS
 - All CSS files are imported into `src/css/index.css`
@@ -151,10 +151,20 @@ To push the latest changes to Heroku, push from a local master branch of this re
 
 [Notes on models](jobs/notes/MODELS.md)
 
-- `/api/jobs/` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (most rencetly published is first). It only accepts a GET request.
-- `/api/addjob/` accepts a POST request to create a new Job.
-- `/api/jobs/:id/` returns a specific job, and accepts PUT, and DELETE requests.
-- `/api/company/jobs/` returns a a list of jobs posted by an authenticated company user, in descending order (most rencently published is first)
+- `/api/jobs/` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (most recently published is first). 
+
+    >Accepts GET requests from both authenticated and       non-authenticated users.
+- `/api/jobs/:id/` returns a specific job. 
+
+    >Accepts GET requests from both authenticated and non-authenticated users.
+    
+- `/api/company/jobs/` returns a list of jobs posted by a user, in descending order (most recently published is first). 
+
+    >Accepts GET and POST requests from authenticated users. 
+- `/api/company/jobs/:id/` returns a specific job. 
+
+    >Accepts GET requests from any authenticated user. \
+    >Accepts PUT, PATCH, and DELETE requests only from authenticated users whose id matches the `company` id field on the returned job.
 
 
 ### Auth Routes
@@ -164,7 +174,7 @@ To push the latest changes to Heroku, push from a local master branch of this re
 
 *Dependency: **`rest_framework_jwt.views`***
 - `/api/login/` Generates a new token. Required fields: `email` & `password`
-- `/api/login/refresh/` Refreshes existing valid token. Refresdelta is set at a maximum of 7 days, before invalidatinoriginal token. Required fields: `token`
+- `/api/login/refresh/` Refreshes existing valid token. Refresh delta is set at a maximum of 7 days, before invalidating the original token. Required fields: `token`
 - `/api/login/verify/` Verifies token validity. Required fields: `token`
 - `/api/logout/all/` Creates a new JWT secret signature field on a User instance, which invalidates all existing tokens signed by previous secret. No required field. Request object must have the User requesting logout to be authenticated when accessing this API route. 
 
