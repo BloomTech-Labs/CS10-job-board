@@ -54,10 +54,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-                            view_name='posts-api:detail',
-                            lookup_field='slug'
-                            )
+    # url = serializers.HyperlinkedIdentityField(
+    #                         view_name='posts-api:detail',
+    #                         lookup_field='slug'
+    #                         )
     tags = TagListSerializerField()
     # company = UserIDSerializer()
 
@@ -82,8 +82,6 @@ class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     class Meta:
         model = JobPost
         fields = [
-            'url',
-            'slug',
             'company',
             'company_name',
             'title',
