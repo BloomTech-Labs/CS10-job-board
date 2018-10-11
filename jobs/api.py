@@ -11,6 +11,27 @@ class JWTSerializer(serializers.ModelSerializer):
         fields = ('id', 'is_employer')
 
 
+class UserViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'is_employer',
+            'email',
+            'password',
+            'is_active',
+            'is_staff',
+            'company_name',
+            'company_logo',
+            'company_summary',
+            'applications_inbox',
+            'first_name',
+            'last_name',
+            'profile_photo',
+            'created_date'
+        )
+
+
 class UserIDSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -34,12 +55,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
         )
-
-
-class UserViewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
 
 
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
