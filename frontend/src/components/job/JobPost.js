@@ -47,7 +47,7 @@ class JobPost extends React.Component {
       } else {
         // POST Request
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        axios.post(`${process.env.REACT_APP_API}addjob/`, this.state, requestOptions)
+        axios.post(`${process.env.REACT_APP_API}company/jobs/`, this.state, requestOptions)
           .then(response => {
             if (is_active) {
               this.setState({ message: `Job Posted!` });
