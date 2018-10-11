@@ -1,9 +1,10 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
 import App from '../App';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+// First test for App component
+
+test('render an app component', () => {
+  const wrapper = shallow(
+    <App/>
+  );
+  expect(wrapper).toHaveLength(1);
 });

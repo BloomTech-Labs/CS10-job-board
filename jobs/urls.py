@@ -1,4 +1,3 @@
-from django.conf.urls import re_path
 from django.urls import path
 from django.contrib.auth import get_user_model
 from djoser import views as djoser_views
@@ -32,12 +31,12 @@ urlpatterns = [
     path('logout/all/', views.UserLogoutAllView.as_view(), name='logout-all'),
 
     # Jobs API
-    path('jobs/', views.ListJobPost.as_view()),
+    path('jobs/', views.ListJobPosts.as_view()),
     # Invidual job view
-    path('jobs/<int:pk>/', views.DetailJobPost.as_view()),
-    # Jobs posted by a user
+    path('jobs/<int:pk>/', views.ViewJobPost.as_view()),
+    # Jobs posted by a company user
     path('company/jobs/', views.ListCompanyJobPosts.as_view()),
-    path('addjob/', views.CreateJobPost.as_view()),
+    path('company/jobs/<int:pk>/', views.ModifyJobPost.as_view()),
     # path('memberships/', (name='membership')),
 
     # Setting up for Membership types

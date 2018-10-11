@@ -41,7 +41,7 @@ urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('api/', include('jobs.urls')),
-    # path('memberships/', include('jobs.urls'), namespace='membership')),
+
     # Configure sendgrid 
     path('sendgrid/', send_email, name='sendgrid'),
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

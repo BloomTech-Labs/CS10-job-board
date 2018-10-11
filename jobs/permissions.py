@@ -13,3 +13,9 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
         return obj.user == request.user
 
+
+class CompanyPermissions(permissions.BasePermission):
+    pass
+
+# Reference: https://www.django-rest-framework.org/api-guide/permissions/
+

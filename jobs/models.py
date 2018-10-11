@@ -117,7 +117,7 @@ class JobPost(models.Model):
     company = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     company_name = models.CharField(max_length=200, blank=True)
     title = models.CharField(max_length=200, blank=True)
-    company_logo = models.ImageField(upload_to='post_image', blank=True)
+    company_logo = models.ImageField(upload_to='post_image', blank=True, null=True)
     description = models.CharField(max_length=12000, blank=True)
     job_location = models.CharField(max_length=200, blank=True)
     requirements = models.CharField(max_length=12000, null=True, blank=True)
@@ -130,9 +130,6 @@ class JobPost(models.Model):
      
     class Meta:
         ordering = ['-published_date']
-
-    def __str__(self):
-        return self.title
 
     @property
     def publish(self):
