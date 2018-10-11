@@ -100,7 +100,7 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
     # Methods update, perform_update, partial_update, destroy, perform_destory
     #   all from Django REST Framework source-code mixins:
     # https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py
-    # To customize, must overwrite but add in default source-code.
+    # To customize, must overwrite but also add in default source-code.
 
     # Override queryset: returns object whose id matches int passed in url params (self.kwargs)
     def get_queryset(self):
