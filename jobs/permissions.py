@@ -1,5 +1,5 @@
 from rest_framework import permissions
-
+from .models import User
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
@@ -12,3 +12,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
         return obj.user == request.user
+
