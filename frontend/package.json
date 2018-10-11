@@ -22,8 +22,12 @@
 		"test:coverage": "jest --coverage"
 	},
 	"jest": {
-		"setupFiles": [ "./jestsetup.js" ],
-		"snapshotSerializers": [ "enzyme-to-json/serializer" ],
+		"setupFiles": [
+			"./jestsetup.js"
+		],
+		"snapshotSerializers": [
+			"enzyme-to-json/serializer"
+		],
 		"moduleNameMapper": {
 			"^.+\\.(css|scss)$": "identity-obj-proxy"
 		},
@@ -50,8 +54,8 @@
 	},
 	"transform": {
 		"^.+\\.jsx?$": "babel-jest"
-  },
-  "transformIgnorePatterns": [
-    "/node_modules/"
-  ]
+	},
+	"transformIgnorePatterns": [
+		"/node_modules/"
+	]
 }
