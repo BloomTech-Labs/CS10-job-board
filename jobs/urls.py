@@ -35,7 +35,8 @@ urlpatterns = [
     # Invidual job view
     path('jobs/<int:pk>/', views.ViewJobPost.as_view()),
     # Jobs posted by a company user
-    path('company/jobs/', views.CompanyJobPosts.as_view()),
+    path('company/jobs/', views.ListCompanyJobPosts.as_view()),
+    path('company/jobs/<int:pk>/', views.ModifyJobPost.as_view()),
     # path('memberships/', (name='membership')),
 
     # Setting up for Membership types
