@@ -131,9 +131,6 @@ class JobPost(models.Model):
     class Meta:
         ordering = ['-published_date']
 
-    def __str__(self):
-        return self.title
-
     @property
     def publish(self):
         self.published_date = timezone.now()
