@@ -151,9 +151,20 @@ To push the latest changes to Heroku, push from a local master branch of this re
 
 [Notes on models](jobs/notes/MODELS.md)
 
-- `/api/jobs/` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (most recently published is first). Accepts GET requests.
-- `/api/jobs/:id/` returns a specific job. Accepts GET requests.
-- `/api/company/jobs/` returns a a list of jobs posted by an authenticated company user, in descending order (most recently published is first). Accepts GET and POST requests.
+- `/api/jobs/` returns a limited view of the 10 most recent jobs, sorted by publishing date in descending order (most recently published is first). 
+
+    >Accepts GET requests from both authenticated and       non-authenticated users.
+- `/api/jobs/:id/` returns a specific job. 
+
+    >Accepts GET requests from both authenticated and non-authenticated users.
+    
+- `/api/company/jobs/` returns a list of jobs posted by a user, in descending order (most recently published is first). 
+
+    >Accepts GET and POST requests from authenticated users. 
+- `/api/company/jobs/:id/` returns a specific job. 
+
+    >Accepts GET requests from any authenticated user. \
+    >Accepts POST, PUT, PATCH, and DELETE requests only from authenticated users whose id matches the `company` id field on the returned job.
 
 
 ### Auth Routes
