@@ -54,13 +54,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     company_name = models.CharField(max_length=200, blank=True)
-    company_logo = models.ImageField(upload_to='post_image', blank=True)
+    company_logo = models.ImageField(upload_to='post_image', blank=True, null=True)
     company_summary = models.CharField(max_length=6000, blank=True)
     applications_inbox = models.EmailField(blank=True, default='')
     first_name = models.CharField(max_length=200, blank=True)
     last_name = models.CharField(max_length=200, blank=True)
-    profile_photo = models.ImageField(upload_to='post_image', blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
+    profile_photo = models.ImageField(upload_to='post_image', blank=True, null=True)
+    created_date = models.DateTimeField(default=timezone.now, editable=False)
     jwt_secret = models.UUIDField(default=uuid.uuid4)
 
     objects = UserManager()
@@ -125,7 +125,7 @@ class JobPost(models.Model):
     max_salary = models.IntegerField(null=True, blank=True)
     is_active = models.BooleanField(default=False)
     tags = TaggableManager(verbose_name="Tags", help_text="Enter tags separated by commas", blank=True)
-    created_date = models.DateTimeField(default=timezone.now)
+    created_date = models.DateTimeField(default=timezone.now, editable=False)
     published_date = models.DateTimeField(blank=True, null=True)
      
     class Meta:
