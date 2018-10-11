@@ -66,7 +66,7 @@ class JobPreviewSerializer(serializers.ModelSerializer):
 class MembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membership
-        fields = ('membership_type', 'price', 'stripe_plan_id')
+        fields = ('membership_type', 'price')
 
 
 class UserMembershipSerializer(serializers.ModelSerializer):
