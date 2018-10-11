@@ -2,8 +2,8 @@ import os
 import uuid
 
 from django.conf import settings
-from django.http import HttpResponse 
-from decouple import config 
+from django.http import HttpResponse
+from decouple import config
 
 # Email 
 import sendgrid 
@@ -41,7 +41,6 @@ from .api import (
     JobPostSerializer,
     JobPreviewSerializer,
     UserIDSerializer,
-    UserRegistrationSerializer,
     MembershipSerializer,
     PaymentViewSerializer,
     JWTSerializer
@@ -57,15 +56,6 @@ def jwt_response_handler(token, user=None, request=None):
         'token': token,
         'user': JWTSerializer(user, context={'request': request}).data
     }
-
-
-class UserRegisterView(generics.CreateAPIView):
-    authentication_classes = (
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permission_classes = (permissions.IsAuthenticated,)
 
 
 class UserLogoutAllView(views.APIView):
@@ -84,15 +74,22 @@ class UserLogoutAllView(views.APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# setting up views for HTTP requests
-class ListJobPost(generics.ListAPIView):
+class ListJobPosts(generics.ListAPIView):
     # returns first 10 most recently published jobs
     queryset = JobPost.objects.exclude(published_date=None)[:10]
     serializer_class = JobPreviewSerializer
 
 
+class ViewJobPost(generics.ListAPIView):
+    serializer_class = JobPostSerializer
+
+    # Override queryset: returns object whose id matches int passed in url params (self.kwargs)
+    def get_queryset(self):
+        return JobPost.objects.filter(id=self.kwargs['pk'])
+
+
 # Returns preview list of Jobs posted by a company account
-class ListCompanyJobPosts(generics.ListAPIView):
+class CompanyJobPosts(generics.ListCreateAPIView):
     serializer_class = JobPostSerializer
     authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
@@ -100,24 +97,22 @@ class ListCompanyJobPosts(generics.ListAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
+    # lookup_field = "company"
     
     def get_queryset(self):
         company = self.request.user
+        print(company)
         return JobPost.objects.filter(company=company)
 
-
-class CreateJobPost(generics.CreateAPIView):
-    serializer_class = JobPostSerializer
-    authentication_classes = (
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permission_classes = (permissions.IsAuthenticated,)
-
     def post(self, request, *args, **kwargs):
+        # print('REQUEST>>>>', request.user.pk)
 
-        # print('REQUEST>>>>', request.data)
+        # Checks company id on request == user id making post request:
+        #   (prevents company 1 posting for company 2)
+        if request.data['company'] is not self.request.user.pk:
+            message = {'FORBIDDEN'}
+            return Response(message, status=status.HTTP_403_FORBIDDEN)
+        # If job post is published, set published_date to current time
         if request.data['is_active'] is True:
             request.data['published_date'] = timezone.now()
         # print('REQUEST>>>>', request.data)
@@ -128,11 +123,6 @@ class CreateJobPost(generics.CreateAPIView):
         headers = self.get_success_headers(serializer.data)
         # print('SERIALIZER.DATA>>>>>>', serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
-    queryset = JobPost.objects.all()
-    serializer_class = JobPostSerializer
 
 
 ########### Membership Views and Methods ###########
