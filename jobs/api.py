@@ -36,25 +36,18 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         )
 
 
+class UserViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = '__all__'
+
+
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
     tags = TagListSerializerField()
 
     class Meta:
         model = JobPost
-        fields = (
-            'company',
-            'company_name',
-            'title',
-            'company_logo',
-            'description',
-            'job_location',
-            'requirements',
-            'min_salary',
-            'max_salary',
-            'is_active',
-            'tags',
-            'created_date',
-            'published_date')
+        fields = '__all__'
 
 
 class JobPreviewSerializer(serializers.ModelSerializer):
@@ -66,7 +59,7 @@ class JobPreviewSerializer(serializers.ModelSerializer):
 class MembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = Membership
-        fields = ('membership_type', 'price', 'stripe_plan_id')
+        fields = ('membership_type', 'price')
 
 
 class UserMembershipSerializer(serializers.ModelSerializer):
