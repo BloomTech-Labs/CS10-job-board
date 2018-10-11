@@ -17,6 +17,7 @@ class UserIDSerializer(serializers.ModelSerializer):
         fields = ('id',)
 
 
+# Used by Djoser to register users, references in settings.py / DJOSER.SERIALIZERS.user_create
 class UserRegistrationSerializer(serializers.ModelSerializer):
 
     # Encrypts password with create_user=Django default create user method
