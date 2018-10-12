@@ -10,16 +10,37 @@ const { TextArea } = Input;
 const Panel = Collapse.Panel;
 
 class CompanyAccount extends React.Component {
-  state = {
-    confirmDirty: false,
-    autoCompleteResult: [],
-  };
+  constructor(props) {
+    super(props)
+    this.state ={
+      confirmDirty: false,
+      autoCompleteResult: [],
+      error: null,
+      message: null
+    }
+  }
 
-  handleSubmit = (e) => {
+  componentDidMount() {
+
+  }
+
+  handleSubmit = e => {
     e.preventDefault();
+    this.setState({ error: null, message: null });
     this.props.form.validateFieldsAndScroll((err, values) => {
       if (!err) {
         console.log('Received values of form: ', values);
+      } else {
+        const token = localStorage.getItem('token');
+        this.props.checkToken(e, this.props.token, token);
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        axios.patch(`${process.env.REACT_APP_API}/account/${this.props.user}`, this.state, requestOptions)
+          .then(response => {
+            this.setState({ message: `Account successfully updated!`});
+          })
+          .catch(err => {
+            this.setState({ error: `Error processing your request. Try Again.`});
+          });
       }
     });
   }
