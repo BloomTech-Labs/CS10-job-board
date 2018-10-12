@@ -1,8 +1,8 @@
 import React from "react";
 import axios from "axios";
-import { Button, Alert, Icon, Input } from "antd";
+import { Form, Button, Checkbox, Alert, Icon, Input } from "antd";
 import { Link, withRouter } from "react-router-dom";
-import { JobPreview } from "../";
+import { JobPreview, CompanyJobCounter } from "../";
 
 class CompanyJobList extends React.Component {
     constructor(props) {
@@ -12,13 +12,17 @@ class CompanyJobList extends React.Component {
             message: null,
             loading: null,
             search: "",
+            count: null,
+            stripe_count: null,
+            published_count: null,
+            is_active: false,
             jobs: []
         }
     }
 
-    handleSearch = el => {
-        this.setState({search: el.target.value});
-    };
+    onChange = e => {
+        this.setState({ [e.target.name]: e.target.value });
+    }
 t 
     componentDidMount() {
         // // Prevents calling a GET request every time component is rendered
@@ -39,7 +43,11 @@ t
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
         axios.get(`${process.env.REACT_APP_API}company/jobs/`, requestOptions)
             .then(response => {
-                this.setState({ jobs: response.data.results });
+                // console.log(response);
+                this.setState({ 
+                    jobs: response.data.results,
+                    count: response.data.count,
+                 });
             })
             .catch(err => {
                 this.setState({ error: `Error processing request. Try Again.`});
@@ -50,20 +58,24 @@ t
 
 
     render() {
-        const { error, loading, jobs, search } = this.state;
+        const { error, loading, jobs, search, count, stripe_count, published_count, is_active } = this.state;
         return (
             <div className="jobs-list-container">
                 {error ? (
                    <Alert message={error} type="error" closable showIcon />
                    ) : (null)}
                 <div>
-                    <Input className="search" type="text" placeholder="search jobs" onChange={this.handleSearch} value={search}/>
+                    <CompanyJobCounter count={count} stripe_count={stripe_count} published_count={published_count}/>
                 </div>
                 {jobs ? (
-                        <div className="jobs-list">
+                    <div className="jobs-list">
+                        <Form>
+                            <Checkbox type="checkbox" name="is_active" value={is_active} onChange={this.onChange} />
+                            <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
                             <Button type="primary" onClick={this.fetchJobs}>
                                 <Icon type="sync" spin={loading}/>
                             </Button>
+                        </Form>
                                 {jobs.map(job => {
                                 return (
                                     <Link key={job.created_date} to={`/dashboard/${job.id}`}>
