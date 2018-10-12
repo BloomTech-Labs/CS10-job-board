@@ -49,7 +49,8 @@ import stripe
 def jwt_get_secret_key(user):
     return user.jwt_secret
 
-# determines payload added to JWT
+
+# determines extra field `user` added to returned JWT (payload itself is determined by payload_handler-> see jwt_config.py)
 def jwt_response_handler(token, user=None, request=None):
     return {
         'token': token,
