@@ -10,7 +10,6 @@ class JobList extends React.Component {
         this.state = {
             error: null,
             loading: null,
-            jobs: [],
         }
     }
 

@@ -11,6 +11,27 @@ class JWTSerializer(serializers.ModelSerializer):
         fields = ('id', 'is_employer')
 
 
+class UserViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'is_employer',
+            'email',
+            'password',
+            'is_active',
+            'is_staff',
+            'company_name',
+            'company_logo',
+            'company_summary',
+            'applications_inbox',
+            'first_name',
+            'last_name',
+            'profile_photo',
+            'created_date'
+        )
+
+
 class UserIDSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -37,29 +58,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
-    # url = serializers.HyperlinkedIdentityField(
-    #                         view_name='posts-api:detail',
-    #                         lookup_field='slug'
+    # url = serializers.HyperlinkedIdentityField(	
+    #                         view_name='posts-api:detail',	
+    #                         lookup_field='slug'	
     #                         )
     tags = TagListSerializerField()
 
     class Meta:
         model = JobPost
-        fields = [
-            'company',
-            'company_name',
-            'title',
-            'company_logo',
-            'description',
-            'job_location',
-            'requirements',
-            'min_salary',
-            'max_salary',
-            'is_active',
-            'tags',
-            'created_date',
-            'published_date'
-        ]
+        fields = '__all__'
 
 
 class JobPreviewSerializer(serializers.ModelSerializer):

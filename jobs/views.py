@@ -1,46 +1,39 @@
 import os 
 import uuid
-
-from django.conf import settings
-from django.http import HttpResponse
-
 from decouple import config
 
-import sendgrid 
-#from sendgrid.core.mail import send_email 
-from sendgrid.helpers.mail import *
-
-from djoser.views import UserView, UserDeleteView
-from djoser import serializers
-
-from rest_framework.response import Response 
-from .models import User, JobPost, Membership, UserMembership, Subscription
-
-from django.shortcuts import render
-
+# Django
+from django.conf import settings
+from django.contrib import messages
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, redirect
+from django.template import Context
+from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import ListView
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.template.loader import render_to_string  
-from django.template import Context
 
+# SendGrid
+import sendgrid
+from sendgrid.helpers.mail import *
 
-# Rest Framework
-from rest_framework import views, permissions, status, authentication, generics, pagination 
+# REST Framework
+from rest_framework import views, permissions, status, authentication, generics, pagination
 from .permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
-# JWT
+
+# JWT REST
 import rest_framework_jwt.authentication
+
 # Models
 from .models import User, JobPost, Membership, UserMembership, Subscription, Payment
+
 # Serializers
 from .api import (
     JobPostSerializer,
     JobPreviewSerializer,
     UserIDSerializer,
+    UserViewSerializer,
     MembershipSerializer,
     PaymentViewSerializer,
     JWTSerializer
@@ -48,17 +41,39 @@ from .api import (
 import stripe
 
 
+################### NOTES ######################
+# User creation is handled by Djoser, in settings.py / DJOSER / SERIALIZERS
+# Django REST Framework Generics reference: https://www.django-rest-framework.org/api-guide/generic-views/
+# Django REST Framework Views reference: https://www.django-rest-framework.org/api-guide/views/
+################################################
+
 def jwt_get_secret_key(user):
     return user.jwt_secret
 
-# determines payload added to JWT
+
+# determines extra field `user` added to returned JWT (payload itself is determined by payload_handler-> see jwt_config.py)
 def jwt_response_handler(token, user=None, request=None):
     return {
         'token': token,
         'user': JWTSerializer(user, context={'request': request}).data
     }
 
+# Create custom view because auth is handles by Django REST framework JWT Auth (not Djoser)
+class UserView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserViewSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
+    def get_queryset(self):
+        id = self.request.user.pk
+        return User.objects.filter(id=id)
+
+
+# Resets the jwt_secret, invalidating all token issued
 class UserLogoutAllView(views.APIView):
     authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
@@ -66,7 +81,6 @@ class UserLogoutAllView(views.APIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
-    # Resets the jwt_secret, invalidating all token issued
 
     def post(self, request, *args, **kwargs):
         user = request.user
@@ -80,7 +94,7 @@ class PostPageNumberPagination(pagination.PageNumberPagination):
     page_size_query_param = 'post'
     max_page_size = 20 
 
-# setting up views for HTTP requests
+
 class ListJobPost(generics.ListCreateAPIView):
     # returns first 10 most recently published jobs
     queryset = JobPost.objects.exclude(published_date=None)[:10]
@@ -159,7 +173,7 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
         instance.delete()
 
 
-# Returns preview list of Jobs posted by a company account
+# Returns list of Jobs posted by a company account
 class ListCompanyJobPosts(generics.ListCreateAPIView):
     serializer_class = JobPostSerializer
     authentication_classes = (
@@ -168,11 +182,17 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = PostPageNumberPagination
     # lookup_field = "company"
     
     def get_queryset(self):
         company = self.request.user
         return JobPost.objects.filter(company=company)
+        # print(self.request.data)
+        # if self.request.data['is_active'] is True:
+        #     return JobPost.objects.filter(published_date=True)
+        # else:
+        #     return JobPost.objects.filter(company=company)
 
     def post(self, request, *args, **kwargs):
         # print('REQUEST>>>>', request.user.pk)
@@ -194,11 +214,6 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         # print('SERIALIZER.DATA>>>>>>', serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-
-class DetailJobPost(generics.RetrieveUpdateDestroyAPIView):
-    queryset = JobPost.objects.all()
-    serializer_class = JobPostSerializer
-    lookup_field = 'slug'
 
 ########### Membership Views and Methods ###########
 
