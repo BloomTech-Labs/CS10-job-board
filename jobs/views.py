@@ -1,27 +1,28 @@
 import os 
 import uuid
-
-from django.conf import settings
-from django.http import HttpResponse
 from decouple import config
-from django.shortcuts import render
+
+# Django
 from django.conf import settings
+from django.contrib import messages
+from django.http import HttpResponseRedirect, HttpResponse
+from django.shortcuts import render, redirect
+from django.template import Context
+from django.template.loader import render_to_string
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import ListView
-from django.urls import reverse
-from django.http import HttpResponseRedirect
-from django.contrib import messages
-from django.shortcuts import render, redirect
 
-# Email 
-import sendgrid 
+# SendGrid
+import sendgrid
 from sendgrid.helpers.mail import *
 
-# Rest Framework
-from rest_framework import views, permissions, status, authentication, generics
+# REST Framework
+from rest_framework import views, permissions, status, authentication, generics, pagination
+from .permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
 
-# JWT
+# JWT REST
 import rest_framework_jwt.authentication
 
 # Models
@@ -88,10 +89,21 @@ class UserLogoutAllView(views.APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class ListJobPosts(generics.ListAPIView):
+class PostPageNumberPagination(pagination.PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'post'
+    max_page_size = 20 
+
+
+class ListJobPost(generics.ListCreateAPIView):
     # returns first 10 most recently published jobs
     queryset = JobPost.objects.exclude(published_date=None)[:10]
     serializer_class = JobPreviewSerializer
+    permission_classes  = [permissions.IsAuthenticatedOrReadOnly]
+    pagination_class = PostPageNumberPagination
+ 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 class ViewJobPost(generics.ListAPIView):
@@ -161,7 +173,7 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
         instance.delete()
 
 
-# Returns preview list of Jobs posted by a company account
+# Returns list of Jobs posted by a company account
 class ListCompanyJobPosts(generics.ListCreateAPIView):
     serializer_class = JobPostSerializer
     authentication_classes = (
@@ -215,21 +227,23 @@ def get_user_subscription(request):
     return None
 
 
+
 def send_email(request):
     sg = sendgrid.SendGridAPIClient(
         apikey=config('SENDGRID_API_KEY')
     )
-    from_email = Email('openjobs@openjobsource.com')
+    from_email = Email('contact@openjobsource.com')
     to_email = Email('cs10jobboard@gmail.com')
     subject = 'Testing!'
+    msg_html = render_to_string('templates/email_confirm.html', {'email': sendgrid})
     content = Content(
-        'text/plain',
-        'hello, world'
+        html_message=msg_html,
     )
     mail = Mail(from_email, subject, to_email, content)
     response = sg.client.mail.send.post(request_body=mail.get())
 
     return HttpResponse('Email sent!')
+
 
 
 def get_selected_membership(request):
@@ -239,6 +253,7 @@ def get_selected_membership(request):
 	if selected_membership_qs.exists():
 		return selected_membership_qs.first()
 	return None
+
 
 
 # for selecting a paid membership
