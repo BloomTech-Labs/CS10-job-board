@@ -6,9 +6,6 @@
 
 /* Controls Background Image properties of Company page */
 .hero-div-company {
-    display: flex;
-    flex-flow: column wrap;
-    align-items: center;
     background-image: url("../assets/hero.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -25,7 +22,7 @@
 }
 
 .company-landing h1 {
-    top: -25px;
+    bottom: 50px;
 }
 
 .company-landing h2 {
