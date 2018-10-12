@@ -182,11 +182,17 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = PostPageNumberPagination
     # lookup_field = "company"
     
     def get_queryset(self):
         company = self.request.user
         return JobPost.objects.filter(company=company)
+        # print(self.request.data)
+        # if self.request.data['is_active'] is True:
+        #     return JobPost.objects.filter(published_date=True)
+        # else:
+        #     return JobPost.objects.filter(company=company)
 
     def post(self, request, *args, **kwargs):
         # print('REQUEST>>>>', request.user.pk)
