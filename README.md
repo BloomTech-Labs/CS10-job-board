@@ -21,6 +21,9 @@ _A Job board for people without college degrees_
 
 If you would like to add to the project, take a look at our currently opened [issues](https://github.com/Lambda-School-Labs/CS10-job-board/issues), or submit an issue.
 
+**Make sure to always pull the latest master branch before submitting a PR.**
+- - -
+
     Development Environment:
     pip 18.0
     Python 3.6.6
