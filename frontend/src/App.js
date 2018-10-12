@@ -9,14 +9,10 @@ import { Account,
   Dashboard,
   Job,
   JobList,
-  JobPost,
   Landing,
   Navigation,
   NoMatch,
-  CompanyProfile,
-  CompanyJobCounter,
-  CompanyJobList,
-  PostedPreview, 
+  CompanyAccount
   } from "./components";
 import { Alert, Button} from "antd";
 
@@ -168,7 +164,7 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <CompanyProfile token={token} logOut={this.logOut}/>} />            
+              <Route path="/account" render={() => <CompanyAccount token={token} logOut={this.logOut}/>} />            
               ) : (
               <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
             )}
