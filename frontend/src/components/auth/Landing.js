@@ -29,7 +29,7 @@ class Landing extends React.Component {
 
                 {/* login toggles the display of Login or Register components */}
 
-                <div className="form-container">
+                <div>
                 {login ? (
                     <div className="landing-form">
                         <Login {...this.props} />
