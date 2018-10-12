@@ -3,7 +3,7 @@
     flex-flow: column wrap;
     align-items: center;
     width: 100%;
-    margin-top: 100px;
+    margin-top: 5vh;
     background-image: url("../assets/hero.svg");
     background-size: contain;
     background-repeat: no-repeat;
@@ -15,9 +15,4 @@
 
 .hero-div > h2 {
     top: 28px;
-}
-
-.form-container {
-    width: 50%;
-    margin-top: 160px;
 }
