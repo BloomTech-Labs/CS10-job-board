@@ -4,6 +4,7 @@
     margin-top: 100px;
 }
 
+/* Controls Background Image properties of Company page */
 .hero-div-company {
     display: flex;
     flex-flow: column wrap;
@@ -14,6 +15,9 @@
     background-repeat: no-repeat;
 }
 
+/* Controls Size of hero-div
+    allows image to be swapped without
+    messing with box sizes */
 .company-landing > div:first-child {
     display: flex;
     flex: 6 1;
@@ -29,6 +33,7 @@
     top: 20px;
 }
 
+/* Controls Company Register Form */
 .company-landing .landing-form {
     margin-top: 80px;
     flex: 2 1;
