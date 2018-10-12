@@ -37,7 +37,7 @@ class CompanyRegister extends React.Component {
             axios.post(`${process.env.REACT_APP_REGISTER_API}`, this.state)
                 .then(response => {
                     this.setState({ message: `Account Created! Redirecting... `});
-                    setTimeout(() => {                        
+                    setTimeout(() => {
                         axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email, password })
                             .then(response => {
                                 localStorage.setItem('token', response.data.token);
@@ -69,7 +69,7 @@ class CompanyRegister extends React.Component {
     }
 
     render() {
-        const { email, password, repeatpassword, firstName, lastName, error, message } = this.state;
+        const { email, password, repeatpassword, error, message } = this.state;
         return (
             <Form className="form">
 

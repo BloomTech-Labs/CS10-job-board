@@ -44,7 +44,6 @@ class Login extends React.Component {
                 {message ? (
                     <Alert message={message} type="success" closable showIcon />
                     ) : (null)}
-                
                 <h3>Login</h3>
                 <FormItem>
                 <Input type="text" name="email" prefix={<Icon type="user" />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />
