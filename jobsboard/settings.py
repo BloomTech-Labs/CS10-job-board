@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['job-board-backend.herokuapp.com', '127.0.0.1', 'https://www.openjobsource.com']
+ALLOWED_HOSTS = ['job-board-backend.herokuapp.com', '127.0.0.1', 'https://www.openjobsource.com', 'http://localhost:3000/']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
