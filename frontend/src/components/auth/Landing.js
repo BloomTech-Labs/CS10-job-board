@@ -16,7 +16,7 @@ class Landing extends React.Component {
     };
 
     render() {
-        const { login, error, loading } = this.state;
+        const { login } = this.state;
         return (
             <div className="landing">
                 <div className="hero-div">
@@ -29,7 +29,7 @@ class Landing extends React.Component {
 
                 {/* login toggles the display of Login or Register components */}
 
-                <div>
+                <div className="form-container">
                 {login ? (
                     <div className="landing-form">
                         <Login {...this.props} />
