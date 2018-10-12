@@ -9,6 +9,7 @@ class CompanyJobList extends React.Component {
         super(props)
         this.state = {
             error: null,
+            message: null,
             loading: null,
             search: "",
             jobs: []
@@ -33,13 +34,12 @@ t
     }
 
     fetchJobs = () => {
-        this.setState({ loading: true });
+        this.setState({ loading: true, error: null, message: null });
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
         axios.get(`${process.env.REACT_APP_API}company/jobs/`, requestOptions)
             .then(response => {
-                console.log(response);
-                this.setState({ jobs: response.data });
+                this.setState({ jobs: response.data.results });
             })
             .catch(err => {
                 this.setState({ error: `Error processing request. Try Again.`});
