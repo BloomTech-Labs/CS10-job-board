@@ -75,44 +75,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.email
 
 
-# class Employer(models.Model):
-#     # company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
-#     image = models.ImageField(upload_to='post_image', blank=True)
-#     email = models.EmailField()
-#     first_name = models.CharField(max_length=30)
-#     last_name = models.CharField(max_length=30)
-#     summary = models.TextField()
-#     applications_inbox = models.EmailField(blank=True, default='')
-#     password = models.CharField(max_length=100, default="", null=False)
-#     # is_employee = models.BooleanField(default=False)
-#     # is_active = models.BooleanField()
-#     created_date = models.DateTimeField(default=timezone.now)
-
-#     class Meta:
-#         ordering = ['created_date']
-
-#     def __str__(self):
-#         return '%s %s' % (self.first_name, self.last_name)
-
-
-# class Employee(models.Model):
-#     company_name = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
-#     image = models.ImageField(upload_to='post_image', blank=True)
-#     email = models.EmailField(unique=True)
-#     first_name = models.CharField(max_length=20)
-#     last_name = models.CharField(max_length=20)
-#     description = models.CharField(max_length=3000, )
-#     apps_inbox = models.CharField(max_length=35)
-#     password = models.CharField(max_length=100, default="", null=False)
-#     is_employer = models.BooleanField(default=False)
-#     created_date = models.DateTimeField(default=timezone.now)
-
-#     class Meta:
-#         ordering = ['created_date']
-
-#     def __str__(self):
-#         return '%s %s' % (self.first_name, self.last_name)
-
 class JobPost(models.Model):
     company = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     company_name = models.CharField(max_length=200, blank=True)

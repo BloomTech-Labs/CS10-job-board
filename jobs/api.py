@@ -68,7 +68,7 @@ class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
 class JobPreviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = JobPost
-        fields = ('id', 'title', 'description', 'min_salary', 'max_salary')
+        fields = ('id', 'title', 'company_logo', 'description', 'min_salary', 'max_salary')
 
 
 class MembershipSerializer(serializers.ModelSerializer):
