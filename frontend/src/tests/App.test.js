@@ -2,9 +2,8 @@ import App from '../App';
 
 // First test for App component
 
-test('render an app component', () => {
-  const wrapper = shallow(
-    <App/>
-  );
-  expect(wrapper).toHaveLength(1);
+test('App', () => {
+	const component = shallow(<App />);
+	expect(component).toHaveLength(1);
 });
+

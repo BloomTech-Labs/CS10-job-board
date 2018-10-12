@@ -27,7 +27,7 @@ function beforeUpload(file) {
   }
 }
 
-class Avatar extends React.Component {
+export default class Avatar extends React.Component {
   state = {
     loading: false,
   };
@@ -70,4 +70,4 @@ class Avatar extends React.Component {
   }
 }
 
-export default Avatar;
+
