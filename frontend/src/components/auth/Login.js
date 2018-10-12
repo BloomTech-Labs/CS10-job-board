@@ -1,7 +1,7 @@
-import React from "react";
-import axios from "axios";
-import { Alert } from "antd";
-import { withRouter } from "react-router-dom";
+import React from 'react';
+import axios from 'axios';
+import { Alert } from 'antd';
+import { withRouter } from 'react-router-dom';
 import { Form, Icon, Input, Button } from 'antd';
 
 const FormItem = Form.Item;

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import { Upload, Icon, message } from 'antd';
 
 function getBase64(img, callback) {

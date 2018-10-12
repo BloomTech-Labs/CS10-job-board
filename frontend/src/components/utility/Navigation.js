@@ -1,7 +1,7 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import { Menu, Dropdown, Button, Icon } from "antd";
-import { Search, JobPost } from "../";
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { Menu, Dropdown, Button, Icon } from 'antd';
+import { Search, JobPost } from '../';
 
 const Navigation = props => {
     const { employer, logOut, token, user } = props;

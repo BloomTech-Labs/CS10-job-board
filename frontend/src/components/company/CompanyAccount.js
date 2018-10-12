@@ -1,6 +1,7 @@
-import React from "react";
-import { withRouter } from "react-router-dom";
-import { Avatar } from "..";
+import React from 'react';
+import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import { Avatar } from '../';
 import { Form, Input, Button, Divider, Collapse } from 'antd';
 
 const FormItem = Form.Item;

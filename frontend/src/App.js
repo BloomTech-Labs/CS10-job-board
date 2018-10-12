@@ -1,6 +1,6 @@
-import React from "react";
-import axios from "axios";
-import { Route, Switch, withRouter, NavLink } from "react-router-dom";
+import React from 'react';
+import axios from 'axios';
+import { Route, Switch, withRouter, NavLink } from 'react-router-dom';
 import './css/index.css';
 import { Account,
   Billing,
@@ -13,8 +13,8 @@ import { Account,
   Navigation,
   NoMatch,
   CompanyAccount
-  } from "./components";
-import { Alert, Button} from "antd";
+  } from './components';
+import { Alert, Button} from 'antd';
 
 class App extends React.Component {
   constructor(props) {

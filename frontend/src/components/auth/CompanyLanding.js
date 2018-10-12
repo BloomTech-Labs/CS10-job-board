@@ -1,5 +1,5 @@
-import React from "react";
-import { CompanyRegister } from "../";
+import React from 'react';
+import { CompanyRegister } from '../';
 
 class CompanyLanding extends React.Component {
     constructor(props) {
