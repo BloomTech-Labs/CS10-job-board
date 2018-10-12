@@ -1,6 +1,6 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { Avatar } from "../";
+import { Avatar } from "..";
 import { Form, Input, Button, Divider, Collapse } from 'antd';
 
 const FormItem = Form.Item;
@@ -8,7 +8,7 @@ const FormItem = Form.Item;
 const { TextArea } = Input;
 const Panel = Collapse.Panel;
 
-class CompanyProfile extends React.Component {
+class CompanyAccount extends React.Component {
   state = {
     confirmDirty: false,
     autoCompleteResult: [],
@@ -224,4 +224,4 @@ class CompanyProfile extends React.Component {
   }
 }
 
-export default CompanyProfile = Form.create()(withRouter(CompanyProfile));
+export default CompanyAccount = Form.create()(withRouter(CompanyAccount));
