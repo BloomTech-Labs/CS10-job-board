@@ -1,8 +1,8 @@
-from datetime import datetime
-from calendar import timegm
-from rest_framework_jwt.settings import api_settings
+# from datetime import datetime
+# from calendar import timegm
+# from rest_framework_jwt.settings import api_settings
 
-# To fully customize JWT returned payload:
+# To fully customize JWT payload encoded on JWT itself:
 #   Reference -> https://github.com/GetBlimp/django-rest-framework-jwt/issues/145#issuecomment-249349031
 
 
