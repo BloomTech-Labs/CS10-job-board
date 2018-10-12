@@ -9,7 +9,7 @@ class JobList extends React.Component {
         super(props)
         this.state = {
             error: null,
-            loading: null
+            loading: null,
         }
     }
 
@@ -31,7 +31,7 @@ class JobList extends React.Component {
         axios.get(`${process.env.REACT_APP_API}jobs/`)
             .then(response => {
                 // setJobs is inherited from App.js
-                this.props.setJobs(response.data);
+                this.props.setJobs(response.data.results);
             })
             .catch(err => {
                 this.setState({ error: `Error processing request. Try Again.`});
