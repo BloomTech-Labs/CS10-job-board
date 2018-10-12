@@ -4,23 +4,7 @@ import uuid
 from django.conf import settings
 from django.http import HttpResponse
 from decouple import config
-
-# Email 
-import sendgrid 
-from sendgrid.helpers.mail import * 
-
-from djoser.views import UserView, UserDeleteView
-from djoser import serializers
-
-from rest_framework.response import Response
-from rest_framework import views, permissions, status, generics
-from .models import User, JobPost, Membership, UserMembership, Subscription
-
 from django.shortcuts import render
-
-#from djoser.views import UserView, UserDeleteView
-# from djoser import serializers
-# from django.shortcuts import render
 from django.conf import settings
 from django.utils import timezone
 from django.views.generic import ListView
@@ -29,23 +13,38 @@ from django.http import HttpResponseRedirect
 from django.contrib import messages
 from django.shortcuts import render, redirect
 
+# Email 
+import sendgrid 
+from sendgrid.helpers.mail import *
+
 # Rest Framework
 from rest_framework import views, permissions, status, authentication, generics
 from rest_framework.response import Response
+
 # JWT
 import rest_framework_jwt.authentication
+
 # Models
 from .models import User, JobPost, Membership, UserMembership, Subscription, Payment
+
 # Serializers
 from .api import (
     JobPostSerializer,
     JobPreviewSerializer,
     UserIDSerializer,
+    UserViewSerializer,
     MembershipSerializer,
     PaymentViewSerializer,
     JWTSerializer
     )
 import stripe
+
+
+################### NOTES ######################
+# User creation is handled by Djoser, in settings.py / DJOSER / SERIALIZERS
+# Django REST Framework Generics reference: https://www.django-rest-framework.org/api-guide/generic-views/
+# Django REST Framework Views reference: https://www.django-rest-framework.org/api-guide/views/
+################################################
 
 def jwt_get_secret_key(user):
     return user.jwt_secret
@@ -57,7 +56,22 @@ def jwt_response_handler(token, user=None, request=None):
         'user': JWTSerializer(user, context={'request': request}).data
     }
 
+# Create custom view because auth is handles by Django REST framework JWT Auth (not Djoser)
+class UserView(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = UserViewSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
 
+    def get_queryset(self):
+        id = self.request.user.pk
+        return User.objects.filter(id=id)
+
+
+# Resets the jwt_secret, invalidating all token issued
 class UserLogoutAllView(views.APIView):
     authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
@@ -65,7 +79,6 @@ class UserLogoutAllView(views.APIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
-    # Resets the jwt_secret, invalidating all token issued
 
     def post(self, request, *args, **kwargs):
         user = request.user
