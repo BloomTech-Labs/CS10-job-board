@@ -2,5 +2,6 @@
 import { JobPreview } from "../components";
 
 test('JobPreview', () => {
-    shallow(<JobPreview {...props} />);
+    const component = shallow(<JobPreview {...props} />);
+    expect(component).toHaveLength(2);
 });
