@@ -2,6 +2,11 @@
 import { JobPreview } from "../components";
 
 test('JobPreview', () => {
-    const component = shallow(<JobPreview {...props} />);
-    expect(component).toHaveLength(2);
+    const mockProps = {
+        title: "firstTitle",
+        min_salary: 100000,
+        max_salary: 200000,
+        description: "firstDescription"
+    }
+    shallow(<JobPreview {...mockProps} />);
 });
