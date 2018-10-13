@@ -181,7 +181,7 @@ JWT_AUTH = {
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
-    'sharp-bhabha-303aff.netlify.com',
+    'openjobsource.com',
     'job-board-backend.herokuapp.com',
 )
 
