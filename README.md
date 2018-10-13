@@ -21,6 +21,9 @@ _A Job board for people without college degrees_
 
 If you would like to add to the project, take a look at our currently opened [issues](https://github.com/Lambda-School-Labs/CS10-job-board/issues), or submit an issue.
 
+**Make sure to always pull the latest master branch before submitting a PR.**
+- - -
+
     Development Environment:
     pip 18.0
     Python 3.6.6
@@ -164,10 +167,14 @@ To push the latest changes to Heroku, push from a local master branch of this re
 - `/api/company/jobs/:id/` returns a specific job. 
 
     >Accepts GET requests from any authenticated user. \
-    >Accepts PUT, PATCH, and DELETE requests only from authenticated users whose id matches the `company` id field on the returned job.
+    >Accepts PUT, PATCH, and DELETE requests from authenticated users whose id matches the `company` id field on the returned job.
 
+### User API
 
-### Auth Routes
+- `/api/account/:id` returns a specific user.
+    >Accepts GET, PUT, PATCH, DELETE requests from authenticated users whose id matches the id of the user.
+
+### Auth API
 
 *Dependency: **djoser_views***
 - `/api/register/` Creates a new User, using Djoser to handle activation email. Required fields: `email` & `password`

@@ -8,9 +8,9 @@ from jobs import views
 
 router = DefaultRouter()
 
-
-User = get_user_model()
-
+######## NOTES ##########
+# Djoser view methods: https://github.com/sunscrapers/djoser/blob/master/djoser/views.py
+#########################
 
 # Assign custom paths for views
 
@@ -20,6 +20,7 @@ urlpatterns = [
 
     # Using Djoser to handle registration email/password reset
     path('register/', djoser_views.UserCreateView.as_view(), name='register'),
+    path('account/<int:pk>/', views.UserView.as_view(), name='account'),
 
     # JWT API
     path('login/', jwt_views.ObtainJSONWebToken.as_view(), name='login'),
@@ -31,7 +32,7 @@ urlpatterns = [
     path('logout/all/', views.UserLogoutAllView.as_view(), name='logout-all'),
 
     # Jobs API
-    path('jobs/', views.ListJobPosts.as_view()),
+    path('jobs/', views.ListJobPost.as_view()),
     # Invidual job view
     path('jobs/<int:pk>/', views.ViewJobPost.as_view()),
     # Jobs posted by a company user

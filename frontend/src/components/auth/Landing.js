@@ -16,7 +16,7 @@ class Landing extends React.Component {
     };
 
     render() {
-        const { login, error, loading } = this.state;
+        const { login } = this.state;
         return (
             <div className="landing">
                 <div className="hero-div">
