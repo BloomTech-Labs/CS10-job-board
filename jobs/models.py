@@ -53,7 +53,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=100, default="", null=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    company_name = models.CharField(max_length=200, blank=True, editable=True)
+    company_name = models.CharField(max_length=200, blank=True)
     company_logo = models.ImageField(upload_to='company_logo/%Y/%m/%d/', blank=True, null=True)
     company_summary = models.CharField(max_length=6000, blank=True)
     application_inbox = models.EmailField(blank=True, default='')
