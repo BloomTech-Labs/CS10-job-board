@@ -102,3 +102,7 @@
 .profile .ant-progress {
     position: absolute;
 }
+
+.profile .ant-alert {
+    position: absolute;
+}
