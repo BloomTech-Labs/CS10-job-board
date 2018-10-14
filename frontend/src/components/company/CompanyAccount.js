@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { Avatar } from '../';
-import { Form, Icon, Input, Button, Divider, Collapse, Progress } from 'antd';
+import { Alert, Form, Icon, Input, Button, Divider, Collapse, Progress } from 'antd';
 
 const FormItem = Form.Item;
 
@@ -181,11 +181,18 @@ class CompanyAccount extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { fileUrl, loadend, progress, uploadStatus } = this.state;
-    const uploaded = progress === 100;
+    const { fileUrl, loadend, progress, uploadStatus, error, message } = this.state;
     
     return (
       <div className="profile">
+
+
+        {error ? (
+          <Alert message={error} type="error" closable showIcon style={{position: "absolute"}} />
+          ) : (null)}
+        {message ? (
+          <Alert message={message} type="success" closable showIcon style={{position: "absolute"}}/>
+        ) : (null)}
 
         {/* Company Profile Form */}
 
@@ -241,7 +248,7 @@ class CompanyAccount extends React.Component {
             {fileUrl ? (
               <img src={fileUrl} id="company_logo" alt="company logo preview"/>
               ):(null)}
-            {uploaded && fileUrl ? (
+            {progress === 100 && fileUrl && !error ? (
                 <Progress type="circle" percent={100} width={55} style={{position: "absolute"}}/>
               ) : (
                 <div style={{position: "absolute"}}>
