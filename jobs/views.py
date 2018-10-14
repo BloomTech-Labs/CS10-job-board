@@ -24,7 +24,6 @@ from .permissions import IsOwnerOrReadOnly, CsrfExemptSessionAuthentication
 # REST Framework
 from rest_framework import views, permissions, status, authentication, generics, pagination
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 # JWT REST
@@ -62,15 +61,6 @@ def jwt_response_handler(token, user=None, request=None):
         'token': token,
         'user': JWTSerializer(user, context={'request': request}).data
     }
-
-class MediaView(views.APIView):
-    authentication_classes = (        
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        CsrfExemptSessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permissions_classes = (permissions.IsAuthenticated,)
-
 
 # Create custom view because auth is handles by Django REST framework JWT Auth (not Djoser)
 class UserView(generics.RetrieveUpdateDestroyAPIView):
