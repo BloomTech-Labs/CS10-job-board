@@ -28,13 +28,17 @@ function beforeUpload(file) {
 }
 
 class Avatar extends React.Component {
-  state = {
-    loading: false,
-  };
+  constructor(props) {
+    super(props)
+    this.state ={
+      loading: false
+    }
+  }
 
   handleChange = (info) => {
     if (info.file.status === 'uploading') {
       this.setState({ loading: true });
+      this.props.onImageChange(info);
       return;
     }
     if (info.file.status === 'done') {
@@ -60,7 +64,7 @@ class Avatar extends React.Component {
         listType="picture-card"
         className="avatar-uploader"
         showUploadList={false}
-        action="//jsonplaceholder.typicode.com/posts/"
+        customRequest={null}
         beforeUpload={beforeUpload}
         onChange={this.handleChange}
       >
