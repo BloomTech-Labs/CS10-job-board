@@ -173,7 +173,7 @@ To push the latest changes to Heroku, push from a local master branch of this re
 ### User API
 
 - `/api/account/:id` returns a specific user.
-    >Accepts GET, PUT, PATCH, DELETE requests from authenticated users whose id matches the id of the user.
+    >Accepts GET, PATCH, DELETE requests from authenticated users whose id matches the id of the user.
 
 ### Auth API
 
