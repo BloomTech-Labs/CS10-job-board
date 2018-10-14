@@ -54,4 +54,4 @@ urlpatterns = [
 # https://docs.djangoproject.com/en/2.1/howto/static-files/#serving-files-uploaded-by-a-user-during-development
 # if settings.DEBUG:
 #     # static files (images, css, javascript, etc.)
-#     urlpatterns += static(settings.MEDIA_URL, views.MediaView.as_view(), document_root=settings.MEDIA_ROOT)
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
