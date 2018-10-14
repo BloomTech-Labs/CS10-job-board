@@ -188,10 +188,10 @@ class CompanyAccount extends React.Component {
 
 
         {error ? (
-          <Alert message={error} type="error" closable showIcon style={{position: "absolute"}} />
+          <Alert message={error} type="error" closable showIcon />
           ) : (null)}
         {message ? (
-          <Alert message={message} type="success" closable showIcon style={{position: "absolute"}}/>
+          <Alert message={message} type="success" closable showIcon/>
         ) : (null)}
 
         {/* Company Profile Form */}
@@ -245,18 +245,19 @@ class CompanyAccount extends React.Component {
               accept="image/png, image/jpeg, image/svg+xml" 
               onChange={this.handleImageUpload} 
             />
+
             {fileUrl ? (
               <img src={fileUrl} id="company_logo" alt="company logo preview"/>
               ):(null)}
+
             {progress === 100 && fileUrl && !error ? (
                 <Progress type="circle" percent={100} width={55} style={{position: "absolute"}}/>
-              ) : (
-                <div style={{position: "absolute"}}>
-                  {progress > 0 && fileUrl ? (
-                    <Progress type="circle" percent={progress} status={uploadStatus} width={55} style={{position: "absolute"}}/>
-                  ) : (null)}
-                </div>
-              )}
+              ) : (null)}
+
+            {progress > 0 && fileUrl ? (
+              <Progress type="circle" percent={progress} status={uploadStatus} width={55} style={{position: "absolute"}}/>
+            ) : (null)}
+
           </FormItem>
 
           <FormItem label="Application Inbox"
