@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { Avatar } from '../';
-import { Form, Input, Button, Divider, Collapse } from 'antd';
+import { Form, Icon, Input, Button, Divider, Collapse } from 'antd';
 
 const FormItem = Form.Item;
 
@@ -16,7 +16,15 @@ class CompanyAccount extends React.Component {
       confirmDirty: false,
       autoCompleteResult: [],
       error: null,
-      message: null
+      message: null,
+      loadend: false,
+      company_name: null,
+      company_logo: null,
+      company_summary: null,
+      application_inbox: null,
+      first_name: null,
+      last_name: null,
+      fileUrl: null
     }
   }
 
@@ -27,23 +35,86 @@ class CompanyAccount extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     this.setState({ error: null, message: null });
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
+    const token = localStorage.getItem('token');
+    this.props.checkToken(e, this.props.token, token);
+    const requestOptions = { headers: { Authorization: `JWT ${token}`}};
+    const { company_name, company_logo, company_summary, application_inbox, first_name, last_name } = this.state;
+    const body = { company_name, company_logo, company_summary, application_inbox, first_name, last_name };
+    const formData = new FormData();
+    for (let key in body) {
+      console.log(key, body[key], body[key]);
+      if (key === 'comapany_image') {
+        console.log(key, body[key], body[key]['name']);
+        formData.append(key, body[key], body[key]['name'])
       } else {
-        const token = localStorage.getItem('token');
-        this.props.checkToken(e, this.props.token, token);
-        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        axios.patch(`${process.env.REACT_APP_API}/account/${this.props.user}`, this.state, requestOptions)
-          .then(response => {
-            this.setState({ message: `Account successfully updated!`});
-          })
-          .catch(err => {
-            this.setState({ error: `Error processing your request. Try Again.`});
-          });
+        formData.append(key, body[key]);
       }
-    });
+    }
+    // formData.append('company_logo', company_logo, company_logo.name);
+    console.log(formData, requestOptions);
+    axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
+      .then(response => {
+        this.setState({ message: `Account successfully updated!`});
+      })
+      .catch(err => {
+        this.setState({ error: `Error processing your request. Try Again.`});
+      });
   }
+
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  // Start Image File Upload Handlers 
+
+  handleImageUpload = e => {
+    this.setState({ error: null, message: null, company_logo: null, loadend: false, fileUrl: null });
+    const file = e.target.files[0];
+    const imgIsValid = this.beforeImgUpload(file);
+    if (imgIsValid) {
+      this.setState({ 
+        company_logo: file,
+        fileUrl: this.getBase64Img(file),
+        loadend: true
+       });
+    }
+  }
+
+  // Encoding for live preview
+  
+  getBase64Img = (file, cb) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => this.setState({ fileUrl: reader.result }), false);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // Validation beyond 'accepts' field on input[type="file"] check
+
+  beforeImgUpload = file => {
+    const isJPG = file.type === 'image/jpg';
+    const isPNG = file.type === 'image/png';
+    const isSVG = file.type === 'image/svg';
+    if (!isJPG && !isPNG && !isSVG) {
+      return this.setState({ error: 'You can only upload a .jpg, .png, or .svg file!'});
+    }
+    const isLt2M = file.size / 1024 / 1024 < 2;
+    if (!isLt2M) {
+      return this.setState({ error: 'Image must smaller than 2MB!'});
+    }
+    if (isJPG) {
+      return isJPG && isLt2M;
+    } else if (isPNG) {
+      return isPNG && isLt2M;
+    } else if (isSVG) {
+      return isSVG && isLt2M;
+    } else {
+      return false;
+    }
+  }
+
+  // End Image Upload Handlers
 
   handlePasswordSubmit = (e) => {
     e.preventDefault();
@@ -97,12 +168,16 @@ class CompanyAccount extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
+    const { fileUrl, loadend } = this.state;
     return (
       <div className="profile">
 
         {/* Company Profile Form */}
 
-        <Form className="form flex" title="Company Profile" layout='vertical'>
+        < Form className = "form flex"
+        title = "Company Profile"
+        layout = 'vertical'
+        encType = "multipart/form-data" >
 
           <Divider orientation="left" className="h3">Company Profile</Divider>
 
@@ -110,39 +185,59 @@ class CompanyAccount extends React.Component {
             {getFieldDecorator('company_name', {
               rules: [{
                 required: true,
-                message: 'Please input the company name',
+                message: 'Please add the company name',
               }],
             })(
-              <Input placeholder="" />
+              <Input placeholder="ie Google" name="company_name" onChange={this.onChange} />
             )}
           </FormItem>
 
           <FormItem label="Summary">
-            {getFieldDecorator('summary', {
+            {getFieldDecorator('company_summary', {
               rules: [{ required: true, message: 'Please input a description of your company!' }],
             })(
-              <TextArea placeholder="What problems are you solving with your product/service? What's the company culture like?" />
+              <TextArea 
+                placeholder="What problems are you solving with your product/service? What's the company culture like?"
+                name="company_summary" onChange={this.onChange}
+                 />
             )}
           </FormItem>
 
           {/* Logo upload */}
-          <FormItem label="Company Logo  *jpg, png, svg">
-            <Avatar
-              style={{float: 'right'}}
-              {...this.props} 
+          <div className="company-logo-upload-container">
+            <label htmlFor="company_logo_input">Company Logo  *jpg, png, svg</label>
+            {loadend ? (
+              <Icon type='close' onClick={() => {
+                document.getElementById("company_logo_input").value = "";
+                this.setState({ fileUrl: null, loadend: false});
+              }}></Icon>
+            ) : (
+                <Icon type='plus' onClick={() => document.getElementById("company_logo_input").click()}></Icon>
+            )}
+          </div>
+          <FormItem>
+            <Input 
+              id="company_logo_input"
+              type="file"
+              multiple={false}
+              accept="image/png, image/jpeg, image/svg+xml" 
+              onChange={this.handleImageUpload} 
             />
+            {fileUrl ? (
+              <img src={fileUrl} id="company_logo" alt="company logo preview"/>
+              ):(null)}
           </FormItem>
 
           <FormItem label="Application Inbox"
             style={{ float: 'left' }}>
-            {getFieldDecorator('inbox', {
+            {getFieldDecorator('application_inbox', {
               rules: [{
                 type: 'email', message: 'The input is not a valid email!',
               }, {
                 required: true, message: 'Please input your company email!',
               }],
             })(
-              <Input  placeholder="Email address to recieve applications" />
+              <Input  placeholder="Email address to recieve applications" name="application_inbox" onChange={this.onChange} />
             )}
           </FormItem>
 
@@ -150,28 +245,28 @@ class CompanyAccount extends React.Component {
             
           <div className="flex space-around">
             <FormItem label="First Name">
-              {getFieldDecorator('firstname', {
+              {getFieldDecorator('first_name', {
                 rules: [{
                   required: false,
                   message: 'Please input your first name',
                 }],
               })(
-                <Input placeholder="" />
+                <Input placeholder="" name="first_name" onChange={this.onChange}/>
               )}
             </FormItem>
             <FormItem label="Last Name">
-              {getFieldDecorator('lastname', {
+              {getFieldDecorator('last_name', {
                 rules: [{
                   required: false,
                   message: 'Please input your last name',
                 }],
               })(
-                <Input placeholder="" />
+                <Input placeholder="" name="last_name" onChange={this.onChange}/>
               )}
             </FormItem>
           </div>
 
-          <Button type="primary" onClick={this.handleSubmit} htmlType="submit" style={{ background: '#7892EA'}}>Save</Button>
+          <Button type="primary" onClick={this.handleSubmit} htmlType="submit">Save</Button>
 
         </Form>
 
@@ -209,7 +304,7 @@ class CompanyAccount extends React.Component {
                   )}
                 </FormItem>
 
-                <Button type="primary" onClick={this.handlePasswordSubmit} htmlType="submit" style={{ background: '#7892EA'}}>Save</Button>
+                <Button type="primary" onClick={this.handlePasswordSubmit}>Change Password</Button>
               </Form>
 
             </Panel>
@@ -230,7 +325,7 @@ class CompanyAccount extends React.Component {
                   )}
                 </FormItem>
                   
-                <Button type="primary" onClick={this.handleEmailSubmit} htmlType="submit" style={{ background: '#7892EA'}}>Save</Button>
+                <Button type="primary" onClick={this.handleEmailSubmit}>Change Email</Button>
 
               </Form>
 
