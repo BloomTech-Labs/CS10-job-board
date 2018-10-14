@@ -1,3 +1,21 @@
+/* 
+  COLOR VARS:
+  app background: #C7D5E2
+  headers: #4A4A4A
+  landing h1, landing-header: #604CB0
+  landing h3, landing-copy: #312C4B
+  form input border-bottom: 1px solid rgba(120, 146, 184, 0);
+  form input background:rgba(22, 122, 165, 0.06);
+  form input:placeholder color: rgba(0, 0, 0, 0.45);
+
+  //// AntDesignOverride.css ////
+  ant-button background: #604CB0
+  ant-button border: #D8D5EA
+  ant-button backgournd:hover: #c3b9ff
+  ant-button border-color: #896CFF
+*/
+
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -103,7 +121,7 @@ button:hover {
 }
 
 .home-navigation h3 {
-  color: rgb(49, 44, 75);
+  color: #312C4B;
   letter-spacing: -0.2px;
 }
 
@@ -128,7 +146,7 @@ button:hover {
 }
 
 .landing-copy {
-  color: rgb(49, 44, 75);
+  color: #312C4B;
   font-size: 3.2rem;
   position: relative;
   letter-spacing: -0.2px;
@@ -194,7 +212,6 @@ button:hover {
 
 .form h3 {
   margin: 1rem;
-  color: #4A4A4A;
 }
 
 .form button {

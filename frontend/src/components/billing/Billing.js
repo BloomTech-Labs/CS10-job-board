@@ -1,8 +1,8 @@
-import React from "react";
-import { Alert } from "antd";
-import { withRouter } from "react-router-dom";
-import { Elements, StripeProvider} from "react-stripe-elements";
-import {CheckoutForm} from "../";
+import React from 'react';
+import { Alert } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { Elements, StripeProvider} from 'react-stripe-elements';
+import {CheckoutForm} from '../';
 
 class Billing extends React.Component {
     constructor(props) {

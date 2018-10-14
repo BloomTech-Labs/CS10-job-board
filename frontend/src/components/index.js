@@ -13,7 +13,7 @@ export { default as CheckoutForm } from './billing/CheckoutForm.js';
 export { default as CompanyDashboard } from './company/CompanyDashboard.js';
 export { default as CompanyJobCounter } from './company/CompanyJobCounter.js';
 export { default as CompanyJobList } from './company/CompanyJobList.js';
-export { default as CompanyProfile } from './company/CompanyProfile.js';
+export { default as CompanyAccount } from './company/CompanyAccount.js';
 // Job
 export { default as Job } from './job/Job.js';
 export { default as JobList } from './job/JobList.js';

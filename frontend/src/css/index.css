@@ -6,11 +6,10 @@
 @import './App.css';
 
 /* Component Styles */
+@import './Account.css';
 @import './Billing.css';
 @import './CheckoutForm.css';
-@import './CheckoutForm.css';
-@import './CompanyLanding.css';
-@import './CompanyProfile.css';
+@import './CompanyAccount.css';
 @import './Dashboard.css';
 @import './Job.css';
 @import './JobList.css';

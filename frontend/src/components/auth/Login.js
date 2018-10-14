@@ -1,7 +1,7 @@
-import React from "react";
-import axios from "axios";
-import { Alert } from "antd";
-import { withRouter } from "react-router-dom";
+import React from 'react';
+import axios from 'axios';
+import { Alert } from 'antd';
+import { withRouter } from 'react-router-dom';
 import { Form, Icon, Input, Button } from 'antd';
 
 const FormItem = Form.Item;
@@ -44,7 +44,6 @@ class Login extends React.Component {
                 {message ? (
                     <Alert message={message} type="success" closable showIcon />
                     ) : (null)}
-                
                 <h3>Login</h3>
                 <FormItem>
                 <Input type="text" name="email" prefix={<Icon type="user" />} value={email} autoComplete="email" placeholder="Email" onChange={this.handleChange} />

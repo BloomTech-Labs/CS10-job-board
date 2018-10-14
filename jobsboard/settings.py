@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['job-board-backend.herokuapp.com', '127.0.0.1', 'https://www.openjobsource.com']
+ALLOWED_HOSTS = ['job-board-backend.herokuapp.com', '127.0.0.1', 'https://www.openjobsource.com/', 'http://localhost:3000/']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
@@ -164,6 +164,9 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
     ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    )
 }
 
 # API slash addition settings: False means it will not add an extra /,
@@ -181,7 +184,7 @@ JWT_AUTH = {
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
-    'sharp-bhabha-303aff.netlify.com',
+    'openjobsource.com',
     'job-board-backend.herokuapp.com',
 )
 
@@ -189,7 +192,5 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
     'SEND_ACTIVATION_EMAIL': False,
-    'SERIALIZERS': {
-        'user_create': 'jobs.api.UserRegistrationSerializer'
-    },
+    'SERIALIZERS': {},
 }

@@ -1,5 +1,5 @@
-import React from "react";
-import { Tag, Tooltip } from "antd";
+import React from 'react';
+import { Tag, Tooltip } from 'antd';
 
 const TagView = props => {
     const { tag } = props;

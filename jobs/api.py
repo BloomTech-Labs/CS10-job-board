@@ -11,33 +11,6 @@ class JWTSerializer(serializers.ModelSerializer):
         fields = ('id', 'is_employer')
 
 
-class UserViewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'is_employer',
-            'email',
-            'password',
-            'is_active',
-            'is_staff',
-            'company_name',
-            'company_logo',
-            'company_summary',
-            'applications_inbox',
-            'first_name',
-            'last_name',
-            'profile_photo',
-            'created_date'
-        )
-
-
-class UserIDSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id',)
-
-
 # Used by Djoser to register users, references in settings.py / DJOSER.SERIALIZERS.user_create
 class UserRegistrationSerializer(serializers.ModelSerializer):
 
@@ -55,6 +28,32 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
         )
+
+
+class UserViewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'is_employer',
+            'email',
+            'password',
+            'is_active',
+            'company_name',
+            'company_logo',
+            'company_summary',
+            'application_inbox',
+            'first_name',
+            'last_name',
+            'profile_photo',
+            'created_date'
+        )
+
+
+class UserIDSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('id',)
 
 
 class JobPostSerializer(TaggitSerializer, serializers.ModelSerializer):
