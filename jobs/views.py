@@ -18,7 +18,7 @@ import sendgrid
 from sendgrid.helpers.mail import *
 
 # Permissions
-from .permissions import IsOwnerOrReadOnly, CsrfExemptSessionAuthentication
+from .permissions import IsOwnerOrReadOnly
 
 
 # REST Framework
