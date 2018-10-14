@@ -119,8 +119,8 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
 
         partial = kwargs.pop('partial', False)
         if partial is False:
-            message = { 'FORBIDDEN' }
-            return Response(message, status=status.HTTP_403_FORBIDDEN)
+            message = { "detail": "Method \"POST\" not allowed." }
+            return Response(message, status=status.HTTP_405_METHOD_NOT_ALLOWED)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
