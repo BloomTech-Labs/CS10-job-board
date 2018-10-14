@@ -21,6 +21,7 @@ urlpatterns = [
 
     # Using Djoser to handle registration email/password reset
     path('register/', djoser_views.UserCreateView.as_view(), name='register'),
+    # Account operations except create
     path('account/<int:pk>/', views.UserView.as_view(), name='account'),
 
     # JWT API
@@ -51,6 +52,6 @@ urlpatterns = [
 
 # Adds a local media server if DEBUG=True: 
 # https://docs.djangoproject.com/en/2.1/howto/static-files/#serving-files-uploaded-by-a-user-during-development
-if settings.DEBUG:
-    # static files (images, css, javascript, etc.)
-    urlpatterns += static(settings.MEDIA_URL, views.MediaView.as_view(), document_root=settings.MEDIA_ROOT)
+# if settings.DEBUG:
+#     # static files (images, css, javascript, etc.)
+#     urlpatterns += static(settings.MEDIA_URL, views.MediaView.as_view(), document_root=settings.MEDIA_ROOT)
