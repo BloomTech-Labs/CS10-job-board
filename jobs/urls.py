@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from djoser import views as djoser_views
+# from djoser import views as djoser_views
 from rest_framework_jwt import views as jwt_views
 from rest_framework.routers import DefaultRouter
 # imports all views
@@ -20,7 +20,7 @@ urlpatterns = [
     # re_path(r'^delete/$', views.UserDeleteView.as_view(), name='delete'),
 
     # Using Djoser to handle registration email/password reset
-    path('register/', djoser_views.UserCreateView.as_view(), name='register'),
+    path('register/', views.UserCreateView.as_view(), name='register'),
     # Account operations except create
     path('account/<int:pk>/', views.UserView.as_view(), name='account'),
 
