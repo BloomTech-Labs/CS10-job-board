@@ -128,59 +128,10 @@ class CompanyAccount extends React.Component {
 
   //##### End Image Upload Handlers ######
 
-  handlePasswordSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }
-
-  handleEmailSubmit = (e) => {
-    e.preventDefault();
-    this.props.form.validateFieldsAndScroll((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
-      }
-    });
-  }
-
-  handleConfirmBlur = (e) => {
-    const value = e.target.value;
-    this.setState({ confirmDirty: this.state.confirmDirty || !!value });
-  }
-
-  compareToFirstPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && value !== form.getFieldValue('password')) {
-      callback('Paswords do not match.');
-    } else {
-      callback();
-    }
-  }
-
-  validateToNextPassword = (rule, value, callback) => {
-    const form = this.props.form;
-    if (value && this.state.confirmDirty) {
-      form.validateFields(['confirm'], { force: true });
-    }
-    callback();
-  }
-
   resetMessages = () => {
     this.setState({ error: null, message: null, progress: 0 });
   }
 
-  // handleWebsiteChange = (value) => {
-  //   let autoCompleteResult;
-  //   if (!value) {
-  //     autoCompleteResult = [];
-  //   } else {
-  //     autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
-  //   }
-  //   this.setState({ autoCompleteResult });
-  // }
 
   render() {
     const { getFieldDecorator } = this.props.form;
