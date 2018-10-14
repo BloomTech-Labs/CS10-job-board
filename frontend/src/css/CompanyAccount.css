@@ -31,6 +31,32 @@
     padding: 10px;
 }
 
+.company-logo-upload-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.company-logo-upload-container .ant-form-item-children {
+    display: flex;
+    max-height: 120px;
+    margin: 10px 0;
+}
+
+.company-logo-upload-container::before, 
+.company-logo-upload-container::after {
+    display: none;
+}
+
+#company_logo_input {
+    background: white;
+    display: none;
+}
+
+#company_logo {
+    height: 100px;
+}
+
 
 
 /* Ant override */
@@ -50,6 +76,24 @@
     height: 100%;
 }
 
-  .ant-collapse > .ant-collapse-item > .ant-collapse-header {
-    display: flex;
-  }
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  display: flex;
+}
+
+.company-logo-upload-container .anticon {
+    width: 27px;
+    height: 27px;
+    margin: 10px;
+    border-radius: 50%;
+    border: 1px solid #604CB0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.company-logo-upload-container .anticon svg {
+    height: 16px;
+    width: 16px;
+    color: #604CB0;
+    align-self: center;
+}
