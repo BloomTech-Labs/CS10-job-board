@@ -27,6 +27,7 @@ export { default as Account } from './seeker/Account.js';
 export { default as Dashboard } from './seeker/Dashboard.js';
 
 // Utility
+export { default as AccountUpdate } from './utility/AccountUpdate.js';
 export { default as Avatar } from './utility/Avatar.js';
 export { default as Navigation } from './utility/Navigation.js';
 export { default as NoMatch } from './utility/NoMatch.js';
