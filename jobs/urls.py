@@ -1,5 +1,6 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
-from django.contrib.auth import get_user_model
 from djoser import views as djoser_views
 from rest_framework_jwt import views as jwt_views
 from rest_framework.routers import DefaultRouter
@@ -42,8 +43,14 @@ urlpatterns = [
 
     # Setting up for Membership types
     path('memberships/', views.MembershipSelectView.as_view(), name='membership'),
-    path('pay/', views.PaymentView.as_view(), name='pay')
+    path('pay/', views.PaymentView.as_view(), name='pay'),
     # path('update-transactions/<subscription_id>/', views.updateTransactionRecords, name='update-transactions'),
     # path('cancel/', views.cancelSubscription, name='cancel')
 
 ]
+
+# Adds a local media server if DEBUG=True: 
+# https://docs.djangoproject.com/en/2.1/howto/static-files/#serving-files-uploaded-by-a-user-during-development
+if settings.DEBUG:
+    # static files (images, css, javascript, etc.)
+    urlpatterns += static(settings.MEDIA_URL, views.MediaView.as_view(), document_root=settings.MEDIA_ROOT)
