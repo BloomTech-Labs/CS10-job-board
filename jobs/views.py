@@ -68,6 +68,11 @@ def jwt_response_handler(token, user=None, request=None):
 class UserCreateView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
 
+    # Methods create, perform_create, get_success_headers
+    #   all from Django REST Framework source-code mixins:
+    # https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py
+    # To customize, must overwrite but also add in default source-code.
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -99,6 +104,11 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
     def get_queryset(self):
         id = self.request.user.pk
         return User.objects.filter(id=id)
+
+    # Methods update, perform_update, partial_update, destroy, perform_destory
+    #   all from Django REST Framework source-code mixins:
+    # https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py
+    # To customize, must overwrite but also add in default source-code.
 
     def update(self, request, *args, **kwargs):
         user = self.get_object()
