@@ -17,10 +17,15 @@ from django.views.generic import ListView
 import sendgrid
 from sendgrid.helpers.mail import *
 
+# Permissions
+from .permissions import IsOwnerOrReadOnly, CsrfExemptSessionAuthentication
+
+
 # REST Framework
 from rest_framework import views, permissions, status, authentication, generics, pagination
-from .permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 # JWT REST
 import rest_framework_jwt.authentication
@@ -58,6 +63,15 @@ def jwt_response_handler(token, user=None, request=None):
         'user': JWTSerializer(user, context={'request': request}).data
     }
 
+class MediaView(views.APIView):
+    authentication_classes = (        
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        CsrfExemptSessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permissions_classes = (permissions.IsAuthenticated,)
+
+
 # Create custom view because auth is handles by Django REST framework JWT Auth (not Djoser)
 class UserView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserViewSerializer
@@ -67,6 +81,7 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
+    parser_classes = (MultiPartParser,)
 
     def get_queryset(self):
         id = self.request.user.pk
