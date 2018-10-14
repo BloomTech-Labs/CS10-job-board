@@ -1,13 +1,11 @@
 import React from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
-import { Avatar } from '../';
-import { Alert, Form, Icon, Input, Button, Divider, Collapse, Progress } from 'antd';
+import { AccountUpdate } from '../';
+import { Alert, Form, Icon, Input, Button, Divider, Progress } from 'antd';
 
 const FormItem = Form.Item;
-
 const { TextArea } = Input;
-const Panel = Collapse.Panel;
 
 class CompanyAccount extends React.Component {
   constructor(props) {
@@ -315,66 +313,7 @@ class CompanyAccount extends React.Component {
 
         {/* Update Account Forms */}
 
-        <div className="form flex column account-change">
-          <Collapse className="flex column" bordered={false} accordion={true}>
-          
-            <Panel className="h4" header="Update Password" key="1">
-
-              <Form className="form account-change">
-                <FormItem label="Password">
-                  {getFieldDecorator('password', {
-                    rules: [{
-                      required: false, message: 'Please input your password!',
-                    }, {
-                      validator: this.validateToNextPassword,
-                    }],
-                  })(
-                    <Input type="password" />
-                  )}
-                </FormItem>
-
-                <FormItem label="Confirm Password">
-                  {getFieldDecorator('confirm', {
-                    rules: [{
-                      required: false, message: 'Please confirm your password!',
-                    }, {
-                      validator: this.compareToFirstPassword,
-                    }],
-                  })(
-                    <Input type="password" onBlur={this.handleConfirmBlur} />
-                  )}
-                </FormItem>
-
-                <Button type="primary" onClick={this.handlePasswordSubmit}>Change Password</Button>
-              </Form>
-
-            </Panel>
-
-            <Panel className="h4" header="Update Account Email" key="2">
-
-              <Form className="form account-change">
-
-                <FormItem label="Email">
-                  {getFieldDecorator('email', {
-                    rules: [{
-                      type: 'email', message: 'The input is not a valid email!',
-                    }, {
-                      required: false, message: 'Please input your email!',
-                    }],
-                  })(
-                    <Input />
-                  )}
-                </FormItem>
-                  
-                <Button type="primary" onClick={this.handleEmailSubmit}>Change Email</Button>
-
-              </Form>
-
-            </Panel>
-          
-          </Collapse>
-
-        </div>
+        <AccountUpdate />
 
       {/* page wrapper */}
       </div>
