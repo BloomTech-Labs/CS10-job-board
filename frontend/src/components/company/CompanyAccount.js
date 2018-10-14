@@ -39,19 +39,16 @@ class CompanyAccount extends React.Component {
     this.props.checkToken(e, this.props.token, token);
     const requestOptions = { headers: { Authorization: `JWT ${token}`}};
     const { company_name, company_logo, company_summary, application_inbox, first_name, last_name } = this.state;
-    const body = { company_name, company_logo, company_summary, application_inbox, first_name, last_name };
+    const requestBody = { company_name, company_logo, company_summary, application_inbox, first_name, last_name };
     const formData = new FormData();
-    for (let key in body) {
-      console.log(key, body[key], body[key]);
-      if (key === 'comapany_image') {
-        console.log(key, body[key], body[key]['name']);
-        formData.append(key, body[key], body[key]['name'])
-      } else {
-        formData.append(key, body[key]);
+    // creates FormData entries
+    for (let key in requestBody) {
+      if (key === 'comapany_image' && requestBody[key] !== null) {
+        formData.append(key, requestBody[key])
+      } else if (requestBody[key] !== null) {
+        formData.append(key, requestBody[key]);
       }
     }
-    // formData.append('company_logo', company_logo, company_logo.name);
-    console.log(formData, requestOptions);
     axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
       .then(response => {
         this.setState({ message: `Account successfully updated!`});
@@ -68,7 +65,13 @@ class CompanyAccount extends React.Component {
   // Start Image File Upload Handlers 
 
   handleImageUpload = e => {
-    this.setState({ error: null, message: null, company_logo: null, loadend: false, fileUrl: null });
+    this.setState({ 
+      error: null, 
+      message: null, 
+      company_logo: null, 
+      loadend: false, 
+      fileUrl: null 
+    });
     const file = e.target.files[0];
     const imgIsValid = this.beforeImgUpload(file);
     if (imgIsValid) {
@@ -93,9 +96,9 @@ class CompanyAccount extends React.Component {
   // Validation beyond 'accepts' field on input[type="file"] check
 
   beforeImgUpload = file => {
-    const isJPG = file.type === 'image/jpg';
+    const isJPG = file.type === 'image/jpeg';
     const isPNG = file.type === 'image/png';
-    const isSVG = file.type === 'image/svg';
+    const isSVG = file.type === 'image/svg+xml';
     if (!isJPG && !isPNG && !isSVG) {
       return this.setState({ error: 'You can only upload a .jpg, .png, or .svg file!'});
     }
@@ -204,12 +207,13 @@ class CompanyAccount extends React.Component {
           </FormItem>
 
           {/* Logo upload */}
+          
           <div className="company-logo-upload-container">
             <label htmlFor="company_logo_input">Company Logo  *jpg, png, svg</label>
             {loadend ? (
               <Icon type='close' onClick={() => {
                 document.getElementById("company_logo_input").value = "";
-                this.setState({ fileUrl: null, loadend: false});
+                this.setState({ fileUrl: null, loadend: false, company_logo: null});
               }}></Icon>
             ) : (
                 <Icon type='plus' onClick={() => document.getElementById("company_logo_input").click()}></Icon>
