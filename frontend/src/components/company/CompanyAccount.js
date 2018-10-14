@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
 import { Avatar } from '../';
-import { Form, Icon, Input, Button, Divider, Collapse } from 'antd';
+import { Form, Icon, Input, Button, Divider, Collapse, Progress } from 'antd';
 
 const FormItem = Form.Item;
 
@@ -24,7 +24,9 @@ class CompanyAccount extends React.Component {
       application_inbox: null,
       first_name: null,
       last_name: null,
-      fileUrl: null
+      fileUrl: null,
+      progress: null,
+      uploadStatus: null,
     }
   }
 
@@ -34,10 +36,9 @@ class CompanyAccount extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({ error: null, message: null });
+    this.setState({ error: null, message: null, progress: null, uploadStatus: null });
     const token = localStorage.getItem('token');
     this.props.checkToken(e, this.props.token, token);
-    const requestOptions = { headers: { Authorization: `JWT ${token}`}};
     const { company_name, company_logo, company_summary, application_inbox, first_name, last_name } = this.state;
     const requestBody = { company_name, company_logo, company_summary, application_inbox, first_name, last_name };
     const formData = new FormData();
@@ -49,12 +50,21 @@ class CompanyAccount extends React.Component {
         formData.append(key, requestBody[key]);
       }
     }
+    const requestOptions = { 
+      headers: { Authorization: `JWT ${token}`},
+      onUploadProgress: progressEvent => { 
+      this.setState({ progress: Math.round(progressEvent.loaded / progressEvent.total * 100)});
+      }
+    };
     axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
       .then(response => {
         this.setState({ message: `Account successfully updated!`});
       })
       .catch(err => {
-        this.setState({ error: `Error processing your request. Try Again.`});
+        this.setState({ 
+          error: `Error processing your request. Try Again.`,
+          uploadStatus: `exception`
+        });
       });
   }
 
@@ -62,7 +72,7 @@ class CompanyAccount extends React.Component {
     this.setState({ [e.target.name]: e.target.value });
   }
 
-  // Start Image File Upload Handlers 
+  //##### Start Image File Upload Handlers ######
 
   handleImageUpload = e => {
     this.setState({ 
@@ -83,7 +93,7 @@ class CompanyAccount extends React.Component {
     }
   }
 
-  // Encoding for live preview
+    // Encoding for live preview
   
   getBase64Img = (file, cb) => {
     const reader = new FileReader();
@@ -93,7 +103,7 @@ class CompanyAccount extends React.Component {
     }
   }
 
-  // Validation beyond 'accepts' field on input[type="file"] check
+    // Validation beyond 'accepts' field on input[type="file"] check
 
   beforeImgUpload = file => {
     const isJPG = file.type === 'image/jpeg';
@@ -117,7 +127,7 @@ class CompanyAccount extends React.Component {
     }
   }
 
-  // End Image Upload Handlers
+  //##### End Image Upload Handlers ######
 
   handlePasswordSubmit = (e) => {
     e.preventDefault();
@@ -171,7 +181,7 @@ class CompanyAccount extends React.Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { fileUrl, loadend } = this.state;
+    const { fileUrl, loadend, progress, uploadStatus } = this.state;
     return (
       <div className="profile">
 
@@ -179,7 +189,6 @@ class CompanyAccount extends React.Component {
 
         < Form className = "form flex"
         title = "Company Profile"
-        layout = 'vertical'
         encType = "multipart/form-data" >
 
           <Divider orientation="left" className="h3">Company Profile</Divider>
@@ -213,7 +222,7 @@ class CompanyAccount extends React.Component {
             {loadend ? (
               <Icon type='close' onClick={() => {
                 document.getElementById("company_logo_input").value = "";
-                this.setState({ fileUrl: null, loadend: false, company_logo: null});
+                this.setState({ fileUrl: null, loadend: false, company_logo: null, progress: null, uploadStatus: null});
               }}></Icon>
             ) : (
                 <Icon type='plus' onClick={() => document.getElementById("company_logo_input").click()}></Icon>
@@ -230,6 +239,9 @@ class CompanyAccount extends React.Component {
             {fileUrl ? (
               <img src={fileUrl} id="company_logo" alt="company logo preview"/>
               ):(null)}
+            {progress ? (
+                <Progress type="circle" percent={progress} status={uploadStatus} width={55} style={{position: "absolute"}}/>
+              ) : (null)}
           </FormItem>
 
           <FormItem label="Application Inbox"
