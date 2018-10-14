@@ -36,6 +36,9 @@
 }
 
 .ant-alert-icon {
+    position: unset;
+    top: unset;
+    right: unset;
     margin-right: 5px;
 }
 
