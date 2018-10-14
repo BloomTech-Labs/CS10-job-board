@@ -58,6 +58,9 @@ class CompanyAccount extends React.Component {
     axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
       .then(response => {
         this.setState({ message: `Account successfully updated!`});
+        setTimeout(() => {
+          this.setState({ progress: 0, message: null });
+        }, 5000);
       })
       .catch(err => {
         this.setState({ 
