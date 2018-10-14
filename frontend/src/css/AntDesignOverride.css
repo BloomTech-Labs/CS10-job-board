@@ -44,6 +44,13 @@
 
 .ant-form-item {
     margin-bottom: 0;
+    text-align: left;
+}
+
+.ant-form-item-children {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .ant-form-item-label label {
@@ -91,4 +98,20 @@
 
 .ant-switch-checked {
     background-color: #604CB0;
+}
+
+/* Progress */
+.ant-progress-circle-path {
+    stroke: #604CB0 !important;
+    fill: white;
+    fill-opacity: 100;
+}
+
+.ant-progress-status-success {
+    color: #52c41a;
+    stroke: #52c41a;
+}
+
+.ant-progress-inner {
+    background: white;
 }
