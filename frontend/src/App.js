@@ -170,7 +170,7 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <CompanyAccount token={token} logOut={this.logOut} checkToken={this.checkToken}/>} />            
+              <Route path="/account" render={() => <CompanyAccount token={token} logOut={this.logOut} checkToken={this.checkToken} user={user}/>} />            
               ) : (
               <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
             )}
