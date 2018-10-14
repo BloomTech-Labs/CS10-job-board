@@ -24,6 +24,7 @@ from .permissions import IsOwnerOrReadOnly
 # REST Framework
 from rest_framework import views, permissions, status, authentication, generics, pagination
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 # JWT REST
@@ -37,6 +38,7 @@ from .api import (
     JobPostSerializer,
     JobPreviewSerializer,
     UserIDSerializer,
+    UserRegistrationSerializer,
     UserViewSerializer,
     MembershipSerializer,
     PaymentViewSerializer,
@@ -61,6 +63,27 @@ def jwt_response_handler(token, user=None, request=None):
         'token': token,
         'user': JWTSerializer(user, context={'request': request}).data
     }
+
+
+class UserCreateView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def get_success_headers(self, data):
+        try:
+            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+        except (TypeError, KeyError):
+            return {}
+
 
 # Create custom view because auth is handles by Django REST framework JWT Auth (not Djoser)
 class UserView(generics.RetrieveUpdateDestroyAPIView):
