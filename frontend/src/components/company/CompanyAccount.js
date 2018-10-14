@@ -25,7 +25,7 @@ class CompanyAccount extends React.Component {
       first_name: null,
       last_name: null,
       fileUrl: null,
-      progress: null,
+      progress: 0,
       uploadStatus: null,
     }
   }
@@ -36,7 +36,7 @@ class CompanyAccount extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    this.setState({ error: null, message: null, progress: null, uploadStatus: null });
+    this.setState({ error: null, message: null, progress: 0, uploadStatus: null });
     const token = localStorage.getItem('token');
     this.props.checkToken(e, this.props.token, token);
     const { company_name, company_logo, company_summary, application_inbox, first_name, last_name } = this.state;
@@ -182,6 +182,8 @@ class CompanyAccount extends React.Component {
   render() {
     const { getFieldDecorator } = this.props.form;
     const { fileUrl, loadend, progress, uploadStatus } = this.state;
+    const uploaded = progress === 100;
+    
     return (
       <div className="profile">
 
@@ -222,7 +224,7 @@ class CompanyAccount extends React.Component {
             {loadend ? (
               <Icon type='close' onClick={() => {
                 document.getElementById("company_logo_input").value = "";
-                this.setState({ fileUrl: null, loadend: false, company_logo: null, progress: null, uploadStatus: null});
+                this.setState({ fileUrl: null, loadend: false, company_logo: null, progress: 0, uploadStatus: null});
               }}></Icon>
             ) : (
                 <Icon type='plus' onClick={() => document.getElementById("company_logo_input").click()}></Icon>
@@ -239,9 +241,15 @@ class CompanyAccount extends React.Component {
             {fileUrl ? (
               <img src={fileUrl} id="company_logo" alt="company logo preview"/>
               ):(null)}
-            {progress ? (
-                <Progress type="circle" percent={progress} status={uploadStatus} width={55} style={{position: "absolute"}}/>
-              ) : (null)}
+            {uploaded && fileUrl ? (
+                <Progress type="circle" percent={100} width={55} style={{position: "absolute"}}/>
+              ) : (
+                <div style={{position: "absolute"}}>
+                  {progress > 0 && fileUrl ? (
+                    <Progress type="circle" percent={progress} status={uploadStatus} width={55} style={{position: "absolute"}}/>
+                  ) : (null)}
+                </div>
+              )}
           </FormItem>
 
           <FormItem label="Application Inbox"
