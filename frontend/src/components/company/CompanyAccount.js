@@ -233,7 +233,7 @@ class CompanyAccount extends React.Component {
 
           <Divider orientation="left" className="h4">Company Contact</Divider>
             
-          <div className="flex space-around">
+          <div className="flex justify-space-around">
             <FormItem label="First Name">
               {getFieldDecorator('first_name', {
                 rules: [{
