@@ -1,5 +1,6 @@
 from .models import JobPost, User, UserMembership, Membership, Payment
 from rest_framework import serializers
+from django.contrib.auth.hashers import make_password
 from taggit_serializer.serializers import (TagListSerializerField, TaggitSerializer)
 
  
@@ -17,6 +18,11 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     # Encrypts password with create_user=Django default create user method
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
+        if 'password' in validated_data:
+            user.password = make_password(
+                validated_data.get('password')
+            )
+            user.save()
         return user
 
     class Meta:
@@ -31,6 +37,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 
 class UserViewSerializer(serializers.ModelSerializer):
+
+    def update(self, instance, validated_data):
+        if 'password' in validated_data:
+            instance.password = make_password(
+                validated_data.get('password')
+            )
+            instance.save()
+
+        return instance
+
     class Meta:
         model = User
         fields = (
