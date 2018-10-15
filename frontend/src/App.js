@@ -78,7 +78,7 @@ class App extends React.Component {
 
   checkToken = (e, appToken, localStorageToken) => {
     if (appToken !== localStorageToken) {
-      this.props.logOut(e, `Problem authenticating account. Please log in again.`);
+      this.logOut(e, `Problem authenticating account. Please log in again.`);
     }
   }
 
