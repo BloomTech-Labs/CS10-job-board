@@ -13,7 +13,8 @@ class AccountUpdate extends React.Component {
         this.state = {
             error: null,
             message: null,
-            formModal: false
+            formModal: false,
+            attempts: 0
         }
     }
 
@@ -25,19 +26,11 @@ class AccountUpdate extends React.Component {
         this.setState({ [e.target.name]: e.target.value });
     }
 
-    handlePasswordSubmit = (e) => {
+    handlePasswordSubmit = e => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 console.log('Received values of form: ', values);
-            }
-        });
-    }
-
-    handleEmailSubmit = (e) => {
-        e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
                 this.setState({ error: null, message: null });
                 const token = localStorage.getItem('token');
                 // Simple token comparison
@@ -54,29 +47,70 @@ class AccountUpdate extends React.Component {
         });
     }
 
-    postEmail = (e) => {
+    handleEmailSubmit = e => {
+        e.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                this.setState({ error: null, message: null });
+                const token = localStorage.getItem('token');
+                // Simple token comparison
+                this.props.checkToken(e, this.props.token, token);
+                // POST to verify token; returns JWT if valid
+                axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
+                .then(response => {
+                    // POST request handled in modal by this.postEmail
+                    this.toggleFormModal();
+                })
+                .catch(err => {
+                    this.props.logOut(e, err);
+                });
+            }
+        });
+    }
+
+    postEmail = e => {
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}`}};
+        // get password from modal input
+        const { email, attempts } = this.state;
         const password = document.getElementById("username_reset_password").value;
-        const { email } = this.state;
-        console.log(email, password);
+        const validPassword = this.sendLoginRequest(email, password);
         const formData = new FormData();
+        // only send email in PATCH request
         formData.append('email', email);
-        axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
+        if (validPassword) {
+            axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
+                .then(response => {
+                    this.setState({ message: `Account successfully updated!`, attempts: 0 });
+                    // Make a login request with new email and password entered into modal
+                    axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: password})
+                        .then(response => {
+                            // replace old token with new one with updated email
+                            localStorage.setItem('token', response.data.token);
+                            this.toggleFormModal();
+                        })
+                        .catch(err => {
+                            this.setState({ error: `Error logging in. Log in again.`});
+                            this.toggleFormModal();
+                        });
+                })
+                .catch(err => {
+                    this.setState({ error: `Error processsing your request.`});
+                });
+        } else {
+            this.toggleFormModal();
+            if (attempts > 2) this.props.logOut(e, `Too many password attempts.`);
+            else this.setState({ attempts: attempts + 1 });
+        }
+    }
+
+    sendLoginRequest = (email, password) => {
+        axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: password })
             .then(response => {
-                this.setState({ message: `Account successfully updated!`});
-                axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: password})
-                    .then(response => {
-                        localStorage.setItem('token', response.data.token);
-                        this.toggleFormModal();
-                    })
-                    .catch(err => {
-                        this.setState({ error: `Error loggin in. Log in again.`});
-                        this.toggleFormModal();
-                    });
+                return true;
             })
             .catch(err => {
-                this.setState({ error: `Error processsing your request.`});
+                return false;
             });
     }
 
@@ -97,7 +131,7 @@ class AccountUpdate extends React.Component {
             callback();
     }
 
-    handleConfirmBlur = (e) => {
+    handleConfirmBlur = e => {
         const value = e.target.value;
         this.setState({ confirmDirty: this.state.confirmDirty || !!value });
     }
@@ -109,7 +143,7 @@ class AccountUpdate extends React.Component {
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { error, message, formModal } = this.state;
+        const { error, message, formModal, attempts } = this.state;
         return (
         <div className="form flex column account-change">
 
@@ -118,6 +152,10 @@ class AccountUpdate extends React.Component {
               ) : (null)}
             {message ? (
               <Alert message={message} type="success" closable showIcon onClose={this.resetMessages}/>
+            ) : (null)}
+
+            {attempts > 0 ? (
+              <Alert message={`Wrong Password. You have ${(3 - attempts)} password attempts left`} type="error" closable showIcon onClose={this.resetMessages}/>
             ) : (null)}
 
             <Collapse className="flex column" bordered={false} accordion={true}>
