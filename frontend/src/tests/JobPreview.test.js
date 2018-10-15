@@ -1,18 +1,13 @@
+import { JobPreview, StylizedLine } from '../components';
 
-import { JobPreview } from "../components";
 
 test('JobPreview', () => {
-    // const job = {
-    //     title: 'Software Engineer',
-    //     min_salary: 100000,
-    //     max_salary: 150000,
-    //     description: 'Software engineer description'
-    // }
-    // const component = shallow(<JobPreview job="post" />);
-    // expect(component.props().job).toEqual();
-    // expect(JobPreview()).toContainEqual(job);
-    // const component = shallow(<JobPreview job="post" />);
-   const component = mount(<JobPreview job={{}} />); 
-   expect(component.props().job).toBeDefined();
-    
+	const component = mount(<JobPreview job={{}} />);
+    expect(component.props().job).toBeDefined();
+    expect(component.find('StylizedLine'));
 });
+
+// test('StylizedLine', () => {
+// 	const component = renderer.create(<StylizedLine />).toJSON();
+// 	expect(component).toMatchSnapshot();
+// });
