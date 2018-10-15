@@ -238,17 +238,22 @@ button:hover {
   flex-flow: column wrap;
 }
 
-.space-between {
+.justify-space-between {
   justify-content: space-between;
 }
 
-.space-around {
+.justify-space-around {
   justify-content: space-around;
+}
+
+.justify-flex-end {
+  justify-content: flex-end;
 }
 
 .flex-start {
   align-self: flex-start;
 }
+
 
 /* CSS Boneyard */
 
