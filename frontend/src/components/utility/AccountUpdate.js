@@ -1,7 +1,7 @@
 import React from 'react';
 import { withRouter } from "react-router-dom";
 import axios from 'axios';
-import { Collapse, Form, Input, Button, Alert, Modal } from 'antd';
+import { Collapse, Form, Input, Icon, Button, Alert, Modal } from 'antd';
 
 const FormItem = Form.Item;
 const Panel = Collapse.Panel;
@@ -11,10 +11,12 @@ class AccountUpdate extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            confirmDirty: [],
             error: null,
             message: null,
             formModal: false,
-            attempts: 0
+            attempts: 0,
+            inputType: false
         }
     }
 
@@ -28,83 +30,147 @@ class AccountUpdate extends React.Component {
 
     handlePasswordSubmit = e => {
         e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-                this.setState({ error: null, message: null });
-                const token = localStorage.getItem('token');
-                // Simple token comparison
-                this.props.checkToken(e, this.props.token, token);
-                // POST to verify token; returns JWT if valid
-                axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
-                .then(response => {
-                    this.toggleFormModal();
-                })
-                .catch(err => {
-                    this.props.logOut(e, err);
-                });
-            }
-        });
+        this.setState({ error: null, message: null });
+        const token = localStorage.getItem('token');
+        const requestOptions = { headers: { Authorization: `JWT ${token}`}};
+        const { email, current_password, new_password, attempts } = this.state;
+        // Simple token comparison
+        this.props.checkToken(e, this.props.token, token);
+        // POST to verify token; returns JWT if valid
+        // const validPassword = this.sendLoginRequest(email, current_password);
+        // console.log(validPassword);
+        axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
+            .then(response => {
+                // If token is valid, check password
+                axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: current_password })
+                    .then(response => {
+                        const formData = new FormData();
+                        formData.append('password', new_password)
+                        // If token & password are valid, send PATCH update
+                        axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
+                            .then(response => {
+                                this.setState({ message: `Password successfully updated`, attempts: 0 });
+                                // Reset JWT secret once password is updated.
+                                axios.post(`${process.env.REACT_APP_API}logout/all/`, {}, requestOptions)
+                                    .then(response => {
+                                        // Login to retrieve a newly signed JWT
+                                        axios.post(`${process.env.REACT_APP_LOGIN_API}`, {email: email, password: new_password})
+                                            .then(response => {
+                                                localStorage.setItem('token', response.data.token);
+                                            })
+                                            .catch(err => {
+                                                this.setState({ error: `Error logging in. Please log in again.`});
+                                            });
+                                    })
+                                    .catch(err => {
+                                        this.setState({ error: `Error processing request. Please log in again.`})
+                                    });
+                            })
+                            .catch(err => {
+                                this.setState({ error: `Error processing your request.`});
+                            });
+                    })
+                    .catch(err => {
+                        if (attempts > 2)  {
+                            // Resets JWT secret signature on User
+                            axios.post(`${process.env.REACT_APP_API}logout/all/`, {}, requestOptions)
+                                .then(response => {
+                                    this.props.logOut(e, `Too many password attempts.`);
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    this.props.logOut(e, `Too many password attempts.`);
+                                })
+                        }
+                        else this.setState({ attempts: attempts + 1 });
+                    });
+            })
+            .catch(err => {
+                this.props.logOut(e, `Problems authenticating request. Please log in again.`);
+            });
     }
+
+    
 
     handleEmailSubmit = e => {
         e.preventDefault();
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                this.setState({ error: null, message: null });
-                const token = localStorage.getItem('token');
-                // Simple token comparison
-                this.props.checkToken(e, this.props.token, token);
-                // POST to verify token; returns JWT if valid
-                axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
-                .then(response => {
-                    // POST request handled in modal by this.postEmail
-                    this.toggleFormModal();
-                })
-                .catch(err => {
-                    this.props.logOut(e, err);
-                });
-            }
+        this.setState({ error: null, message: null });
+        const token = localStorage.getItem('token');
+        // Simple token comparison
+        this.props.checkToken(e, this.props.token, token);
+        // POST to verify token; returns the same JWT if valid
+        axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
+        .then(response => {
+            // console.log('token valid', response.data);
+            // POST request handled in modal by this.postEmail
+            this.toggleFormModal();
+        })
+        .catch(err => {
+            this.props.logOut(e, `Problems authenticating request. Please log in again.`);
         });
     }
 
     postEmail = e => {
+        e.preventDefault();
+        // get password from modal input
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}`}};
-        // get password from modal input
-        const { email, attempts } = this.state;
+        const { new_email, attempts } = this.state;
         const password = document.getElementById("username_reset_password").value;
-        const validPassword = this.sendLoginRequest(email, password);
-        const formData = new FormData();
+        const current_email = document.getElementById("username_reset_email").value;
+        console.log(current_email, password);
+        // const validPassword = this.sendLoginRequest(email, password);
         // only send email in PATCH request
-        formData.append('email', email);
-        if (validPassword) {
-            axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
-                .then(response => {
-                    this.setState({ message: `Account successfully updated!`, attempts: 0 });
-                    // Make a login request with new email and password entered into modal
-                    axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: password})
+        axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: current_email, password: password })
+            .then(response => {
+                // console.log('log in to verify password', response.data);
+                const formData = new FormData();
+                formData.append('email', new_email);
+                // for (var pair of formData.entries()) {
+                //     console.log(pair[0]+ ', ' + pair[1]); 
+                // }
+                axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
+                    .then(response => {
+                        this.setState({ message: `Account successfully updated!`, attempts: 0 });
+                        // Make a login request with new email and password entered into modal
+                        const { new_email } = this.state;
+                        axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: new_email, password: password})
+                            .then(response => {
+                                console.log('new username token', response.data);
+                                // replace old token with new one with updated email
+                                localStorage.setItem('token', response.data.token);
+                                this.toggleFormModal();
+                            })
+                            .catch(err => {
+                                this.setState({ error: `Error logging in. Log in again.`});
+                                this.toggleFormModal();
+                            });
+                    })
+                    .catch(err => {
+                        this.setState({ error: `Error processsing your request.`});
+                    });
+            })
+            .catch(err => {
+                if (attempts > 2)  {
+                    this.toggleFormModal();
+                    // Resets JWT secret signature on User
+                    axios.post(`${process.env.REACT_APP_API}logout/all/`, {}, requestOptions)
                         .then(response => {
-                            // replace old token with new one with updated email
-                            localStorage.setItem('token', response.data.token);
-                            this.toggleFormModal();
+                            this.props.logOut(e, `Too many password attempts.`);
                         })
                         .catch(err => {
-                            this.setState({ error: `Error logging in. Log in again.`});
-                            this.toggleFormModal();
+                            console.log(err);
+                            this.props.logOut(e, `Too many password attempts.`);
                         });
-                })
-                .catch(err => {
-                    this.setState({ error: `Error processsing your request.`});
-                });
-        } else {
-            this.toggleFormModal();
-            if (attempts > 2) this.props.logOut(e, `Too many password attempts.`);
-            else this.setState({ attempts: attempts + 1 });
-        }
+                } else {
+                    this.toggleFormModal();
+                    this.setState({ attempts: attempts + 1 });
+                }
+            });
     }
 
     sendLoginRequest = (email, password) => {
+        console.log({email: email, password: password});
         axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: password })
             .then(response => {
                 return true;
@@ -116,7 +182,7 @@ class AccountUpdate extends React.Component {
 
     compareToFirstPassword = (rule, value, callback) => {
         const form = this.props.form;
-        if (value && value !== form.getFieldValue('password')) {
+        if (value && value !== form.getFieldValue('new_password')) {
             callback('Paswords do not match.');
         } else {
             callback();
@@ -140,12 +206,16 @@ class AccountUpdate extends React.Component {
         this.setState({ formModal: !this.state.formModal });
     }
 
+    toggleInputType = () => {
+        this.setState({ inputType: !this.state.inputType });
+    }
+
 
     render() {
         const { getFieldDecorator } = this.props.form;
-        const { error, message, formModal, attempts } = this.state;
+        const { error, message, formModal, attempts, inputType } = this.state;
         return (
-        <div className="form flex column account-change">
+        <div className="account form flex column account-change">
 
             {error ? (
               <Alert message={error} type="error" closable showIcon  onClose={this.resetMessages}/>
@@ -163,22 +233,48 @@ class AccountUpdate extends React.Component {
                 <Panel className="h4" header="Update Password" key="1">
 
                   <Form className="form account-change">
-                    <FormItem label="Password">
-                      {getFieldDecorator('password', {
+                    
+                    <FormItem label="Account Email">
+                      {getFieldDecorator('email', {
                         rules: [{
-                          required: false, message: 'Please input your password!',
+                          required: true, message: 'Please add your account email!',
                         }, {
                           validator: this.validateToNextPassword,
                         }],
                       })(
-                        <Input type="password" onChange={this.onChange} name="password"/>
+                        <Input type="email" onChange={this.onChange} name="email"/>
+                      )}
+                    </FormItem>
+                    
+                    <FormItem label="Current Password">
+                      {getFieldDecorator('current_password', {
+                        rules: [{
+                          required: true, message: 'Please add your current password!',
+                        }, {
+                          validator: this.validateToNextPassword,
+                        }],
+                      })(
+                        <Input type={inputType ? (`text`) : (`password`)} onChange={this.onChange} name="current_password"/>
+                      )}
+                      <Icon type="eye" onClick={this.toggleInputType}/>
+                    </FormItem>
+
+                    <FormItem label="New Password">
+                      {getFieldDecorator('new_password', {
+                        rules: [{
+                          required: true, message: 'Please add your new password!',
+                        }, {
+                          validator: this.validateToNextPassword,
+                        }],
+                      })(
+                        <Input type="password" onChange={this.onChange} name="new_password"/>
                       )}
                     </FormItem>
 
                     <FormItem label="Confirm Password">
                       {getFieldDecorator('confirm', {
                         rules: [{
-                          required: false, message: 'Please confirm your password!',
+                          required: true, message: 'Please confirm your password!',
                         }, {
                           validator: this.compareToFirstPassword,
                         }],
@@ -196,29 +292,29 @@ class AccountUpdate extends React.Component {
 
                   <Form className="form account-change">
 
-                    <FormItem label="Email">
-                      {getFieldDecorator('email', {
-                        rules: [{
-                          type: 'email', message: 'The input is not a valid email!',
-                        }, {
-                          required: false, message: 'Please input your email!',
-                        }],
-                      })(
-                        <Input onChange={this.onChange} name="email"/>
-                      )}
+                    <FormItem label="New Email" required>
+                        <Input onChange={this.onChange} name="new_email" placeholder="Choose a new account email"/>
                     </FormItem>
 
-                    <Modal title="Enter your password"
-                    visible={formModal}
-                    onCancel={this.toggleFormModal}
-                    footer={[null, null,]} >
+                <Modal title="Enter your account details"
+                visible={formModal}
+                onCancel={this.toggleFormModal}
+                footer={[null, null,]} 
+                className="account-modal"
+                >
 
-                        <FormItem label="password">
-                            <Input type="password" id="username_reset_password"/>
-                            <Button onClick={this.postEmail}>Submit</Button>
-                        </FormItem>
+                    <FormItem label="Current Email" required>
+                        <Input type="email" id="username_reset_email"/>
+                    </FormItem>
+                    <FormItem label="Password" required>
+                        <Input type={inputType ? (`text`) : (`password`)} id="username_reset_password"/>
+                        <Icon type="eye" onClick={this.toggleInputType}/>
+                    </FormItem>
+                    <FormItem>
+                        <Button type="primary" onClick={this.postEmail}>Confirm</Button>
+                    </FormItem>
 
-                    </Modal>
+                </Modal>
                     
                     <Button type="primary" onClick={this.handleEmailSubmit}>Change Email</Button>
 
