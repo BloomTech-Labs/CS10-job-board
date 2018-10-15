@@ -1,7 +1,9 @@
-
-import { CheckoutForm } from "../../components";
+import { CheckoutForm} from '../../components';
+import ReactTestUtils from 'react-dom/test-utils';
 
 test('CheckoutForm', () => {
-    const component = mount(<CheckoutForm />);
-    // expect(component).toHaveLength(1);
+	window.Stripe = function() {
+		let rendered = ReactTestUtils.renderIntoDocument(<CheckoutForm error={{}} message={{}} pay={{}} />);
+		expect(rendered).toHaveLength(1);
+	};
 });
