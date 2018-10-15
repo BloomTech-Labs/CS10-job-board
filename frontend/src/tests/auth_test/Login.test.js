@@ -1,5 +1,5 @@
 
-import { Login } from "../components";
+import { Login } from "../../components";
 
 test('Login', () => {
     const component = shallow(<Login />);
