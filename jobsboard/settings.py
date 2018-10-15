@@ -30,7 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['job-board-backend.herokuapp.com', '127.0.0.1', 'https://www.openjobsource.com/', 'http://localhost:3000/']
+ALLOWED_HOSTS = ['https://job-board-backend.herokuapp.com']
 #ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
@@ -185,12 +185,11 @@ JWT_AUTH = {
     'JWT_GET_USER_SECRET_KEY': 'jobs.views.jwt_get_secret_key',
 }
 
-CORS_ORIGIN_ALLOW_ALL = False
+
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:3000',
-    'https://www.openjobsource.com',
+    'https://www.openjobsource.com/',
 )
 
 DJOSER = {
