@@ -264,7 +264,7 @@ class CompanyAccount extends React.Component {
 
         {/* Update Account Forms */}
 
-        <AccountUpdate />
+        <AccountUpdate {...this.props} />
 
       {/* page wrapper */}
       </div>
