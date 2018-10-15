@@ -3,3 +3,46 @@
     flex-flow: column wrap;
     width: 100%;
 }
+
+.account .anticon-eye {
+    position: absolute;
+    right: 15px;
+    top: 7px;
+}
+
+.account .anticon-eye svg {
+    height: 18px;
+    width: 18px;
+}
+
+.account .form input {
+    padding: 10px;
+    margin: 0;
+}
+
+.account .form button {
+    margin-top: 22px;
+}
+
+.account-modal {
+    width: 380px !important;
+}
+
+.account-modal .ant-form-item-children {
+    justify-content: flex-end;
+}
+
+.account-modal .ant-form-item-children button {
+    margin-top: 25px;
+}
+
+.account-modal .anticon-eye {
+    position: absolute;
+    right: 15px;
+    top: 7px;
+}
+
+.account-modal .anticon-eye svg {
+    height: 18px;
+    width: 18px;
+}
