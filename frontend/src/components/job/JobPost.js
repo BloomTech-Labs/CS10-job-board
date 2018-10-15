@@ -216,7 +216,7 @@ class JobPost extends React.Component {
             </FormItem>
   
             <div className="flex">
-              <FormItem label="Minimum Salary" className="ant-form-item-required">
+              <FormItem label="Minimum Salary" required>
                 <InputNumber
                   onChange={this.updateMinSalary} name="min_salary" id="min_salary"
                   step={10000}
@@ -229,7 +229,7 @@ class JobPost extends React.Component {
                 />
               </FormItem>
   
-              <FormItem label="Maximum Salary" className="ant-form-item-required">
+              <FormItem label="Maximum Salary" required>
                 <InputNumber
                   onChange={this.updateMaxSalary} name="max_salary" id="max_salary"
                   step={10000}
