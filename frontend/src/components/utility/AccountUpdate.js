@@ -37,8 +37,6 @@ class AccountUpdate extends React.Component {
         // Simple token comparison
         this.props.checkToken(e, this.props.token, token);
         // POST to verify token; returns JWT if valid
-        // const validPassword = this.sendLoginRequest(email, current_password);
-        // console.log(validPassword);
         axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
             .then(response => {
                 // If token is valid, check password
@@ -101,8 +99,7 @@ class AccountUpdate extends React.Component {
         // POST to verify token; returns the same JWT if valid
         axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
         .then(response => {
-            // console.log('token valid', response.data);
-            // POST request handled in modal by this.postEmail
+            // POST request handled in modal by this.postEmail()
             this.toggleFormModal();
         })
         .catch(err => {
@@ -116,27 +113,25 @@ class AccountUpdate extends React.Component {
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}`}};
         const { new_email, attempts } = this.state;
+        // get password & current_email from modal input ids
         const password = document.getElementById("username_reset_password").value;
         const current_email = document.getElementById("username_reset_email").value;
-        console.log(current_email, password);
-        // const validPassword = this.sendLoginRequest(email, password);
-        // only send email in PATCH request
+        // Verify password with login request
         axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: current_email, password: password })
             .then(response => {
-                // console.log('log in to verify password', response.data);
                 const formData = new FormData();
                 formData.append('email', new_email);
                 // for (var pair of formData.entries()) {
                 //     console.log(pair[0]+ ', ' + pair[1]); 
                 // }
+                // Update only email field in PATCH request
                 axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
                     .then(response => {
                         this.setState({ message: `Account successfully updated!`, attempts: 0 });
-                        // Make a login request with new email and password entered into modal
                         const { new_email } = this.state;
+                        // Make a login request with new email and password entered into modal
                         axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: new_email, password: password})
                             .then(response => {
-                                console.log('new username token', response.data);
                                 // replace old token with new one with updated email
                                 localStorage.setItem('token', response.data.token);
                                 this.toggleFormModal();
@@ -166,17 +161,6 @@ class AccountUpdate extends React.Component {
                     this.toggleFormModal();
                     this.setState({ attempts: attempts + 1 });
                 }
-            });
-    }
-
-    sendLoginRequest = (email, password) => {
-        console.log({email: email, password: password});
-        axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: password })
-            .then(response => {
-                return true;
-            })
-            .catch(err => {
-                return false;
             });
     }
 
