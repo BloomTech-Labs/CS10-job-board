@@ -1,8 +1,8 @@
-import React from "react";
-import axios from "axios";
-import { Form, Button, Checkbox, Alert, Icon, Input } from "antd";
-import { Link, withRouter } from "react-router-dom";
-import { JobPreview, CompanyJobCounter } from "../";
+import React from 'react';
+import axios from 'axios';
+import { Form, Button, Checkbox, Alert, Icon, Input } from 'antd';
+import { Link, withRouter } from 'react-router-dom';
+import { JobPreview, CompanyJobCounter } from '../';
 
 class CompanyJobList extends React.Component {
     constructor(props) {

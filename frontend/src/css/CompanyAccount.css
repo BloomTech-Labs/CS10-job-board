@@ -1,0 +1,108 @@
+.profile {
+    padding: 10px;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+}
+
+.profile textarea {
+    min-height: 140px;
+}
+
+.profile .form {
+    width: 40%;
+    max-width: 100%;
+    margin: 10px;
+    align-self: flex-start;
+}
+
+.profile .account-change {
+    width: 352px;
+    align-self: flex-start;
+    margin: 10px 0;
+    padding: 10px 0;
+}
+
+.profile .form button,
+.profile .account-change button {
+    align-self: flex-end;
+}
+
+.profile .form input {
+    padding: 10px;
+}
+
+.company-logo-upload-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.company-logo-upload-container .ant-form-item-children {
+    display: flex;
+    max-height: 120px;
+    margin: 10px 0;
+}
+
+.company-logo-upload-container::before, 
+.company-logo-upload-container::after {
+    display: none;
+}
+
+#company_logo_input {
+    background: white;
+    display: none;
+}
+
+#company_logo {
+    height: 100px;
+}
+
+
+
+/* Ant override */
+
+.profile .avatar-uploader {
+    width: 100%;
+    display: flex;
+}
+
+.profile .ant-upload.ant-upload-select-picture-card {
+    width: 100%;
+    display: flex;
+    height: 70px;
+}
+
+.profile .ant-upload > img {
+    height: 100%;
+}
+
+.profile .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  display: flex;
+}
+
+.profile .company-logo-upload-container .anticon {
+    width: 27px;
+    height: 27px;
+    margin: 10px;
+    border-radius: 50%;
+    border: 1px solid #604CB0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile .company-logo-upload-container .anticon svg {
+    height: 16px;
+    width: 16px;
+    color: #604CB0;
+    align-self: center;
+}
+
+.profile .ant-progress {
+    position: absolute;
+}
+
+.profile .ant-alert {
+    position: absolute;
+}

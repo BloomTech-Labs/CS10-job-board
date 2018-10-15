@@ -1,9 +1,9 @@
-import React from "react";
-import axios from "axios";
-import { withRouter } from "react-router-dom";
-import { Alert, Icon } from "antd";
-import numeral from "numeral";
-import { TagView } from "../";
+import React from 'react';
+import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import { Alert, Icon } from 'antd';
+import numeral from 'numeral';
+import { TagView } from '../';
 
 class Job extends React.Component {
     constructor(props) {

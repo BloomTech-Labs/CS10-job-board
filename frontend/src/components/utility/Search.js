@@ -1,6 +1,6 @@
-import React from "react";
-import axios from "axios";
-import { Icon } from "antd";
+import React from 'react';
+import axios from 'axios';
+import { Icon } from 'antd';
 
 class Search extends React.Component {
     state = {

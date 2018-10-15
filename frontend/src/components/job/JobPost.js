@@ -1,7 +1,7 @@
-import React from "react";
-import axios from "axios";
-import { withRouter } from "react-router-dom";
-import { TagCreate } from "../";
+import React from 'react';
+import axios from 'axios';
+import { withRouter } from 'react-router-dom';
+import { TagCreate } from '../';
 import { Alert, Form, Input, InputNumber, Button, Switch, Modal } from 'antd';
 
 const FormItem = Form.Item;
@@ -36,7 +36,7 @@ class JobPost extends React.Component {
     this.setState({ error: null, message: null});
     // Authentication
     const token = localStorage.getItem('token');
-    this.checkToken(e, this.props.token, token);
+    this.props.checkToken(e, this.props.token, token);
     // Validation
     if (company_name && title && description && job_location && requirements && min_salary && max_salary) {
       
@@ -95,12 +95,6 @@ class JobPost extends React.Component {
 
   toggleResetFieldsModal = () => {
     this.setState({ resetFieldsModal: !this.state.resetFieldsModal});
-  }
-
-  checkToken = (e, appToken, token) => {
-    if (appToken !== token) {
-      this.props.logOut(e, `Problem authenticating account. Please log in again.`);
-    }
   }
 
   onChange = e => {
@@ -222,7 +216,7 @@ class JobPost extends React.Component {
             </FormItem>
   
             <div className="flex">
-              <FormItem label="Minimum Salary" className="ant-form-item-required">
+              <FormItem label="Minimum Salary" required>
                 <InputNumber
                   onChange={this.updateMinSalary} name="min_salary" id="min_salary"
                   step={10000}
@@ -235,7 +229,7 @@ class JobPost extends React.Component {
                 />
               </FormItem>
   
-              <FormItem label="Maximum Salary" className="ant-form-item-required">
+              <FormItem label="Maximum Salary" required>
                 <InputNumber
                   onChange={this.updateMaxSalary} name="max_salary" id="max_salary"
                   step={10000}

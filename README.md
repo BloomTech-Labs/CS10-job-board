@@ -81,6 +81,7 @@ Any pull request made to the project will be tested by Netlify's CI.
 ##### Components
 - All components are exported from `src/components/index.js`
 - To import a component inside another component, import directly from this `index.js` file. ie. `import { Example } from '../'`. If components are in the same directory, still import from index.js instead of `'./'`.
+- Use single quotes for imports, ie `from 'react'`.
 - Avoid nesting folders more than one level inside `src/components/`
  ##### CSS
 - All CSS files are imported into `src/css/index.css`
@@ -172,7 +173,7 @@ To push the latest changes to Heroku, push from a local master branch of this re
 ### User API
 
 - `/api/account/:id` returns a specific user.
-    >Accepts GET, PUT, PATCH, DELETE requests from authenticated users whose id matches the id of the user.
+    >Accepts GET, PATCH, DELETE requests from authenticated users whose id matches the id of the user.
 
 ### Auth API
 
