@@ -1,5 +1,5 @@
 
-import { Job } from "../components";
+import { Job } from "../../components";
 
 test('Job', () => {
     const component = shallow(<Job />);

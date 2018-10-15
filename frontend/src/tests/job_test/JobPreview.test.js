@@ -1,4 +1,4 @@
-import { JobPreview } from '../components';
+import { JobPreview } from '../../components';
 
 test('JobPreview', () => {
 	const component = mount(<JobPreview job={{}} />);

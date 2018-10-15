@@ -1,5 +1,5 @@
 
-import { Search } from "../components";
+import { Search } from "../../components";
 
 
 test('Search', () => {

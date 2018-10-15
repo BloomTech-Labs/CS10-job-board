@@ -1,5 +1,5 @@
 
-import { Billing } from "../components";
+import { Billing } from "../../components";
 
 test('Billing', () => {
     const component = shallow(<Billing />);
