@@ -182,10 +182,11 @@ JWT_AUTH = {
     'JWT_GET_USER_SECRET_KEY': 'jobs.views.jwt_get_secret_key',
 }
 
+CORS_ORIGIN_ALLOW_ALL = False
+
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
-    'openjobsource.com',
-    'job-board-backend.herokuapp.com',
+    'https://www.openjobsource.com',
 )
 
 DJOSER = {
