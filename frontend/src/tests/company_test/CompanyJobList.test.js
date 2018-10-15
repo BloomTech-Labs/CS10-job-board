@@ -1,4 +1,4 @@
-import { CompanyJobList } from "../components";
+import { CompanyJobList } from "../../components";
 
 test('CompanyJobList', () => {
     const component = shallow(<CompanyJobList />);

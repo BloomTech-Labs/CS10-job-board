@@ -1,4 +1,4 @@
-import { TagCreate } from '../components';
+import { TagCreate } from '../../components';
 
 test('TagCreate', () => {
     const wrapper = shallow(<TagCreate tags={['example']} />);
