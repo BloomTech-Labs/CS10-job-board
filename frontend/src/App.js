@@ -82,11 +82,11 @@ class App extends React.Component {
     }
   }
 
-  logOut = (e, error) => {
+  logOut = (e, errorMessage) => {
     localStorage.removeItem('token');
     this.setState({ 
       loggedIn: false,
-      error: error,
+      error: errorMessage,
       message: null,
       token: null,
       jobs: null,
