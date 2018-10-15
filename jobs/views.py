@@ -112,24 +112,26 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
 
     def update(self, request, *args, **kwargs):
         user = self.get_object()
+
         # Check job company id matches user id
         if user.pk is not self.request.user.pk:
             message = {'FORBIDDEN'}
             return Response(message, status=status.HTTP_403_FORBIDDEN)
 
+        # Determines if PUT or PATCH request
         partial = kwargs.pop('partial', False)
         if partial is False:
             message = { "detail": "Method \"PUT\" not allowed." }
             return Response(message, status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+
+        serializer = self.get_serializer(user, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
-        if getattr(instance, '_prefetched_objects_cache', None):
+        if getattr(user, '_prefetched_objects_cache', None):
             # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
-            instance._prefetched_objects_cache = {}
+            # forcibly invalidate the prefetch cache on the user.
+            user._prefetched_objects_cache = {}
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
