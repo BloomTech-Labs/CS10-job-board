@@ -17,10 +17,15 @@ from django.views.generic import ListView
 import sendgrid
 from sendgrid.helpers.mail import *
 
+# Permissions
+from .permissions import IsOwnerOrReadOnly
+
+
 # REST Framework
 from rest_framework import views, permissions, status, authentication, generics, pagination
-from .permissions import IsOwnerOrReadOnly
 from rest_framework.response import Response
+from rest_framework.settings import api_settings
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 # JWT REST
 import rest_framework_jwt.authentication
@@ -33,6 +38,7 @@ from .api import (
     JobPostSerializer,
     JobPreviewSerializer,
     UserIDSerializer,
+    UserRegistrationSerializer,
     UserViewSerializer,
     MembershipSerializer,
     PaymentViewSerializer,
@@ -58,6 +64,32 @@ def jwt_response_handler(token, user=None, request=None):
         'user': JWTSerializer(user, context={'request': request}).data
     }
 
+
+class UserCreateView(generics.CreateAPIView):
+    serializer_class = UserRegistrationSerializer
+
+    # Methods create, perform_create, get_success_headers
+    #   all from Django REST Framework source-code mixins:
+    # https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py
+    # To customize, must overwrite but also add in default source-code.
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def get_success_headers(self, data):
+        try:
+            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+        except (TypeError, KeyError):
+            return {}
+
+
 # Create custom view because auth is handles by Django REST framework JWT Auth (not Djoser)
 class UserView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserViewSerializer
@@ -67,11 +99,62 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
+    parser_classes = (MultiPartParser,)
 
     def get_queryset(self):
         id = self.request.user.pk
         return User.objects.filter(id=id)
 
+    # Methods update, perform_update, partial_update, destroy, perform_destory
+    #   all from Django REST Framework source-code mixins:
+    # https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py
+    # To customize, must overwrite but also add in default source-code.
+
+    def update(self, request, *args, **kwargs):
+        user = self.get_object()
+
+        # Check job company id matches user id
+        if user.pk is not self.request.user.pk:
+            message = {'FORBIDDEN'}
+            return Response(message, status=status.HTTP_403_FORBIDDEN)
+
+        # Determines if PUT or PATCH request
+        partial = kwargs.pop('partial', False)
+        if partial is False:
+            message = { "detail": "Method \"PUT\" not allowed." }
+            return Response(message, status=status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        serializer = self.get_serializer(user, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        if getattr(user, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the user.
+            user._prefetched_objects_cache = {}
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def perform_update(self, serializer):
+        serializer.save()
+
+    def partial_update(self, request, *args, **kwargs):
+        kwargs['partial'] = True
+        return self.update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        user = self.get_object()
+        # Checks user id on request == user id making delete request:
+        #   (prevents company 1 deleting for company 2)
+        if user.pk is not self.request.user.pk:
+            message = {'FORBIDDEN'}
+            return Response(message, status=status.HTTP_403_FORBIDDEN)
+        self.perform_destroy(user)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def perform_destroy(self, instance):
+        instance.delete()
+        
 
 # Resets the jwt_secret, invalidating all token issued
 class UserLogoutAllView(views.APIView):

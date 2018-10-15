@@ -1,6 +1,6 @@
-import React from "react";
-import axios from "axios";
-import { Route, Switch, withRouter, NavLink } from "react-router-dom";
+import React from 'react';
+import axios from 'axios';
+import { Route, Switch, withRouter, NavLink } from 'react-router-dom';
 import './css/index.css';
 import { Account,
   Billing,
@@ -9,16 +9,12 @@ import { Account,
   Dashboard,
   Job,
   JobList,
-  JobPost,
   Landing,
   Navigation,
   NoMatch,
-  CompanyProfile,
-  CompanyJobCounter,
-  CompanyJobList,
-  PostedPreview, 
-  } from "./components";
-import { Alert, Button} from "antd";
+  CompanyAccount
+  } from './components';
+import { Alert, Button} from 'antd';
 
 class App extends React.Component {
   constructor(props) {
@@ -80,11 +76,17 @@ class App extends React.Component {
     }
   }
 
-  logOut = (e, error) => {
+  checkToken = (e, appToken, localStorageToken) => {
+    if (appToken !== localStorageToken) {
+      this.logOut(e, `Problem authenticating account. Please log in again.`);
+    }
+  }
+
+  logOut = (e, errorMessage) => {
     localStorage.removeItem('token');
     this.setState({ 
       loggedIn: false,
-      error: error,
+      error: errorMessage,
       message: null,
       token: null,
       jobs: null,
@@ -117,7 +119,7 @@ class App extends React.Component {
 
         {loggedIn ? (
           <div className="nav-wrapper">
-            <Navigation logOut={this.logOut} employer={employer} token={token} user={user}/>
+            <Navigation logOut={this.logOut} checkToken={this.checkToken} employer={employer} token={token} user={user}/>
           </div>
         ) : (
             // Navigation for unauthenticated users
@@ -168,9 +170,9 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <CompanyProfile token={token} logOut={this.logOut}/>} />            
+              <Route path="/account" render={() => <CompanyAccount token={token} logOut={this.logOut} checkToken={this.checkToken} user={user}/>} />            
               ) : (
-              <Route path="/account" render={() => <Account token={token} logOut={this.logOut}/>} />
+              <Route path="/account" render={() => <Account token={token} logIn={this.logIn} logOut={this.logOut} checkToken={this.checkToken} user={user}/>} />
             )}
             {employer ? (
               <Route exact path="/dashboard" render={() => <CompanyDashboard token={token} logOut={this.logOut}/>} />

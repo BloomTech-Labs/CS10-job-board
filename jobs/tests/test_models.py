@@ -1,4 +1,4 @@
-from mixer.backend.django import mixer
+
 from django.utils import timezone
 from jobs.models import JobPost
 import pytest

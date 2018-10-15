@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import { withRouter, NavLink } from 'react-router-dom';
-import axios from "axios";
+import axios from 'axios';
 import { CompanyJobCounter, CompanyJobList } from '../';
 
 class CompanyDashboard extends Component {

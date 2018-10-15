@@ -13,7 +13,7 @@ export { default as CheckoutForm } from './billing/CheckoutForm.js';
 export { default as CompanyDashboard } from './company/CompanyDashboard.js';
 export { default as CompanyJobCounter } from './company/CompanyJobCounter.js';
 export { default as CompanyJobList } from './company/CompanyJobList.js';
-export { default as CompanyProfile } from './company/CompanyProfile.js';
+export { default as CompanyAccount } from './company/CompanyAccount.js';
 // Job
 export { default as Job } from './job/Job.js';
 export { default as JobList } from './job/JobList.js';
@@ -27,6 +27,7 @@ export { default as Account } from './seeker/Account.js';
 export { default as Dashboard } from './seeker/Dashboard.js';
 
 // Utility
+export { default as AccountUpdate } from './utility/AccountUpdate.js';
 export { default as Avatar } from './utility/Avatar.js';
 export { default as Navigation } from './utility/Navigation.js';
 export { default as NoMatch } from './utility/NoMatch.js';

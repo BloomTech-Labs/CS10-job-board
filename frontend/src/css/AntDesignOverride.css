@@ -24,6 +24,32 @@
     top: 40%;
 }
 
+/* Alerts */
+
+.ant-alert {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    z-index: 1000;
+}
+
+.ant-alert-icon {
+    position: unset;
+    top: unset;
+    right: unset;
+    margin-right: 5px;
+}
+
+.ant-alert-close-icon {
+    position: relative;
+    margin-left: 5px;
+    top: 0;
+    right: 0;
+    line-height: inherit;
+    font-size: 16px;
+}
+
 /* Menu Items */
 
 .ant-dropdown-menu-item {
@@ -44,6 +70,13 @@
 
 .ant-form-item {
     margin-bottom: 0;
+    text-align: left;
+}
+
+.ant-form-item-children {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .ant-form-item-label label {
@@ -91,4 +124,16 @@
 
 .ant-switch-checked {
     background-color: #604CB0;
+}
+
+/* Progress */
+.ant-progress-circle-path {
+    stroke: #604CB0;
+    fill: white;
+    fill-opacity: 100;
+}
+
+.ant-progress-status-success {
+    color: #52c41a;
+    stroke: #52c41a;
 }

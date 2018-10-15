@@ -5,10 +5,10 @@ jobs/migrations
 .vscode
 Pipfile
 Pipfile.lock
+media/sendgrid.env
+media
 
 # Frontend ignore
 frontend/.env
 
-
-media/sendgrid.env
 
