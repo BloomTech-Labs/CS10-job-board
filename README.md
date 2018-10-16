@@ -40,7 +40,7 @@ Client dependencies can be found in [package.json](https://github.com/Lambda-Sch
   `./manage.py makemgrations` \
   `/.manage.py makemigrations jobs`\
   `/.manage.py migrate` \
-  to create tables in SQLite3 databse file `db.sqlite3` \
+  to create tables in SQLite3 database file `db.sqlite3` 
  3. Run `/manage.py runserver` to start the development server
 
 
@@ -134,21 +134,37 @@ NB:
 
 ### Heroku
 
-To push the latest changes to Heroku, push from a local master branch of this repo using `git push heroku master` with a properly authenticated Heroku account. An automated deploy script should make all necessary migrations on the connected PostgreSQL databse.
+Heroku is configured to deploy directly from this repository. The branch `deployed_live_site` is reserved for this purpose.
+
+The `master` branch should contain the latest features, while the `deployed_live_site` branch should be the latest stable release.
+
+To push the latest stable changes to Heroku:
+
+ 1. `git checkout deployed_live_site`  (NO `-b` flag)
+ 2. `git pull` from `deployed_live_site` to pull all changes not updated on local machine
+ 3. `git pull origin master` to pull in changes from the `master`
+ 4. `git push` to upload to branch
+ 5. In the Heroku app dashboard, navigate to the `Deploy` tab. At the bottom is the option `Manual Deploy`. Select the branch `deployed_live_site`, and click the `Deploy Branch` button. 
 
 **If problems arise during deployment:**
->1. Make sure you are deploying from the master branch 
->2. If you want to deploy from a branch, run:
-`git push heroku branchname:master`.
->3. Start a heroku bash: `heroku run bash`: 
+
+>-  _To create Faker data in Heroku shell:_ 
+>    `/manage.py shell` \
+>   `/manage.py import seeder`
+
+**If problems arise during deployment:**
+>
+>- Start a heroku bash: `heroku run bash -a job-board-backend` after loggin in to Heroku CLI with an autheticated account: 
 >
 >    `./manage.py makemigrations` \
 >    `./manage.py makemigrations jobs` \
->    `./manage.py migrate` \
-
->    - _To create Faker data in Heroku shell:_ \
->    `/manage.py shell` \
->    `/manage.py import seeder`
+>    `./manage.py migrate` 
+>- **_Last resort_**: reset DB data: \
+>   Click on `Resources` tab \
+>   Click on `Heroku Postgres :: Database` \
+>   Click on `Settings` in new window pop up \
+>   Click `Reset Database` (deletes all data)
+>
 
 
 ### Jobs API
