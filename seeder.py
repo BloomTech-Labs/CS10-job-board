@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from fakerdata import UserFactory, JobPostFactory
 from random import randint, choice
+from taggit.managers import TaggableManager
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from jobs import models
@@ -93,15 +94,6 @@ class Command(BaseCommand):
         company = choice(companies)
         print(company)
 
-        # Create Tags
-        count = 0
-        tag_count = randint(1, 7)
-        tags = []
-        while count < tag_count:
-            tags.append(choice(skills_list))
-            count += 1
-
-        print(tags)
         if published:
             published_date = factory.Faker('past_datetime')
 
@@ -115,18 +107,32 @@ class Command(BaseCommand):
             min_salary=factory.Faker('random_int', min=29999, max=69999),
             max_salary=factory.Faker('random_int', min=70000, max=179999),
             is_active=factory.Faker('boolean', False),
-            tags=tags,
             created_date=factory.Faker('past_date'),
             published_date=published_date
         )
 
-        # Loop through tags list, save each tag to get the correct separation
-        # for tag in tags:
-        #     new_jobpost.tags += tag
-        # Set publish date if boolean is True
-
         new_jobpost.save()
         print(new_jobpost)
+
+
+
+    job_posts = models.JobPost.objects.all()
+
+    for post in job_posts:
+
+        # Create Tags
+        count = 0
+        tag_count = randint(1, 7)
+        tags = []
+        while count < tag_count:
+            tags.append(choice(skills_list))
+            count += 1
+
+        print(tags)
+        for tag in tags:
+            post.tags.add(tag)
+
+        post.save()
 
 # Job Posts fields:
 
