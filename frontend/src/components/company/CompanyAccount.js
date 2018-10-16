@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
-import { AccountUpdate } from '../';
+import { AccountUpdate, LogoutAll } from '../';
 import { Alert, Form, Icon, Input, Button, Divider, Progress } from 'antd';
 
 const FormItem = Form.Item;
@@ -41,9 +41,7 @@ class CompanyAccount extends React.Component {
     const formData = new FormData();
     // creates FormData entries
     for (let key in requestBody) {
-      if (key === 'comapany_image' && requestBody[key] !== null) {
-        formData.append(key, requestBody[key])
-      } else if (requestBody[key] !== null) {
+      if (requestBody[key] !== null) {
         formData.append(key, requestBody[key]);
       }
     }
@@ -130,6 +128,10 @@ class CompanyAccount extends React.Component {
 
   resetMessages = () => {
     this.setState({ error: null, message: null, progress: 0 });
+  }
+
+  setMessages = (error, message) => {
+        this.setState({ error: error, message: message });
   }
 
 
@@ -263,8 +265,11 @@ class CompanyAccount extends React.Component {
 
 
         {/* Update Account Forms */}
-
-        <AccountUpdate {...this.props} />
+        <div>
+          <AccountUpdate {...this.props} />
+          <Divider />
+          <LogoutAll logOut={this.props.logOut} setMessages={this.setMessages}/>
+        </div>
 
       {/* page wrapper */}
       </div>
