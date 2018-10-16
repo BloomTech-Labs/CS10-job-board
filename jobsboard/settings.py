@@ -187,13 +187,13 @@ JWT_AUTH = {
 
 
 CORS_ALLOW_CREDENTIALS = True
-# CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ORIGIN_WHITELIST = (
-    'https://www.openjobsource.com',
-    'https://openjobsource.com',
-    'https://sharp-bhabha-303aff.netlify.com'
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'https://www.openjobsource.com',
+#     'https://openjobsource.com',
+#     'https://sharp-bhabha-303aff.netlify.com'
+# )
 
 DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
