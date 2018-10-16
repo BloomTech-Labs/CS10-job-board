@@ -1,6 +1,7 @@
 
 from django.utils import timezone
 from jobs.models import JobPost, UserManager, User
+import uuid
 import pytest
  
 # JobPost Test Suite
@@ -69,23 +70,9 @@ class TestUserManager:
     else:
         print("Exists")
 
-    # def test__create_user(self):
-    #     # testUserManager = UserManager()
-    #     # assert testUserManager._create_user == testUserManager.user
-    #     self._create_user = self._create_user
-    
-    # def _create_user(self):
-    #     pass
 
-    # def test_create_user(self):
-    #     testUserManager = UserManager()
-    #     assert testUserManager.create_user == testUserManager._create_user
-
-    # def test_create_superuser(self):
-    #     testUserManager = UserManager()
-    #     assert testUserManager.create_superuser == testUserManager.create_superuser
-
-"""
+# User Test Suite
+@pytest.mark.django_db
 class TestUser:
     def test_user_model(self):
         self.is_employer = True
@@ -95,12 +82,13 @@ class TestUser:
         self.is_staff = True
         self.company_name = 'Example Company'
         self.company_logo = '<img src=\'#\' alt=\'example\'>'
-        self.company_description = "An example company description for the company"
-        self.application_inbox = 'javascript, mongodb, sql, express.js'
-        self.first_name = "Example"
+        self.company_summary = 'An example company description for the company'
+        self.application_inbox = []
+        self.first_name = 'Firstname'
+        self.last_name = 'Lastname'
         self.profile_photo = '<img src=\'#\' alt=\'example\'>'
         self.created_date = timezone.now()
-        self.jwt_secret = '{12345678-1234-5678-1234-567812345678}'
+        self.jwt_secret = uuid.uuid4()
 
         self.test_user = User.objects.create(
             is_employer = self.is_employer,
@@ -110,17 +98,18 @@ class TestUser:
             is_staff = self.is_staff,
             company_name = self.company_name,
             company_logo = self.company_logo,
-            company_description = self.company_description,
+            company_summary = self.company_summary,
             application_inbox = self.application_inbox,
             first_name = self.first_name,
+            last_name = self.last_name,
             profile_photo = self.profile_photo,
             created_date = self.created_date,
-            jwt_secret = self.jwt_secret,
+            jwt_secret = self.jwt_secret
         )
 
         def test_str(self):
             assert self.__str__ == self.email
-"""
+
 """
 class User(AbstractBaseUser, PermissionsMixin):
     is_employer = models.BooleanField(default=False)
