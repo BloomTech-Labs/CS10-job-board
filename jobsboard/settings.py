@@ -190,9 +190,9 @@ CORS_ALLOW_CREDENTIALS = True
 # CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
-    'https://www.openjobsource.com/',
-    'https://openjobsource.com/',
-    'https://sharp-bhabha-303aff.netlify.com',
+    'https://www.openjobsource.com',
+    'https://openjobsource.com',
+    'https://sharp-bhabha-303aff.netlify.com'
 )
 
 DJOSER = {
