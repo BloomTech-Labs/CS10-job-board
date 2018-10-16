@@ -1,6 +1,6 @@
 from mixer.backend.django import mixer
 from django.utils import timezone
-from jobs.models import JobPost, UserManager, User
+from jobs.models import JobPost, UserManager, User, UserMembership
 import uuid
 import pytest
  
@@ -114,34 +114,38 @@ class TestUser:
         def test_str(self):
             assert self.__str__ == self.email
 
-"""
-class User(AbstractBaseUser, PermissionsMixin):
-    is_employer = models.BooleanField(default=False)
-    email = models.EmailField(
-        verbose_name='email address', max_length=255, unique=True)
-    password = models.CharField(max_length=100, default="", null=False)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    company_name = models.CharField(max_length=200, blank=True)
-    company_logo = models.FileField(
-        upload_to='company_logo/%Y/%m/%d/', blank=True, null=True)
-    company_summary = models.CharField(max_length=6000, blank=True)
-    application_inbox = models.EmailField(blank=True, default='')
-    first_name = models.CharField(max_length=200, blank=True)
-    last_name = models.CharField(max_length=200, blank=True)
-    profile_photo = models.ImageField(
-        upload_to='profile_photo/%Y/%m/%d/', blank=True, null=True)
-    created_date = models.DateTimeField(default=timezone.now, editable=False)
-    jwt_secret = models.UUIDField(default=uuid.uuid4)
+# Membership Test Suite
+@pytest.mark.django_db
+class TestUserMembership:
+    try:
+        UserMembership()
+    except NameError:
+        print('Does not exist')
+    else:
+        print('It may exist but we have a little error going on.')
 
-    objects = UserManager()
+    try:
+        getattr(UserMembership, '__str__')
+    except AttributeError:
+        print("__str__ doesn't exist")
+    else:
+        print("Exists")
 
-    USERNAME_FIELD = 'email'
-    # REQUIRED_FIELDS = []
 
-    class Meta:
-        ordering = ['created_date']
+    # def test_usermembership_model(self):
+    #     user_membership = mixer.blend(UserMembership)
+        
+    #     def test_create_user_membership(self):
+    #         assert isinstance(self.test_usermembership, UserMembership)
 
-    def __str__(self):
-        return self.email
-"""
+    #     def test_str(self):
+    #         assert self.__str__ == self.user.email
+
+# class UserMembership(models.Model):
+#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     stripe_customer_id = models.CharField(max_length=40)
+#     membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, null=True)
+#     # stripe_product_id = models.CharField(max_length=40)
+
+#     def __str__(self):
+#         return self.user.email
