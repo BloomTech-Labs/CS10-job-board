@@ -76,7 +76,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class JobPost(models.Model):
-    company = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
+    company = models.ForeignKey('jobs.User', on_delete=models.CASCADE, null=True)
     company_name = models.CharField(max_length=200, blank=True)
     title = models.CharField(max_length=200, blank=True)
     company_logo = models.ImageField(upload_to='job_post/company_logo/%Y/%m/%d/', blank=True, null=True)
