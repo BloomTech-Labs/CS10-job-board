@@ -1,4 +1,4 @@
-
+from mixer.backend.django import mixer
 from django.utils import timezone
 from jobs.models import JobPost, UserManager, User
 import uuid
@@ -107,6 +107,10 @@ class TestUser:
             jwt_secret = self.jwt_secret
         )
 
+        # test_user = mixer.blend(User) 
+        def test_create_user(self):
+            assert isinstance(self.test_user, User)
+            
         def test_str(self):
             assert self.__str__ == self.email
 

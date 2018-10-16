@@ -123,7 +123,7 @@ class UserMembership(models.Model):
 
 
     # Creates a Membership instance for User
-    def post_save_usermembership_create(self, sender, instance, created, *args, **kwargs):
+    def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
         if created:
             UserMembership.objects.get_or_create(user=instance)
 
