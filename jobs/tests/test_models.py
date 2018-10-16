@@ -1,6 +1,6 @@
 from mixer.backend.django import mixer
 from django.utils import timezone
-from jobs.models import JobPost, UserManager, User, UserMembership
+from jobs.models import JobPost, UserManager, User, UserMembership, Payment
 import uuid
 import pytest
  
@@ -47,28 +47,28 @@ class TestUserManager:
     except NameError:
         print('Does not exist')
     else:
-        print('It may exist but we have a little error going on.')
+        print('UserManager exists')
 
     try:
         getattr(UserManager, '_create_user')
     except AttributeError:
         print("_create_user doesn't exist")
     else:
-        print("Exists")
+        print("_create_user exists")
 
     try:
         getattr(UserManager, 'create_user')
     except AttributeError:
         print("create_user doesn't exist")
     else:
-        print("Exists")
+        print("create_user exists")
 
     try:
         getattr(UserManager, 'create_superuser')
     except AttributeError:
         print("create_superuser doesn't exist")
     else:
-        print("Exists")
+        print("create_superuser exists")
 
 
 # User Test Suite
@@ -117,35 +117,36 @@ class TestUser:
 # Membership Test Suite
 @pytest.mark.django_db
 class TestUserMembership:
-    try:
-        UserMembership()
-    except NameError:
-        print('Does not exist')
-    else:
-        print('It may exist but we have a little error going on.')
+    def test_usermembership_model(self):
+        try:
+            UserMembership()
+        except NameError:
+            print('Does not exist')
+        else:
+            print('UserMembership exists.')
 
-    try:
-        getattr(UserMembership, '__str__')
-    except AttributeError:
-        print("__str__ doesn't exist")
-    else:
-        print("Exists")
+        try:
+            getattr(UserMembership, '__str__')
+        except AttributeError:
+            print("__str__ doesn't exist")
+        else:
+            print("__str__ exists")
+
+        try:
+            getattr(UserMembership, 'post_save_usermembership_create')
+        except AttributeError:
+            print("post_save_usermembership_create doesn't exist")
+        else:
+            print("post_save_usermembership_create  exists")
 
 
-    # def test_usermembership_model(self):
-    #     user_membership = mixer.blend(UserMembership)
-        
-    #     def test_create_user_membership(self):
-    #         assert isinstance(self.test_usermembership, UserMembership)
+@pytest.mark.django_db
+class TestPayment:
+    def test_payment(self):
+        try:
+            UserMembership()
+        except NameError:
+            print('Payment does not exist')
+        else:
+            print('Payment exists')
 
-    #     def test_str(self):
-    #         assert self.__str__ == self.user.email
-
-# class UserMembership(models.Model):
-#     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-#     stripe_customer_id = models.CharField(max_length=40)
-#     membership = models.ForeignKey(Membership, on_delete=models.SET_NULL, null=True)
-#     # stripe_product_id = models.CharField(max_length=40)
-
-#     def __str__(self):
-#         return self.user.email
