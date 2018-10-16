@@ -67,15 +67,17 @@ t
                 <div>
                     <CompanyJobCounter count={count} stripe_count={stripe_count} published_count={published_count}/>
                 </div>
+
+                <Form>
+                    <Checkbox type="checkbox" name="is_active" value={is_active} onChange={this.onChange} />
+                    <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
+                    <Button type="primary" onClick={this.fetchJobs}>
+                        <Icon type="sync" spin={loading}/>
+                    </Button>
+                </Form>
+
                 {jobs ? (
                     <div className="jobs-list">
-                        <Form>
-                            <Checkbox type="checkbox" name="is_active" value={is_active} onChange={this.onChange} />
-                            <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
-                            <Button type="primary" onClick={this.fetchJobs}>
-                                <Icon type="sync" spin={loading}/>
-                            </Button>
-                        </Form>
                                 {jobs.map(job => {
                                 return (
                                     <Link key={job.created_date} to={`/dashboard/${job.id}`}>
@@ -91,3 +93,24 @@ t
 }
 
 export default withRouter(CompanyJobList);
+
+
+    //   <List
+    //     className="jobs-list"
+    //     loading={true}
+    //     itemLayout="horizontal"
+    //     // loadMore={loadMore}
+    //     dataSource={list}
+    //     renderItem={item => (
+    //       <List.Item actions={[<a>edit</a>, <a>more</a>]}>
+    //         <Skeleton avatar title={false} loading={item.loading} active>
+    //           <List.Item.Meta
+    //             avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
+    //             title={<a href="https://ant.design">{item.name.last}</a>}
+    //             description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+    //           />
+    //           <div>content</div>
+    //         </Skeleton>
+    //       </List.Item>
+    //     )}
+    //   />
