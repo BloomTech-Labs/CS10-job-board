@@ -106,3 +106,7 @@
 .profile .ant-alert {
     position: absolute;
 }
+
+.profile .logout-all {
+    justify-content: flex-end;
+}
