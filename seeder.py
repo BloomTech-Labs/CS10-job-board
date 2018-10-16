@@ -41,7 +41,7 @@ class Command(BaseCommand):
     for entry in range(20):
 
         email = factory.Faker('safe_email')
-        password = make_password(factory.Faker('password', length=10, special_chars=True, digits=True, upper_case=True, lower_case=True))
+        password = make_password('TESTACCOUNT')
         is_employer = factory.Faker('boolean', chance_of_getting_true=40)
 
         if is_employer:

@@ -204,7 +204,9 @@ To push the latest stable changes to Heroku:
 
 ## Dependencies:
 
+###  Factory Boy: generating job post data: [DOCS](https://factoryboy.readthedocs.io/en/latest/)
 ###  Faker: generating job post data: [DOCS](https://faker.readthedocs.io/en/master/)
+
 
 > NB:  If data models have changed, make migrations or delete development database and migration folder, and run migrations commands.
 
@@ -216,6 +218,7 @@ To push the latest stable changes to Heroku:
     >>> exit()
 
 `seeder.py` contains the data configuration.
+`fakerdata.py` creates classes with `factory-boy` to create classes
 
 ### Running Tests
 
