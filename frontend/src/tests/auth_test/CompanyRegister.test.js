@@ -1,4 +1,4 @@
-import { CompanyRegister } from "../components";
+import { CompanyRegister } from "../../components";
 
 test('CompanyRegister', () => {
     const component = shallow(<CompanyRegister />);

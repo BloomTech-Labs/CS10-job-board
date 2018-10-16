@@ -1,6 +1,4 @@
-import App from '../App';
-
-// First test for App component
+import App from '../../App';
 
 test('App', () => {
 	const component = shallow(<App />);

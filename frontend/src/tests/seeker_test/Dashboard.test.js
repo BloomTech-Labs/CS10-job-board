@@ -1,4 +1,4 @@
-import Dashboard from '../components/seeker/Dashboard';
+import Dashboard from '../../components/seeker/Dashboard';
 
 test('Dashboard', () => {
     const component = shallow(<Dashboard />);

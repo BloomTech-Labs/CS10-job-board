@@ -1,4 +1,4 @@
-import Account from '../components/seeker/Account'
+import Account from '../../components/seeker/Account'
 
 test('Account', () => {
     const component = shallow(<Account />);
