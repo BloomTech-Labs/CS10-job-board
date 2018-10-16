@@ -189,7 +189,7 @@ JWT_AUTH = {
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = (
-    'https://www.openjobsource.com/',
+    'openjobsource.com',
 )
 
 DJOSER = {
