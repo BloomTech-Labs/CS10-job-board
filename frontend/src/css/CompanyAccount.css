@@ -41,6 +41,7 @@
 .company-logo-upload-container .ant-form-item-children {
     display: flex;
     max-height: 120px;
+    justify-content: center;
     margin: 10px 0;
 }
 
