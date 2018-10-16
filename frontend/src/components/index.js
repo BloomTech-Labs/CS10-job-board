@@ -32,4 +32,5 @@ export { default as Avatar } from './utility/Avatar.js';
 export { default as Navigation } from './utility/Navigation.js';
 export { default as NoMatch } from './utility/NoMatch.js';
 export { default as Search } from './utility/Search.js';
+export { default as LogoutAll } from './utility/LogoutAll.js';
 
