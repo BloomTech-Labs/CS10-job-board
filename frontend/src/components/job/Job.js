@@ -40,20 +40,20 @@ class Job extends React.Component {
                          <Icon onClick={this.props.history.goBack}type="left-circle" theme="twoTone" /> 
                         <div>
                             <img src="" alt="" className="job-logo"/>
-                            <h3>{job.company_name}</h3>
-                            <p>{job.company_desc}</p>
+                            <h3>{job[0].company_name}</h3>
+                            <p>{job[0].company_desc}</p>
                         </div>
-                        <h2>{job.title}</h2>
-                        <h3>{numeral(job.min_salary).format('($0a)')} - {numeral(job.max_salary).format('($0a)')}</h3>
+                        <h2>{job[0].title}</h2>
+                        <h3>{numeral(job[0].min_salary).format('($0a)')} - {numeral(job[0].max_salary).format('($0a)')}</h3>
                         <h3>Job Description</h3>
-                        <p>{job.description}</p>
+                        <p>{job[0].description}</p>
                         <h3>Requirements</h3>
-                        <p>{job.requirements}</p>
+                        <p>{job[0].requirements}</p>
                         <div>
                             <h3>Tags</h3>
                             <div className="job-tags">
-                                {job.tags ? (
-                                    job.tags.map(tag => {
+                                {job[0].tags ? (
+                                    job[0].tags.map(tag => {
                                         return (
                                             <TagView key={tag} tag={tag} />
                                         );
