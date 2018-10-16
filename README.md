@@ -35,16 +35,16 @@ A full list of server dependencies can be found in [requirements.txt](https://gi
 Client dependencies can be found in [package.json](https://github.com/Lambda-School-Labs/CS10-job-board/blob/master/frontend/package.json)
 
 ### Workflow in Django
-> 1. Run `pipenv install`, `pipenv shell` to create a virtual environment
-  2. Run inside virtural environment: \
+ 1. Run `pipenv install`, `pipenv shell` to create a virtual environment
+ 2. Run inside virtural environment: \
   `./manage.py makemgrations` \
   `/.manage.py makemigrations jobs`\
   `/.manage.py migrate` \
   to create tables in SQLite3 databse file `db.sqlite3` \
-  3. Run `/manage.py runserver` to start the development server
+ 3. Run `/manage.py runserver` to start the development server
 
 
-**NB:**
+_**NB:**_
 
 Python 3.6.6:
 > Make sure pipenv python version is 3.6.6 by running `python --version` inside virtual environment
@@ -180,7 +180,7 @@ To push the latest changes to Heroku, push from a local master branch of this re
 *Dependency: **djoser_views***
 - `/api/register/` Creates a new User, using Djoser to handle activation email. Required fields: `email` & `password`
 
-*Dependency: **`rest_framework_jwt.views`***
+*Dependency: **rest_framework_jwt***
 - `/api/login/` Generates a new token. Required fields: `email` & `password`
 - `/api/login/refresh/` Refreshes existing valid token. Refresh delta is set at a maximum of 7 days, before invalidating the original token. Required fields: `token`
 - `/api/login/verify/` Verifies token validity. Required fields: `token`
