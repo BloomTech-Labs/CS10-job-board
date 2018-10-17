@@ -1,11 +1,10 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Checkbox, Alert, Icon, Input, Collapse } from 'antd';
+import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
-import { JobPreview, CompanyJobCounter } from '../';
+import { CompanyJobPreview, CompanyJobCounter } from '../';
 
 const FormItem = Form.Item;
-const Panel = Collapse.Panel;
 
 class CompanyJobList extends React.Component {
     constructor(props) {
@@ -13,11 +12,10 @@ class CompanyJobList extends React.Component {
         this.state = {
             error: null,
             message: null,
-            loading: null,
+            loading: false,
             search: "",
             count: null,
             published_count: null,
-            is_active: false,
             jobs: [],
             next: null,
             previous: null
@@ -58,7 +56,7 @@ t
 
 
     render() {
-        const { error, loading, jobs, search, is_active, count, published_count } = this.state;
+        const { error, loading, jobs, search, count, published_count } = this.state;
         return (
             <div className="company-job-list-container">
                 {error ? (
@@ -70,7 +68,7 @@ t
                 </div>
 
                 <Form>
-                    <Checkbox type="checkbox" name="is_active" value={is_active} onChange={this.onChange} />
+                    <Checkbox type="checkbox" onChange={this.onChange} />
                     <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
                     <Button type="primary" onClick={this.fetchJobs}>
                         <Icon type="sync" spin={loading}/>
@@ -78,15 +76,33 @@ t
                 </Form>
 
                 {jobs ? (
-                        <Collapse className="flex column" bordered={false} accordion={true}>
+                        <List 
+                        className="flex column company-job-list" 
+                        bordered={true} 
+                        loading={loading} 
+                        pagination={true} 
+                        position="both" 
+                        loadMore
+                        gutter={1}
+                        header={[
+                           <h3>Title</h3>,
+                           <p><strong>Published</strong></p>
+                        ]}
+                        >
                                 {jobs.map(job => {
                                 return (
-                                    <Panel className="h4" header={job.title} key={job.id}>
-                                        <JobPreview job={job}/>
-                                    </Panel>
+                                    <List.Item 
+                                        key={job.id}
+                                        actions={[
+                                            <a href="#">edit</a>,
+                                            <Switch onChange={this.togglePublish} checked={job.is_active}/>
+                                        ]}
+                                    >
+                                        <p>{job.title}</p>
+                                    </List.Item>
                                 );
                             })}
-                        </Collapse>
+                        </List>
                 ) : (null)}
             </div>
         );
