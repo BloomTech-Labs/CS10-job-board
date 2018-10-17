@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch } from 'antd';
+import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { CompanyJobPreview, CompanyJobCounter } from '../';
 
@@ -18,7 +18,8 @@ class CompanyJobList extends React.Component {
             published_count: null,
             jobs: [],
             next: null,
-            previous: null
+            previous: null,
+            padding: null
         }
     }
 
@@ -54,9 +55,42 @@ t
     }
 
 
+    setPaddingCompact = e => {
+        e.preventDefault();
+        this.setState({ padding: "4px"});
+    }
+
+    setPaddingNormal = e => {
+        e.preventDefault();
+        this.setState({ padding: "10px"});
+    }
+
+    setPaddingLarge = e => {
+        e.preventDefault();
+        this.setState({ padding: "25px"});
+    }
+
 
     render() {
-        const { error, loading, jobs, search, count, published_count } = this.state;
+        const { error, loading, jobs, search, count, published_count, padding } = this.state;
+
+        const displayDensity = (
+           <Menu>
+               <Menu.Item key="0">
+                   <a href="#" onClick={(e) => this.setPaddingCompact(e)}>Compact</a>
+               </Menu.Item>
+
+               <Menu.Item key="1">
+                   <a href="#" onClick={(e) => this.setPaddingNormal(e)}>Normal</a>
+               </Menu.Item>
+
+               <Menu.Item key="2">
+                   <a href="#" onClick={(e) => this.setPaddingLarge(e)}>Large</a>
+               </Menu.Item>
+           </Menu>
+           );
+
+
         return (
             <div className="company-job-list-container">
                 {error ? (
@@ -68,12 +102,18 @@ t
                 </div>
 
                 <Form>
-                    <Checkbox type="checkbox" onChange={this.onChange} />
+                    <Checkbox onChange={this.onChange} />
                     <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
                     <Button type="primary" onClick={this.fetchJobs}>
                         <Icon type="sync" spin={loading}/>
                     </Button>
                 </Form>
+
+                <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
+                    <a className="ant-dropdown-link">
+                      <Icon type="bars" />
+                    </a>
+                </Dropdown>
 
                 {jobs ? (
                         <List 
@@ -85,8 +125,12 @@ t
                         loadMore
                         gutter={1}
                         header={[
-                           <h3>Title</h3>,
-                           <p><strong>Published</strong></p>
+                            <div key={1} className="flex baseline">
+                                <Checkbox key={1}/>
+                                <em className="ant-list-item-action-split-modified"></em>
+                                <h3 key={2}>Title</h3>
+                            </div>,
+                           <p key={3}><strong>Published</strong></p>
                         ]}
                         >
                                 {jobs.map(job => {
@@ -97,7 +141,10 @@ t
                                             <a href="#">edit</a>,
                                             <Switch onChange={this.togglePublish} checked={job.is_active}/>
                                         ]}
+                                        style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
                                     >
+                                        <Checkbox />
+                                        <em className="ant-list-item-action-split-modified"></em>
                                         <p>{job.title}</p>
                                     </List.Item>
                                 );
