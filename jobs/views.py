@@ -272,12 +272,16 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
     
     def get_queryset(self):
         company = self.request.user
-        return JobPost.objects.filter(company=company)
-        # print(self.request.data)
-        # if self.request.data['is_active'] is True:
-        #     return JobPost.objects.filter(published_date=True)
-        # else:
-        #     return JobPost.objects.filter(company=company)
+        queryset = JobPost.objects.filter(company=company)
+        
+        published = self.request.query_params.get('published', None)
+        print(published)
+        unpublished = self.request.query_params.get('unpublished', None)
+        if published is not None:
+            queryset = queryset.filter(is_active=True)
+        if unpublished is not None:
+            queryset = queryset.filter(is_active=False)
+        return queryset
 
     def post(self, request, *args, **kwargs):
         # print('REQUEST>>>>', request.user.pk)
