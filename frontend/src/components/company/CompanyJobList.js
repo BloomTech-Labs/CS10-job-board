@@ -134,7 +134,7 @@ t
             input.onClick = null;
             if (e.target.checked && !input.checked) {
                 input.click();
-            } else if (input.checked) {
+            } else if (!e.target.checked && input.checked) {
                 input.click()
             }
             checkedList[i].onClick = this.checkJob;
