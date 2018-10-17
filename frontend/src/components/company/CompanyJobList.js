@@ -202,7 +202,9 @@ t
                     </Tooltip>
 
                     <div className="whitespace"></div>
-                    <Icon type="delete" onClick={this.handleBulkDelete} />
+                    <Tooltip placement="top" trigger="hover" title={<span>Delete</span>} mouseEnterDelay={0.8}>
+                        <Icon type="delete" onClick={this.handleBulkDelete} />
+                    </Tooltip>
                     <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
                         <a className="flex">
                           <Icon type="bars" />
