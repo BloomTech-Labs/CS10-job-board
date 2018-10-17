@@ -16,7 +16,7 @@ class CompanyJobList extends React.Component {
             search: "",
             count: null,
             published_count: null,
-            jobs: [],
+            jobs: null,
             next: null,
             previous: null,
             padding: null,
@@ -78,7 +78,7 @@ t
 
     handleBulkDelete = e => {
         e.preventDefault();
-        this.setState({ bulk: true, error: false, message: true });
+        this.setState({ bulk: true, error: false, message: false });
         let {checkedList} = this.state;
         const deleteJob = this.deleteJob;
         const numOfJobs = checkedList.length;
@@ -233,24 +233,3 @@ t
 }
 
 export default withRouter(CompanyJobList);
-
-
-    //   <List
-    //     className="job-list"
-    //     loading={true}
-    //     itemLayout="horizontal"
-    //     // loadMore={loadMore}
-    //     dataSource={list}
-    //     renderItem={item => (
-    //       <List.Item actions={[<a>edit</a>, <a>more</a>]}>
-    //         <Skeleton avatar title={false} loading={item.loading} active>
-    //           <List.Item.Meta
-    //             avatar={<Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />}
-    //             title={<a href="https://ant.design">{item.name.last}</a>}
-    //             description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-    //           />
-    //           <div>content</div>
-    //         </Skeleton>
-    //       </List.Item>
-    //     )}
-    //   />
