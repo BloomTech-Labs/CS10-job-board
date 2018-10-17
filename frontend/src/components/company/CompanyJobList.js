@@ -84,7 +84,7 @@ t
                     <div className="jobs-list">
                                 {jobs.map(job => {
                                 return (
-                                    <Link key={job.created_date} to={`/dashboard/${job.id}`}>
+                                    <Link key={job.id} to={`/dashboard/${job.id}`}>
                                         <JobPreview job={job}/>
                                     </Link>
                                 );
