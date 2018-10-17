@@ -72,3 +72,7 @@
     align-items: center;
     margin: 10px 0;
 }
+
+.job-list-actions .anticon-sync {
+    margin: 0 10px;
+}
