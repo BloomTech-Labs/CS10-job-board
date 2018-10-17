@@ -16,7 +16,9 @@ class CompanyJobList extends React.Component {
             stripe_count: null,
             published_count: null,
             is_active: false,
-            jobs: []
+            jobs: [],
+            next: null,
+            previous: null
         }
     }
 
@@ -43,10 +45,12 @@ t
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
         axios.get(`${process.env.REACT_APP_API}company/jobs/`, requestOptions)
             .then(response => {
-                // console.log(response);
+                console.log(response);
                 this.setState({ 
                     jobs: response.data.results,
                     count: response.data.count,
+                    next: response.data.next,
+                    previous: response.data.previous
                  });
             })
             .catch(err => {
