@@ -3,7 +3,8 @@
 _A Job board for people without college degrees_
 
 [Visit Site](https://www.openjobsource.com/)
-[Demo] (https://www.youtube.com/watch?v=eSk4lympLVg&feature=share)
+
+[Demo](https://www.youtube.com/watch?v=eSk4lympLVg&feature=share)
 
 ---
 
