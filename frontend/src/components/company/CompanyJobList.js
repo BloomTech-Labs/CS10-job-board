@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio, Tooltip } from 'antd';
-import { Link, withRouter } from 'react-router-dom';
-import { CompanyJobPreview, CompanyJobCounter } from '../';
+import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio, Tooltip, Popconfirm } from 'antd';
+import { withRouter } from 'react-router-dom';
+import { CompanyJobCounter } from '../';
 
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
@@ -66,36 +66,45 @@ t
                 this.state.bulk ? (
                     this.setState({ checkedList: this.state.checkedList.filter(item => item.id !== id)})
                 ) : (
-                    this.setState({ message: `Record successfully deleted` })
+                    this.setState({ message: `Record successfully deleted`, loading: false })
                 );
             })
             .catch(err => {
                 this.state.bulk ? (
                     console.log(err)
                 ) : (
-                    this.setState({ error: `Error deleting records. Try again.`})
+                    this.setState({ error: `Error deleting records. Try again.`, loading: false})
                 );
-            });
-        this.setState({ loading: false });       
+            });      
     }
 
     handleBulkDelete = e => {
         e.preventDefault();
-        this.setState({ bulk: true, error: false, message: false });
+        this.setState({ bulk: true, error: false, message: false, loading: true });
         let {checkedList} = this.state;
         const deleteJob = this.deleteJob;
         const numOfJobs = checkedList.length;
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        let running = false;
         if (numOfJobs > 0) {
-            (async function loop(requestOptions, deleteJob) {
+            async function loop(requestOptions, deleteJob) {
+                running = true;
                 for (let i = 0; i < numOfJobs; i++) {
                     const id = checkedList[i];
                     await deleteJob(id, requestOptions);
                 }
-            })(requestOptions, deleteJob);
-            this.setState({ message: `Successfully removed ${numOfJobs} jobs.`, buld: false });
-            this.fetchJobs();
+                return running = false;
+            };
+            loop(requestOptions, deleteJob).then(response => {
+                setTimeout(() => {
+                    this.fetchJobs();
+                    this.setState({ message: `Successfully removed ${numOfJobs} jobs.`, bulk: false, loading: false });
+                }, 1000);
+            })
+            .catch(err => {
+                this.setState({ error: `Error deleting jobs. Try again or refresh.`, bulk: false, loading: false});
+            });
         }
     }
 
@@ -203,7 +212,15 @@ t
 
                     <div className="whitespace"></div>
                     <Tooltip placement="top" trigger="hover" title={<span>Delete</span>} mouseEnterDelay={0.8}>
-                        <Icon type="delete" onClick={this.handleBulkDelete} />
+                        <Popconfirm
+                            title="Are you sure you want to delete these jobs?"
+                            okText="Delete"
+                            cancelText="Cancel"
+                            onConfirm={this.handleBulkDelete}
+                        >
+                            {/* <a className="ant-btn ant-btn-danger" href="#"> Logout All Sessions</a> */}
+                            <Icon type="delete" onClick={null}/>
+                        </Popconfirm>
                     </Tooltip>
                     <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
                         <a className="flex">
