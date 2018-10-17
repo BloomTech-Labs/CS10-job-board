@@ -1,4 +1,6 @@
 .company-job-list-container {
+    display: flex;
+    flex-flow: column wrap;
     margin: 10px;
     padding: 10px;
     width: 510px;
@@ -13,11 +15,21 @@
 
 .company-job-list-container .ant-list-bordered .ant-list-item {
     padding-right: 0;
+    padding-left: 10px;
 }
 
 .company-job-list-container .ant-list-header {
     display: flex;
     justify-content: space-between;
     padding-right: 8px;
+    padding-left: 10px;
     align-items: baseline;
+}
+
+.company-job-list-container .ant-dropdown-link {
+    align-self: flex-end;   
+}
+
+.company-job-list-container .anticon-bars svg {
+    font-size: 24px; 
 }
