@@ -33,3 +33,14 @@
 .company-job-list-container .anticon-bars svg {
     font-size: 24px; 
 }
+
+.company-job-list-container .anticon-delete svg {
+    position: relative;
+    top: 2px;
+    margin: 0 20px;
+    font-size: 20px; 
+}
+
+.company-job-list-container .ant-list-header svg {
+    font-size: 20px;
+}
