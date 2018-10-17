@@ -77,12 +77,26 @@ t
         this.setState({ indeterminate: !this.state.indeterminate });
     }
 
-    // checkAll = e => {
-    //     this.setState({ checkedList: e.target.checked ? })
-    // }
+    checkAll = e => {
+        // get a list of checkboxes inside the job list & click them
+        let checkedList = document.querySelectorAll(".job-item .ant-checkbox-input");
+        let checkedListIds = [];
+        for (let i = 0; i < checkedList.length; i++) {
+            const input = checkedList[i];
+            checkedListIds.push(input.id);
+            input.onClick = null;
+            if (e.target.checked && !input.checked) {
+                input.click();
+            } else if (!e.target.checked && input.checked ) {
+                input.click()
+            }
+            checkedList[i].onClick = this.checkJob;
+        }
+        this.setState({ checkedList:  e.target.checked ? checkedListIds : [] });
+    }
 
     checkJob = e => {
-        // console.log(e);
+        console.log(e.target);
         if (e.target.checked === true) {
             this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
         } else {
@@ -152,7 +166,7 @@ t
                                 <em className="ant-list-item-action-split-modified"></em>
                                 <h3 key={2}>Title</h3>
                             </div>,
-                           <p key={3}><strong>Published</strong></p>
+                           <p key={3}>Published</p>
                         ]}
                         >
                                 {jobs.map(job => {
@@ -165,7 +179,7 @@ t
                                         ]}
                                         style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
                                     >
-                                        <Checkbox onChange={this.checkJob} id={`${job.id}`}/>
+                                        <Checkbox onChange={this.checkJob} id={`${job.id}`} className="job-item"/>
                                         <em className="ant-list-item-action-split-modified"></em>
                                         <p>{job.title}</p>
                                     </List.Item>
