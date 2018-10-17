@@ -180,7 +180,7 @@ class PostPageNumberPagination(pagination.PageNumberPagination):
 
 class ListJobPost(generics.ListCreateAPIView):
     # returns first 10 most recently published jobs
-    queryset = JobPost.objects.exclude(published_date=None)[:10]
+    queryset = JobPost.objects.exclude(published_date=None)
     serializer_class = JobPreviewSerializer
     permission_classes  = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = PostPageNumberPagination
