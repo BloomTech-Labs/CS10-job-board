@@ -174,8 +174,10 @@ class UserLogoutAllView(views.APIView):
 
 class PostPageNumberPagination(pagination.PageNumberPagination):
     page_size = 10
+    # Method allowed from client to change query page_size
     page_size_query_param = 'post'
-    max_page_size = 20 
+    # Max amount allowed from client request's to change page_size
+    max_page_size = 100
 
 
 class ListJobPost(generics.ListCreateAPIView):
