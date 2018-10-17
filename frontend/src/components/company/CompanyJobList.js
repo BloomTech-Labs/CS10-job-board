@@ -1,8 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Checkbox, Alert, Icon, Input } from 'antd';
+import { Form, Button, Checkbox, Alert, Icon, Input, Collapse } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { JobPreview, CompanyJobCounter } from '../';
+
+const FormItem = Form.Item;
+const Panel = Collapse.Panel;
 
 class CompanyJobList extends React.Component {
     constructor(props) {
@@ -12,9 +15,6 @@ class CompanyJobList extends React.Component {
             message: null,
             loading: null,
             search: "",
-            count: null,
-            stripe_count: null,
-            published_count: null,
             is_active: false,
             jobs: [],
             next: null,
@@ -27,12 +27,6 @@ class CompanyJobList extends React.Component {
     }
 t 
     componentDidMount() {
-        // // Prevents calling a GET request every time component is rendered
-        // // jobs is inherited from App.js
-        // const location = this.props.history.location;
-        // if (location !== '/' && location !== '/jobs') {
-        //     this.props.history.push('/');
-        // }
         if (!this.state.jobs) {
             this.fetchJobs();
         }
@@ -62,15 +56,12 @@ t
 
 
     render() {
-        const { error, loading, jobs, search, count, stripe_count, published_count, is_active } = this.state;
+        const { error, loading, jobs, search, is_active } = this.state;
         return (
             <div className="jobs-list-container">
                 {error ? (
                    <Alert message={error} type="error" closable showIcon />
                    ) : (null)}
-                <div>
-                    <CompanyJobCounter count={count} stripe_count={stripe_count} published_count={published_count}/>
-                </div>
 
                 <Form>
                     <Checkbox type="checkbox" name="is_active" value={is_active} onChange={this.onChange} />
@@ -81,15 +72,15 @@ t
                 </Form>
 
                 {jobs ? (
-                    <div className="jobs-list">
+                        <Collapse className="flex column jobs-list" bordered={false} accordion={true}>
                                 {jobs.map(job => {
                                 return (
-                                    <Link key={job.id} to={`/dashboard/${job.id}`}>
+                                    <Panel className="h4" header={job.title} key={job.id}>
                                         <JobPreview job={job}/>
-                                    </Link>
+                                    </Panel>
                                 );
                             })}
-                        </div>
+                        </Collapse>
                 ) : (null)}
             </div>
         );
