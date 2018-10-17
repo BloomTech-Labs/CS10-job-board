@@ -10,11 +10,16 @@ class CompanyDashboard extends Component {
 
         }
     }
+
+    setJobCount = count => {
+        this.setState({ count: count });
+    }
+
     render() {
         return (
             <div className="dashboard">
                 <CompanyJobList />
-                <CompanyJobCounter />
+                <CompanyJobCounter count={count} stripe_count={stripe_count} published_count={published_count}/>
             </div>
         );
     }
