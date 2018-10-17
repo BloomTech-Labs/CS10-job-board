@@ -45,12 +45,12 @@ class JobList extends React.Component {
         const { jobs } = this.props;
         const { error, loading } = this.state;
         return (
-            <div className="jobs-list-container">
+            <div className="job-list-container">
                 {error ? (
                    <Alert message={error} type="error" closable showIcon />
                    ) : (null)}
                 {jobs ? (
-                    <div className="jobs-list">
+                    <div className="job-list">
                         <Button type="primary" onClick={this.fetchJobs}>
                             <Icon type="sync" spin={loading}/>
                         </Button>

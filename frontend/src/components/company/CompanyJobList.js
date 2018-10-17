@@ -78,7 +78,7 @@ t
                 </Form>
 
                 {jobs ? (
-                        <Collapse className="flex column jobs-list" bordered={false} accordion={true}>
+                        <Collapse className="flex column" bordered={false} accordion={true}>
                                 {jobs.map(job => {
                                 return (
                                     <Panel className="h4" header={job.title} key={job.id}>
@@ -97,7 +97,7 @@ export default withRouter(CompanyJobList);
 
 
     //   <List
-    //     className="jobs-list"
+    //     className="job-list"
     //     loading={true}
     //     itemLayout="horizontal"
     //     // loadMore={loadMore}
