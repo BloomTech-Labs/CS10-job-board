@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio } from 'antd';
+import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio, Tooltip } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { CompanyJobPreview, CompanyJobCounter } from '../';
 
@@ -51,13 +51,13 @@ t
                     jobs: response.data.results,
                     count: response.data.count,
                     next: response.data.next,
-                    previous: response.data.previous
+                    previous: response.data.previous,
+                    loading: false
                  });
             })
             .catch(err => {
-                this.setState({ error: `Error processing request. Try Again.`});
+                this.setState({ error: `Error processing request. Try Again.`, loading: false});
             });
-        this.setState({ loading: false });
     }
 
     deleteJob = (id, requestOptions) => {
@@ -146,7 +146,7 @@ t
     }
 
     render() {
-        const { error, message, loading, jobs, search, count, published_count, padding, jobType } = this.state;
+        const { error, message, loading, jobs, search, count, published_count, padding } = this.state;
 
         const displayDensity = (
            <Menu>
@@ -188,22 +188,26 @@ t
                 </div>
 
                 <Form>
-                    <Checkbox onChange={this.onChange} />
                     <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
-                    <Button type="primary" onClick={this.fetchJobs}>
-                        <Icon type="sync" spin={loading}/>
-                    </Button>
+                    <Button type="primary" onClick={}>Search</Button>
                 </Form>
                 
                 <div className="job-list-actions">
                     {jobTypeMenu}
-                        <div className="whitespace"></div>
-                        <Icon type="delete" onClick={this.handleBulkDelete} />
-                        <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
-                            <a className="flex">
-                              <Icon type="bars" />
-                            </a>
-                        </Dropdown>
+
+                    <Tooltip placement="top" trigger="hover" title={<span>Refresh</span>} mouseEnterDelay={0.8}>
+                        <a onClick={this.fetchJobs}>
+                            <Icon type="sync" spin={loading}/>
+                        </a>
+                    </Tooltip>
+
+                    <div className="whitespace"></div>
+                    <Icon type="delete" onClick={this.handleBulkDelete} />
+                    <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
+                        <a className="flex">
+                          <Icon type="bars" />
+                        </a>
+                    </Dropdown>
                 </div>
 
                 {jobs ? (
