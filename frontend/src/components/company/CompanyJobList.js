@@ -20,9 +20,9 @@ class CompanyJobList extends React.Component {
             next: null,
             previous: null,
             padding: null,
-            // indeterminate: true,
             checkedList: [],
-            checkAll: false
+            checkAll: false,
+            bulk: false
         }
     }
 
@@ -57,6 +57,45 @@ t
         this.setState({ loading: false });
     }
 
+    deleteJob = (id, requestOptions) => {
+        axios.delete(`${process.env.REACT_APP_API}company/jobs/${id}/`, requestOptions)
+            .then(response => {
+                this.state.bulk ? (
+                    this.setState({ checkedList: this.state.checkedList.filter(item => item.id !== id)})
+                ) : (
+                    this.setState({ message: `Record successfully deleted` })
+                );
+            })
+            .catch(err => {
+                this.state.bulk ? (
+                    console.log(err)
+                ) : (
+                    this.setState({ error: `Error deleting records. Try again.`})
+                );
+            });
+        this.setState({ loading: false });       
+    }
+
+    handleBulkDelete = e => {
+        e.preventDefault();
+        this.setState({ bulk: true, error: false, message: true });
+        let {checkedList} = this.state;
+        const deleteJob = this.deleteJob;
+        const numOfJobs = checkedList.length;
+        const token = localStorage.getItem('token');
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        if (numOfJobs > 0) {
+            (async function loop(requestOptions, deleteJob) {
+                for (let i = 0; i < numOfJobs; i++) {
+                    const id = checkedList[i];
+                    await deleteJob(id, requestOptions);
+                }
+            })(requestOptions, deleteJob);
+            this.setState({ message: `Successfully removed ${numOfJobs} jobs.`, buld: false });
+            this.fetchJobs();
+        }
+    }
+
 
     setPaddingCompact = e => {
         e.preventDefault();
@@ -73,10 +112,6 @@ t
         this.setState({ padding: "25px"});
     }
 
-    toggleIndeterminate = e => {
-        this.setState({ indeterminate: !this.state.indeterminate });
-    }
-
     checkAll = e => {
         // get a list of checkboxes inside the job list & click them
         let checkedList = document.querySelectorAll(".job-item .ant-checkbox-input");
@@ -87,7 +122,7 @@ t
             input.onClick = null;
             if (e.target.checked && !input.checked) {
                 input.click();
-            } else if (!e.target.checked && input.checked ) {
+            } else if (input.checked) {
                 input.click()
             }
             checkedList[i].onClick = this.checkJob;
@@ -105,7 +140,7 @@ t
     }
 
     render() {
-        const { error, loading, jobs, search, count, published_count, padding, indeterminate } = this.state;
+        const { error, message, loading, jobs, search, count, published_count, padding } = this.state;
 
         const displayDensity = (
            <Menu>
@@ -126,9 +161,13 @@ t
 
         return (
             <div className="company-job-list-container">
+
                 {error ? (
-                   <Alert message={error} type="error" closable showIcon />
-                   ) : (null)}
+                  <Alert message={error} type="error" closable showIcon banner />
+                  ) : (null)}
+                {message ? (
+                  <Alert message={message} type="success" closable showIcon />
+                ) : (null)}
 
                 <div>
                      <CompanyJobCounter count={count} published_count={published_count}/>
@@ -141,12 +180,15 @@ t
                         <Icon type="sync" spin={loading}/>
                     </Button>
                 </Form>
-
-                <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
-                    <a className="ant-dropdown-link">
-                      <Icon type="bars" />
-                    </a>
-                </Dropdown>
+                
+                <div className="flex justify-flex-end baseline">
+                    <Icon type="delete" onClick={this.handleBulkDelete} />
+                    <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
+                        <a className="ant-dropdown-link">
+                          <Icon type="bars" />
+                        </a>
+                    </Dropdown>
+                </div>
 
                 {jobs ? (
                         <List 
@@ -160,13 +202,11 @@ t
                         header={[
                             <div key={1} className="flex baseline">
                                 <Checkbox 
-                                    key={1} 
-                                    // indeterminate={indeterminate}
                                     onChange={this.checkAll}/>
                                 <em className="ant-list-item-action-split-modified"></em>
-                                <h3 key={2}>Title</h3>
+                                <h3>Title</h3>
                             </div>,
-                           <p key={3}>Published</p>
+                            <p key={2}>Published</p>
                         ]}
                         >
                                 {jobs.map(job => {
