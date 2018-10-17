@@ -11,6 +11,7 @@ export { default as CheckoutForm } from './billing/CheckoutForm.js';
 
 // Company
 export { default as CompanyDashboard } from './company/CompanyDashboard.js';
+export { default as CompanyJobBalance } from './company/CompanyJobBalance.js';
 export { default as CompanyJobCounter } from './company/CompanyJobCounter.js';
 export { default as CompanyJobList } from './company/CompanyJobList.js';
 export { default as CompanyAccount } from './company/CompanyAccount.js';
