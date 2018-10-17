@@ -2,7 +2,7 @@
 
 _A Job board for people without college degrees_
 
-[Visit Site](https://www.openjobsoure.com/)
+[Visit Site](https://www.openjobsource.com/)
 
 ---
 
