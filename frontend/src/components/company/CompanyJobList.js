@@ -19,7 +19,10 @@ class CompanyJobList extends React.Component {
             jobs: [],
             next: null,
             previous: null,
-            padding: null
+            padding: null,
+            // indeterminate: true,
+            checkedList: [],
+            checkAll: false
         }
     }
 
@@ -70,9 +73,25 @@ t
         this.setState({ padding: "25px"});
     }
 
+    toggleIndeterminate = e => {
+        this.setState({ indeterminate: !this.state.indeterminate });
+    }
+
+    // checkAll = e => {
+    //     this.setState({ checkedList: e.target.checked ? })
+    // }
+
+    checkJob = e => {
+        // console.log(e);
+        if (e.target.checked === true) {
+            this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
+        } else {
+            this.setState({ checkedList: this.state.checkedList.filter(item => item !== e.target.id)});
+        }
+    }
 
     render() {
-        const { error, loading, jobs, search, count, published_count, padding } = this.state;
+        const { error, loading, jobs, search, count, published_count, padding, indeterminate } = this.state;
 
         const displayDensity = (
            <Menu>
@@ -126,7 +145,10 @@ t
                         gutter={1}
                         header={[
                             <div key={1} className="flex baseline">
-                                <Checkbox key={1}/>
+                                <Checkbox 
+                                    key={1} 
+                                    // indeterminate={indeterminate}
+                                    onChange={this.checkAll}/>
                                 <em className="ant-list-item-action-split-modified"></em>
                                 <h3 key={2}>Title</h3>
                             </div>,
@@ -143,7 +165,7 @@ t
                                         ]}
                                         style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
                                     >
-                                        <Checkbox />
+                                        <Checkbox onChange={this.checkJob} id={`${job.id}`}/>
                                         <em className="ant-list-item-action-split-modified"></em>
                                         <p>{job.title}</p>
                                     </List.Item>
