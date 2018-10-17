@@ -76,3 +76,13 @@
 .job-list-actions .anticon-sync {
     margin: 0 10px;
 }
+
+.company-job-search {
+    display: flex;
+    align-items: baseline;
+    margin: 0 0 20px;
+}
+
+.company-job-search input {
+    margin-right: 10px;
+}

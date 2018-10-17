@@ -187,9 +187,9 @@ t
                      <CompanyJobCounter count={count} published_count={published_count}/>
                 </div>
 
-                <Form>
+                <Form className="company-job-search">
                     <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
-                    <Button type="primary" onClick={}>Search</Button>
+                    <Button type="primary" onClick={null}>Search</Button>
                 </Form>
                 
                 <div className="job-list-actions">
