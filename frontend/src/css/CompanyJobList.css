@@ -18,5 +18,6 @@
 .company-job-list-container .ant-list-header {
     display: flex;
     justify-content: space-between;
-    padding-right: 10px;
+    padding-right: 8px;
+    align-items: baseline;
 }
