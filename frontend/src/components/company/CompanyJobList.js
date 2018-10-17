@@ -1,10 +1,12 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu } from 'antd';
+import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio } from 'antd';
 import { Link, withRouter } from 'react-router-dom';
 import { CompanyJobPreview, CompanyJobCounter } from '../';
 
 const FormItem = Form.Item;
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 
 class CompanyJobList extends React.Component {
     constructor(props) {
@@ -22,7 +24,8 @@ class CompanyJobList extends React.Component {
             padding: null,
             checkedList: [],
             checkAll: false,
-            bulk: false
+            bulk: false,
+            jobType: null
         }
     }
 
@@ -131,7 +134,6 @@ t
     }
 
     checkJob = e => {
-        console.log(e.target);
         if (e.target.checked === true) {
             this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
         } else {
@@ -139,8 +141,12 @@ t
         }
     }
 
+    handleJobType = e => {
+        this.setState({ jobType: e.target.value });
+    }
+
     render() {
-        const { error, message, loading, jobs, search, count, published_count, padding } = this.state;
+        const { error, message, loading, jobs, search, count, published_count, padding, jobType } = this.state;
 
         const displayDensity = (
            <Menu>
@@ -157,6 +163,14 @@ t
                </Menu.Item>
            </Menu>
            );
+
+        const jobTypeMenu = (
+            <RadioGroup defaultValue="all" onChange={this.handleJobType} size="small">
+                <RadioButton value="All">All</RadioButton>
+                <RadioButton value="Published">Published</RadioButton>
+                <RadioButton value="Unpublished">Unpublished</RadioButton>
+            </RadioGroup>
+        )
 
 
         return (
@@ -181,13 +195,15 @@ t
                     </Button>
                 </Form>
                 
-                <div className="flex justify-flex-end baseline">
-                    <Icon type="delete" onClick={this.handleBulkDelete} />
-                    <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
-                        <a className="ant-dropdown-link">
-                          <Icon type="bars" />
-                        </a>
-                    </Dropdown>
+                <div className="job-list-actions">
+                    {jobTypeMenu}
+                        <div className="whitespace"></div>
+                        <Icon type="delete" onClick={this.handleBulkDelete} />
+                        <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
+                            <a className="flex">
+                              <Icon type="bars" />
+                            </a>
+                        </Dropdown>
                 </div>
 
                 {jobs ? (
@@ -204,7 +220,6 @@ t
                                 <Checkbox 
                                     onChange={this.checkAll}/>
                                 <em className="ant-list-item-action-split-modified"></em>
-                                <h3>Title</h3>
                             </div>,
                             <p key={2}>Published</p>
                         ]}
