@@ -35,18 +35,29 @@ class CompanyJobList extends React.Component {
 t 
     componentDidMount() {
         if (!this.state.jobs) {
-            this.fetchJobs();
+            this.handleJobRequest();
         }
 
     }
+    
+    handleJobRequest = e => {
+        if (e.target.value === 'Published') {
+            this.fetchJobs(`?published`);
+        } else if (e.target.value === 'Unpublished') {
+            this.fetchJobs(`?unpublished`);
+        } else {
+            this.fetchJobs();
+        }
+    }
 
-    fetchJobs = () => {
+    fetchJobs = query => {
         this.setState({ loading: true, error: null, message: null });
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        axios.get(`${process.env.REACT_APP_API}company/jobs/`, requestOptions)
+        let api = `${process.env.REACT_APP_API}company/jobs/`;
+        let url = query ? api + query : api;
+        axios.get(url , requestOptions)
             .then(response => {
-                console.log(response);
                 this.setState({ 
                     jobs: response.data.results,
                     count: response.data.count,
@@ -98,7 +109,7 @@ t
             };
             loop(requestOptions, deleteJob).then(response => {
                 setTimeout(() => {
-                    this.fetchJobs();
+                    this.handleJobRequest();
                     this.setState({ message: `Successfully removed ${numOfJobs} jobs.`, bulk: false, loading: false });
                 }, 1000);
             })
@@ -150,9 +161,6 @@ t
         }
     }
 
-    handleJobType = e => {
-        this.setState({ jobType: e.target.value });
-    }
 
     render() {
         const { error, message, loading, jobs, search, count, published_count, padding } = this.state;
@@ -174,7 +182,7 @@ t
            );
 
         const jobTypeMenu = (
-            <RadioGroup defaultValue="all" onChange={this.handleJobType} size="small">
+            <RadioGroup defaultValue="all" onChange={this.handleJobRequest} size="small">
                 <RadioButton value="All">All</RadioButton>
                 <RadioButton value="Published">Published</RadioButton>
                 <RadioButton value="Unpublished">Unpublished</RadioButton>
@@ -205,7 +213,7 @@ t
                     {jobTypeMenu}
 
                     <Tooltip placement="top" trigger="hover" title={<span>Refresh</span>} mouseEnterDelay={0.8}>
-                        <a onClick={this.fetchJobs}>
+                        <a onClick={this.handleJobRequest}>
                             <Icon type="sync" spin={loading}/>
                         </a>
                     </Tooltip>
