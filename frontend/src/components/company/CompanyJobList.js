@@ -15,6 +15,8 @@ class CompanyJobList extends React.Component {
             message: null,
             loading: null,
             search: "",
+            count: null,
+            published_count: null,
             is_active: false,
             jobs: [],
             next: null,
@@ -56,12 +58,16 @@ t
 
 
     render() {
-        const { error, loading, jobs, search, is_active } = this.state;
+        const { error, loading, jobs, search, is_active, count, published_count } = this.state;
         return (
-            <div className="jobs-list-container">
+            <div className="company-job-list-container">
                 {error ? (
                    <Alert message={error} type="error" closable showIcon />
                    ) : (null)}
+
+                <div>
+                     <CompanyJobCounter count={count} published_count={published_count}/>
+                </div>
 
                 <Form>
                     <Checkbox type="checkbox" name="is_active" value={is_active} onChange={this.onChange} />
