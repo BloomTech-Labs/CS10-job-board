@@ -230,6 +230,8 @@ button:hover {
   flex-grow: 1;
 }
 
+
+/* Flex Utilities */
 .flex {
   display: flex;
 }
@@ -250,8 +252,24 @@ button:hover {
   justify-content: flex-end;
 }
 
+.justify-center {
+  justify-items: center;
+}
+
+.justify-baseline {
+  justify-items: baseline;
+}
+
 .flex-start {
   align-self: flex-start;
+}
+
+.baseline {
+  align-items: baseline;
+}
+
+.center {
+  align-items: center;
 }
 
 
