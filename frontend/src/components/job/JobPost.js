@@ -154,7 +154,7 @@ class JobPost extends React.Component {
                   hasFeedback: true,
                 }]
               })(
-                <Input type="text" placeholder="e.g. Google" name="company_name" onChange={this.onChange}/>
+                <Input type="text" placeholder="e.g. Google" name="company_name" onChange={this.onChange} id="co-2"/>
               )}
             </FormItem>
           
