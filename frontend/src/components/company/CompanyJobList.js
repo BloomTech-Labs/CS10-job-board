@@ -114,6 +114,7 @@ t
                 }
             };
             loop(requestOptions, deleteJob).then(response => {
+                // Timeout to ensure delete by server before requesting new list of jobs
                 setTimeout(() => {
                     this.handleJobRequest();
                     this.setState({ message: `Successfully removed ${numOfJobs} jobs.`, bulk: false, loading: false });
@@ -125,6 +126,7 @@ t
         }
     }
 
+    // Next 3 fns: Sets display density of job list
 
     setPaddingCompact = e => {
         e.preventDefault();
@@ -141,6 +143,8 @@ t
         this.setState({ padding: "25px"});
     }
 
+    // Toggles click state of all displayed jobs
+
     checkAll = e => {
         // get a list of checkboxes inside the job list & click them
         let checkedList = document.querySelectorAll(".job-item .ant-checkbox-input");
@@ -148,17 +152,22 @@ t
         for (let i = 0; i < checkedList.length; i++) {
             const input = checkedList[i];
             checkedListIds.push(input.id);
+            // removes onClick reference to not trigger this.checkJob(), assigned to each individual checkbox
             input.onClick = null;
+            // Must check both states of parent checkbox and individual checkbox to get proper behavior
             if (e.target.checked && !input.checked) {
                 input.click();
             } else if (!e.target.checked && input.checked) {
                 input.click()
             }
+            // reassignes the onClick reference to this.checkJob()
             checkedList[i].onClick = this.checkJob;
         }
+        // if parent checkbox is checked replace state with list, else if not checked, replace checkedList with empty array
         this.setState({ checkedList:  e.target.checked ? checkedListIds : [] });
     }
 
+    // individaul checkbox event handler, concats/filters array of checkedList state depending on checked state
     checkJob = e => {
         if (e.target.checked === true) {
             this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
@@ -171,7 +180,7 @@ t
     render() {
         const { error, message, loading, jobs, search, count, published_count, padding } = this.state;
 
-        const displayDensity = (
+        const displayDensityMenu = (
            <Menu>
                <Menu.Item key="0">
                    <a href="#" onClick={(e) => this.setPaddingCompact(e)}>Compact</a>
@@ -232,11 +241,10 @@ t
                             cancelText="Cancel"
                             onConfirm={this.handleBulkDelete}
                         >
-                            {/* <a className="ant-btn ant-btn-danger" href="#"> Logout All Sessions</a> */}
                             <Icon type="delete" onClick={null}/>
                         </Popconfirm>
                     </Tooltip>
-                    <Dropdown overlay={displayDensity} trigger={['click']} placement="bottomRight">
+                    <Dropdown overlay={displayDensityMenu} trigger={['click']} placement="bottomRight">
                         <a className="flex">
                           <Icon type="bars" />
                         </a>
