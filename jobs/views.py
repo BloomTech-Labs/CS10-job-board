@@ -31,7 +31,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 import rest_framework_jwt.authentication
 
 # Models
-from .models import User, JobPost, Membership, UserMembership, Subscription, Payment
+from .models import User, JobPost, UserMembership, Subscription, Payment
 
 # Serializers
 from .api import (
@@ -40,7 +40,7 @@ from .api import (
     UserIDSerializer,
     UserRegistrationSerializer,
     UserViewSerializer,
-    MembershipSerializer,
+    UserMembershipSerializer,
     PaymentViewSerializer,
     JWTSerializer
     )
@@ -349,26 +349,34 @@ def send_email(request):
 
 
 def get_selected_membership(request):
-	membership_type = request.session['selected_membership_type']
-	selected_membership_qs = Membership.objects.filter(
-            membership_type=membership_type)
+	membership = request.session['selected_membership']
+	selected_membership_qs = UserMembership.objects.filter(
+            membership=membership)
 	if selected_membership_qs.exists():
 		return selected_membership_qs.first()
 	return None
 
 
+# class UserMembshipView(generics.RetrieveUpdateDestroyAPIView):
+#     model = UserMembership
+
+
 
 # for selecting a paid membership
-class MembershipSelectView(generics.ListAPIView):
-    model = Membership
-    queryset = Membership.objects.all()
-    serializer_class = MembershipSerializer
+class UserMembershipView(generics.ListCreateAPIView):
+    model = UserMembership
+    serializer_class = UserMembershipSerializer
     authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        id = self.request.user.id
+        queryset = UserMembership.objects.filter(id=id)
+        return queryset
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -379,12 +387,12 @@ class MembershipSelectView(generics.ListAPIView):
         return context
 
     def post(self, request, **kwargs):
-        selected_membership_type = request.POST.get('membership_type')
+        selected_membership = request.POST.get('membership')
         user_subscription = get_user_subscription(request)
         user_membership = get_user_membership(request)
 
-        selected_membership_qs = Membership.objects.filter(
-            membership_type=selected_membership_type
+        selected_membership_qs = UserMembership.objects.filter(
+            membership=selected_membership
         )
         if selected_membership_qs.exists():
             selected_membership = selected_membership_qs.first()
@@ -401,7 +409,7 @@ class MembershipSelectView(generics.ListAPIView):
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
         #assign any changes to membership type to the session
-        request.session['selected_membership_type'] = selected_membership.membership_type
+        request.session['selected_membership'] = selected_membership.membership
         return HttpResponseRedirect(reverse('memberships:payment'))
 
 
@@ -428,7 +436,7 @@ class PaymentView(generics.CreateAPIView):
 # 		try:
 # 			token = request.POST['stripeToken']
 # 			subscription = stripe.Subscription.create(
-# 			  customer=user_membership.stripe_customer_id,
+# 			  customer=user_membership.stripe_id,
 # 			  items=[
 # 			    {
 # 			      "plan": selected_membership.stripe_plan_id,
@@ -466,7 +474,7 @@ class PaymentView(generics.CreateAPIView):
 # 	sub.save()
 
 # 	try:
-# 		del request.session['selected_membership_type']
+# 		del request.session['selected_membership']
 # 	except:
 # 		pass
 
@@ -488,7 +496,7 @@ class PaymentView(generics.CreateAPIView):
 # 	user_sub.save()
 
 
-# 	free_membership = Membership.objects.filter(membership_type='Free').first()
+# 	free_membership = UserMembership.objects.filter(membership='Free').first()
 # 	user_membership = get_user_membership(request)
 # 	user_membership.membership = free_membership
 # 	user_membership.save()
