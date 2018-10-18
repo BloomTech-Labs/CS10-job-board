@@ -41,10 +41,14 @@ t
     }
     
     handleJobRequest = e => {
-        if (e.target.value === 'Published') {
-            this.fetchJobs(`?published`);
-        } else if (e.target.value === 'Unpublished') {
-            this.fetchJobs(`?unpublished`);
+        if (e) {
+            if (e.target.value === 'Published') {
+                this.fetchJobs(`?published`);
+            } else if (e.target.value === 'Unpublished') {
+                this.fetchJobs(`?unpublished`);
+            } else {
+                this.fetchJobs();
+            }
         } else {
             this.fetchJobs();
         }
