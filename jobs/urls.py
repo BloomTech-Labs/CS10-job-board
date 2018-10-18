@@ -43,7 +43,7 @@ urlpatterns = [
     # path('memberships/', (name='membership')),
 
     # Membership & Stripe API
-    path('membership/', views.MembershipSelectView.as_view(), name='membership'),
+    path('membership/', views.UserMembershipView.as_view(), name='membership'),
     path('pay/', views.PaymentView.as_view(), name='pay'),
     # path('update-transactions/<subscription_id>/', views.updateTransactionRecords, name='update-transactions'),
     # path('cancel/', views.cancelSubscription, name='cancel')
