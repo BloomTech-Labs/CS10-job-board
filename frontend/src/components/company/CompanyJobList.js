@@ -77,6 +77,7 @@ t
         }
     }
     
+    // delete REST request
     deleteJob = (id, requestOptions) => {
         axios.delete(`${process.env.REACT_APP_API}company/jobs/${id}/`, requestOptions)
             .then(response => {
@@ -95,6 +96,7 @@ t
             });      
     }
 
+    // handles delete requests for one or many items
     handleBulkDelete = e => {
         e.preventDefault();
         this.setState({ bulk: true, error: false, message: false, loading: true });
@@ -103,15 +105,13 @@ t
         const numOfJobs = checkedList.length;
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        let running = false;
         if (numOfJobs > 0) {
+            // function to ensure proper delete before moving on to next item in checkedList
             async function loop(requestOptions, deleteJob) {
-                running = true;
                 for (let i = 0; i < numOfJobs; i++) {
                     const id = checkedList[i];
                     await deleteJob(id, requestOptions);
                 }
-                return running = false;
             };
             loop(requestOptions, deleteJob).then(response => {
                 setTimeout(() => {
