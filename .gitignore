@@ -7,8 +7,8 @@ Pipfile
 Pipfile.lock
 media/sendgrid.env
 media
+__pycache__
 
 # Frontend ignore
 frontend/.env
-
 
