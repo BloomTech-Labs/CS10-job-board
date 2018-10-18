@@ -40,8 +40,31 @@ t
 
     }
     
+    fetchJobs = query => {
+        this.setState({ loading: true, error: null, message: null });
+        const token = localStorage.getItem('token');
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        let api = `${process.env.REACT_APP_API}company/jobs/`;
+        let url = query ? api + query : api;
+        axios.get(url , requestOptions)
+        .then(response => {
+            this.setState({ 
+                jobs: response.data.results,
+                count: response.data.count,
+                next: response.data.next,
+                previous: response.data.previous,
+                loading: false
+            });
+        })
+        .catch(err => {
+            this.setState({ error: `Error processing request. Try Again.`, loading: false});
+        });
+    }
+    
     handleJobRequest = e => {
+        // During component mount, no e exists
         if (e) {
+            // Clicking radio button passes query param to fetchJobs
             if (e.target.value === 'Published') {
                 this.fetchJobs(`?published`);
             } else if (e.target.value === 'Unpublished') {
@@ -53,28 +76,7 @@ t
             this.fetchJobs();
         }
     }
-
-    fetchJobs = query => {
-        this.setState({ loading: true, error: null, message: null });
-        const token = localStorage.getItem('token');
-        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        let api = `${process.env.REACT_APP_API}company/jobs/`;
-        let url = query ? api + query : api;
-        axios.get(url , requestOptions)
-            .then(response => {
-                this.setState({ 
-                    jobs: response.data.results,
-                    count: response.data.count,
-                    next: response.data.next,
-                    previous: response.data.previous,
-                    loading: false
-                 });
-            })
-            .catch(err => {
-                this.setState({ error: `Error processing request. Try Again.`, loading: false});
-            });
-    }
-
+    
     deleteJob = (id, requestOptions) => {
         axios.delete(`${process.env.REACT_APP_API}company/jobs/${id}/`, requestOptions)
             .then(response => {
