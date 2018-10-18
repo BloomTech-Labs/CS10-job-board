@@ -174,15 +174,24 @@ class UserLogoutAllView(views.APIView):
 
 class PostPageNumberPagination(pagination.PageNumberPagination):
     page_size = 10
+    # Method allowed from client to change query page_size
     page_size_query_param = 'post'
-    max_page_size = 20 
+    # Max amount allowed from client request's to change page_size
+    max_page_size = 100
+
+class CompanyPostPageNumberPagination(pagination.PageNumberPagination):
+    page_size = 25
+    # Method allowed from client to change query page_size
+    page_size_query_param = 'post'
+    # Max amount allowed from client request's to change page_size
+    max_page_size = 100
 
 
 class ListJobPost(generics.ListCreateAPIView):
     # returns first 10 most recently published jobs
-    queryset = JobPost.objects.exclude(published_date=None)[:10]
+    queryset = JobPost.objects.exclude(published_date=None)
     serializer_class = JobPreviewSerializer
-    permission_classes  = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = PostPageNumberPagination
  
     def perform_create(self, serializer):
@@ -265,17 +274,21 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
-    pagination_class = PostPageNumberPagination
+    pagination_class = CompanyPostPageNumberPagination
     # lookup_field = "company"
     
     def get_queryset(self):
         company = self.request.user
-        return JobPost.objects.filter(company=company)
-        # print(self.request.data)
-        # if self.request.data['is_active'] is True:
-        #     return JobPost.objects.filter(published_date=True)
-        # else:
-        #     return JobPost.objects.filter(company=company)
+        queryset = JobPost.objects.filter(company=company)
+
+        published = self.request.query_params.get('published', None)
+        print(published)
+        unpublished = self.request.query_params.get('unpublished', None)
+        if published is not None:
+            queryset = queryset.filter(is_active=True)
+        if unpublished is not None:
+            queryset = queryset.filter(is_active=False)
+        return queryset
 
     def post(self, request, *args, **kwargs):
         # print('REQUEST>>>>', request.user.pk)
