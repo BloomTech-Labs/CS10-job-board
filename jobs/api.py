@@ -112,7 +112,7 @@ class JobPreviewSerializer(serializers.ModelSerializer):
 class UserMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMembership
-        fields = ('user', 'stripe_id', 'membership')
+        fields = ('stripe_id', 'membership')
 
 
 class PaymentViewSerializer(serializers.ModelSerializer):
