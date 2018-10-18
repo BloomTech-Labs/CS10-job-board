@@ -179,6 +179,13 @@ class PostPageNumberPagination(pagination.PageNumberPagination):
     # Max amount allowed from client request's to change page_size
     max_page_size = 100
 
+class CompanyPostPageNumberPagination(pagination.PageNumberPagination):
+    page_size = 25
+    # Method allowed from client to change query page_size
+    page_size_query_param = 'post'
+    # Max amount allowed from client request's to change page_size
+    max_page_size = 100
+
 
 class ListJobPost(generics.ListCreateAPIView):
     # returns first 10 most recently published jobs
@@ -267,13 +274,13 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
-    pagination_class = PostPageNumberPagination
+    pagination_class = CompanyPostPageNumberPagination
     # lookup_field = "company"
     
     def get_queryset(self):
         company = self.request.user
         queryset = JobPost.objects.filter(company=company)
-        
+
         published = self.request.query_params.get('published', None)
         print(published)
         unpublished = self.request.query_params.get('unpublished', None)
