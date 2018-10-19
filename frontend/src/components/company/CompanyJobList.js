@@ -27,7 +27,8 @@ class CompanyJobList extends React.Component {
             bulk: false,
             jobType: null,
             job: null,
-            drawer: false
+            drawer: false,
+            drawerPlacement: "right"
         }
     }
 
@@ -179,7 +180,7 @@ t
         }
     }
 
-    // show edit job view
+    // show JobEdit.js view drawer
     openDrawer = id => {
         console.log(id, this.state.jobs.filter(job => job.id === id));
         this.setState({ job: this.state.jobs.filter(job => job.id === id)[0], drawer: true });
@@ -189,9 +190,12 @@ t
         this.setState({ job: null, drawer: false });
     }
 
+    // Change position of drawer
+
+
 
     render() {
-        const { error, message, loading, jobs, search, count, published_count, padding, job, drawer } = this.state;
+        const { error, message, loading, jobs, search, count, published_count, padding, job, drawer, drawerPlacement } = this.state;
 
         const displayDensityMenu = (
            <Menu>
@@ -304,13 +308,13 @@ t
                 <Drawer
                     width={580}
                     visible={drawer}
-                    placement="right"
+                    placement={drawerPlacement}
                     toggleDrawer={this.toggleDrawer}
                     onClose={this.closeDrawer}
-                    destroyOnClose={true}
                     className="company-job-drawer"
                 >
-                    <CompanyJobEdit job={job} />
+                    {/* Pass job key to rerender different jobs w/o unmounting component*/}
+                        <CompanyJobEdit key={job ? job.id : null} job={job} />
                 </Drawer>
         
             </div>
