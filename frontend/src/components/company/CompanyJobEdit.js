@@ -15,18 +15,36 @@ class CompanyJobEdit extends React.Component {
       message: null,
       error: null,
       formModal: false,
-      company: this.props.job.company,
-      company_name: this.props.job.company_name,
-      title: this.props.job.title,
-      description: this.props.job.description,
-      job_location: this.props.job.job_location,
-      requirements: this.props.job.requirements,
-      min_salary: this.props.job.min_salary,
-      max_salary: this.props.job.max_salary,
-      tags: this.props.job.tags,
-      is_active: this.props.job.is_active,
+      company: null,
+      company_name: null,
+      title: null,
+      description: null,
+      job_location: null,
+      requirements: null,
+      min_salary: null,
+      max_salary: null,
+      tags: null,
+      is_active: null,
       resetFieldsModal: false,
     };
+  }
+
+//   componentWillUpdate
+  componentDidMount() {
+      if (this.props.job) {
+          this.setState({ 
+            company: this.props.job.company,
+            company_name: this.props.job.company_name,
+            title: this.props.job.title,
+            description: this.props.job.description,
+            job_location: this.props.job.job_location,
+            requirements: this.props.job.requirements,
+            min_salary: this.props.job.min_salary,
+            max_salary: this.props.job.max_salary,
+            tags: this.props.job.tags,
+            is_active: this.props.job.is_active,
+          });
+      }
   }
 
 
