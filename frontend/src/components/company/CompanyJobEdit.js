@@ -259,7 +259,7 @@ class CompanyJobEdit extends React.Component {
               >
                 <p>Are you sure you want to delete all fields?</p>
               </Modal>
-              <Button type="primary" onClick={this.handleJobEdit}>{is_active ? `Publish` : `Save Draft`}</Button>
+              <Button type="primary" onClick={this.handleJobEdit}>{is_active ? `Update` : `Save Draft`}</Button>
             </div>
             <br />
             {/* Error / Success messages */}
