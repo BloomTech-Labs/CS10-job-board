@@ -11,7 +11,6 @@ class CompanyDashboard extends Component {
     }
 
     render() {
-        const { count, published_count } = this.state;
         return (
             <div className="dashboard">
                 <CompanyJobList />
