@@ -51,7 +51,6 @@ t
         let url = query ? api + query : api;
         axios.get(url , requestOptions)
         .then(response => {
-            console.log(response.data.results);
             this.setState({ 
                 jobs: response.data.results,
                 count: response.data.count,
@@ -68,8 +67,22 @@ t
     handleJobRequest = e => {
         // During component mount, no e exists
         if (e) {
+            if (e.target.value === 'refresh-jobs') {
+                const checked = document.querySelectorAll("span.ant-radio-button-checked > input")[0];
+                if (checked) {
+                    if (checked.value === 'Published') {
+                        this.fetchJobs(`?published`);
+                    } else if (checked.value === 'Unpublished') {
+                        this.fetchJobs(`?unpublished`);
+                    } else {
+                        this.fetchJobs();
+                    }
+                } else {
+                    this.fetchJobs();
+                }
+            }
             // Clicking radio button passes query param to fetchJobs
-            if (e.target.value === 'Published') {
+            else if (e.target.value === 'Published') {
                 this.fetchJobs(`?published`);
             } else if (e.target.value === 'Unpublished') {
                 this.fetchJobs(`?unpublished`);
@@ -182,7 +195,6 @@ t
 
     // show JobEdit.js view drawer
     openDrawer = id => {
-        console.log(id, this.state.jobs.filter(job => job.id === id));
         this.setState({ job: this.state.jobs.filter(job => job.id === id)[0], drawer: true });
     }
 
@@ -218,7 +230,13 @@ t
                 <RadioButton value="All">All</RadioButton>
                 <RadioButton value="Published">Published</RadioButton>
                 <RadioButton value="Unpublished">Unpublished</RadioButton>
+                <Tooltip placement="top" trigger="hover" title={<span>Refresh</span>} mouseEnterDelay={0.8}>
+                    <Button className="company-job-edit-link" onClick={this.handleJobRequest} value="refresh-jobs" style={{marginLeft: "6px"}}>
+                        <Icon type="sync" spin={loading} />
+                    </Button>
+                </Tooltip>
             </RadioGroup>
+
         )
 
 
@@ -242,13 +260,8 @@ t
                 </Form>
                 
                 <div className="job-list-actions">
+                
                     {jobTypeMenu}
-
-                    <Tooltip placement="top" trigger="hover" title={<span>Refresh</span>} mouseEnterDelay={0.8}>
-                        <a onClick={this.handleJobRequest}>
-                            <Icon type="sync" spin={loading}/>
-                        </a>
-                    </Tooltip>
 
                     <div className="whitespace"></div>
                     <Tooltip placement="top" trigger="hover" title={<span>Delete</span>} mouseEnterDelay={0.8}>
