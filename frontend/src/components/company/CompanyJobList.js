@@ -48,7 +48,7 @@ t
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
         let api = `${process.env.REACT_APP_API}company/jobs/`;
-        let url = query ? api + query : api;
+        let url = query ? api + `?${query}` : api;
         axios.get(url , requestOptions)
         .then(response => {
             this.setState({ 
@@ -63,35 +63,15 @@ t
             this.setState({ error: `Error processing request. Try Again.`, loading: false});
         });
     }
-    
+
     handleJobRequest = e => {
-        // During component mount, no e exists
-        if (e) {
-            if (e.target.value === 'refresh-jobs') {
-                const checked = document.querySelectorAll("span.ant-radio-button-checked > input")[0];
-                if (checked) {
-                    if (checked.value === 'Published') {
-                        this.fetchJobs(`?published`);
-                    } else if (checked.value === 'Unpublished') {
-                        this.fetchJobs(`?unpublished`);
-                    } else {
-                        this.fetchJobs();
-                    }
-                } else {
-                    this.fetchJobs();
-                }
-            }
-            // Clicking radio button passes query param to fetchJobs
-            else if (e.target.value === 'Published') {
-                this.fetchJobs(`?published`);
-            } else if (e.target.value === 'Unpublished') {
-                this.fetchJobs(`?unpublished`);
-            } else {
-                this.fetchJobs();
-            }
-        } else {
-            this.fetchJobs();
+        if (!e) return this.fetchJobs();
+        const value = e.target.value;
+        if (value === 'refresh-jobs') {
+            const checkedValue = document.querySelectorAll("span.ant-radio-button-checked > input")[0].value;
+            this.fetchJobs(checkedValue.toLowerCase());
         }
+        else this.fetchJobs(value.toLowerCase());
     }
     
     // delete REST request
