@@ -67,13 +67,10 @@ class CompanyJobEdit extends React.Component {
           .then(response => {
               console.log(response);
             if (is_active) {
-              this.setState({ message: `Job Posted!` });
+              this.setState({ message: `Job Updated!` });
             } else {
               this.setState({ message: `Draft Saved!`});
             }
-            setTimeout(() => {
-              this.clearForm();
-            }, 2500);
           })
           .catch(err => {
             this.setState({ error: `Error processing request. Please try again.`})
