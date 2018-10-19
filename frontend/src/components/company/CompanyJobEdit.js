@@ -153,7 +153,15 @@ class CompanyJobEdit extends React.Component {
     const { getFieldDecorator } = this.props.form;
 
     return (
-          <Form className="job-post" id="job-post-form" >
+          <Form className="job-post" id="job-edit-form" >
+
+            {/* Error / Success messages */}
+            {error ? (
+              <Alert message={error} type="error" closable onClose={() => this.setState({ error: null })} showIcon />
+              ) : (null)}
+            {message ? (
+              <Alert message={message} type="success" closable onClose={() => this.setState({ message: null })} showIcon />
+            ) : (null)}
           
             <FormItem label="Company Name" >
               {getFieldDecorator('company_name', {
@@ -280,13 +288,6 @@ class CompanyJobEdit extends React.Component {
               <Button type="primary" onClick={this.handleJobEdit}>{is_active ? `Update` : `Save Draft`}</Button>
             </div>
             <br />
-            {/* Error / Success messages */}
-            {error ? (
-              <Alert message={error} type="error" closable showIcon />
-              ) : (null)}
-            {message ? (
-              <Alert message={message} type="success" closable showIcon />
-            ) : (null)}
 
           </Form>
     );
