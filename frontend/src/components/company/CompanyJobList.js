@@ -175,7 +175,8 @@ t
 
     // show JobEdit.js view drawer
     openDrawer = id => {
-        this.setState({ job: this.state.jobs.filter(job => job.id === id)[0], drawer: true });
+        this.setState({ job: this.state.jobs.filter(job => job.id === id)[0] });
+        this.setState({ drawer: true });
     }
 
     closeDrawer = () => {
