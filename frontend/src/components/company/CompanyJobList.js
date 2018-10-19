@@ -16,11 +16,12 @@ class CompanyJobList extends React.Component {
             message: null,
             loading: false,
             search: "",
+            filtered: null,
             count: null,
             published_count: null,
             jobs: null,
-            publishedJobs: null,
-            unpublishedJobs: null,
+            published: null,
+            unpublished: null,
             next: null,
             previous: null,
             padding: null,
@@ -60,8 +61,8 @@ t
                 count: response.data.count,
                 next: response.data.next,
                 previous: response.data.previous,
-                publishedJobs: response.data.results.filter(job => job.is_active == true),
-                unpublishedJobs: response.data.results.filter(jobs => jobs.is_active == false),
+                published: response.data.results.filter(job => job.is_active == true),
+                unpublished: response.data.results.filter(jobs => jobs.is_active == false),
                 loading: false
             });
         })
@@ -123,6 +124,14 @@ t
                 this.setState({ error: `Error deleting jobs. Try again or refresh.`, bulk: false, loading: false});
             });
         }
+    }
+
+    // Filter search
+
+    searchJobs = e => {
+        this.setState({ search: e.target.value.toUpperCase() });
+        this.setState({ })
+
     }
 
     // Next 3 fns: Sets display density of job list
@@ -282,7 +291,7 @@ t
                 </div>
 
                 <Form className="company-job-search">
-                    <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
+                    <Input className="search" type="text" placeholder="search jobs" onChange={this.searchJobs} name="search" value={search}/>
                     <Button type="primary" onClick={null}>Search</Button>
                 </Form>
                 
@@ -326,7 +335,7 @@ t
                             <p key={2}>Published</p>
                         ]}
                         >
-                            {mapJobs(currentQuery ? this.state[`${this.state.currentQuery}Jobs`] : this.state.jobs )}
+                            {mapJobs(currentQuery ? this.state[`${this.state.currentQuery}`] : this.state.jobs )}
                         </List>
                 ) : (null)}
 
