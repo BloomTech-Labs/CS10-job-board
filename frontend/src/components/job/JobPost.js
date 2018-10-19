@@ -70,7 +70,7 @@ class JobPost extends React.Component {
 
   clearForm = () => {
     // Ant-Design form method to reset state with components wrapped in {getFieldDecorator}
-    this.props.form.setFields({
+    this.props.form.setFieldsValue({
       company_name: null,
       title: null,
       description: null,
