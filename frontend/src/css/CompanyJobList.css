@@ -103,10 +103,15 @@
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    height: 30px;
+    height: 36px;
     border-radius: 50%;
-    width: 30px;
+    width: 36px;
     background: white;
+}
+
+.company-job-drawer .ant-drawer-close-x svg{
+    height: 22px;
+    width: 22px;
 }
 
 .company-job-drawer .ant-drawer-close-x:hover {
