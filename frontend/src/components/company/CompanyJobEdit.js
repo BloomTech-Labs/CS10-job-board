@@ -83,7 +83,7 @@ class CompanyJobEdit extends React.Component {
 
   clearForm = () => {
     // Ant-Design form method to reset state with components wrapped in {getFieldDecorator}
-    this.props.form.setFields({
+    this.props.form.setFieldsValue({
       company_name: null,
       title: null,
       description: null,
@@ -274,13 +274,13 @@ class CompanyJobEdit extends React.Component {
               </FormItem>
               <Button type="ghost" onClick={this.toggleResetFieldsModal}>Reset all fields</Button>
               <Modal
-              okText="Delete all fields"
+              okText="Reset all fields"
               okType="danger"
               visible={resetFieldsModal}
               onCancel={this.toggleResetFieldsModal}
               onOk={this.clearForm}
               >
-                <p>Are you sure you want to delete all fields?</p>
+                <p>Are you sure you want to reset all fields?</p>
               </Modal>
               <Button type="primary" onClick={this.handleJobEdit}>{is_active ? `Update` : `Save Draft`}</Button>
             </div>
