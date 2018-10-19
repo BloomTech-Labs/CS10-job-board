@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio, Tooltip, Popconfirm } from 'antd';
+import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio, Tooltip, Popconfirm, Drawer } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { CompanyJobCounter } from '../';
+import { CompanyJobCounter, CompanyJobEdit } from '../';
 
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
@@ -25,7 +25,9 @@ class CompanyJobList extends React.Component {
             checkedList: [],
             checkAll: false,
             bulk: false,
-            jobType: null
+            jobType: null,
+            job: null,
+            drawer: false
         }
     }
 
@@ -48,6 +50,7 @@ t
         let url = query ? api + query : api;
         axios.get(url , requestOptions)
         .then(response => {
+            console.log(response.data.results);
             this.setState({ 
                 jobs: response.data.results,
                 count: response.data.count,
@@ -176,9 +179,19 @@ t
         }
     }
 
+    // show edit job view
+    openDrawer = id => {
+        console.log(id, this.state.jobs.filter(job => job.id === id));
+        this.setState({ job: this.state.jobs.filter(job => job.id === id)[0], drawer: true });
+    }
+
+    closeDrawer = () => {
+        this.setState({ job: null, drawer: false });
+    }
+
 
     render() {
-        const { error, message, loading, jobs, search, count, published_count, padding } = this.state;
+        const { error, message, loading, jobs, search, count, published_count, padding, job, drawer } = this.state;
 
         const displayDensityMenu = (
            <Menu>
@@ -274,7 +287,7 @@ t
                                     <List.Item 
                                         key={job.id}
                                         actions={[
-                                            <a href="#">edit</a>,
+                                            <button className="company-job-edit-link" onClick={() => this.openDrawer(job.id)}>edit</button>,
                                             <Switch onChange={this.togglePublish} checked={job.is_active}/>
                                         ]}
                                         style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
@@ -287,6 +300,19 @@ t
                             })}
                         </List>
                 ) : (null)}
+
+                <Drawer
+                    width={580}
+                    visible={drawer}
+                    placement="right"
+                    toggleDrawer={this.toggleDrawer}
+                    onClose={this.closeDrawer}
+                    destroyOnClose={true}
+                    className="company-job-drawer"
+                >
+                    <CompanyJobEdit job={job} />
+                </Drawer>
+        
             </div>
         );
     }
