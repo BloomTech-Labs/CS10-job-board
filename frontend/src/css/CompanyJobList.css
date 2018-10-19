@@ -91,7 +91,10 @@
 .company-job-edit-link {
     min-width: 0;
     padding: 0;
-    background: none;
+    background: none !important;
+    border: none;
+    box-shadow: none;
+    border-radius: 50%;
 }
 
 .company-job-edit-link:hover {
