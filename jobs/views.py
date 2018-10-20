@@ -1,4 +1,4 @@
-import os 
+import os
 import uuid
 from decouple import config
 
@@ -43,7 +43,7 @@ from .api import (
     MembershipSerializer,
     PaymentViewSerializer,
     JWTSerializer
-    )
+)
 import stripe
 
 
@@ -97,7 +97,7 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    )
+        )
     permission_classes = (permissions.IsAuthenticated,)
     parser_classes = (MultiPartParser,)
 
@@ -121,10 +121,11 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
         # Determines if PUT or PATCH request
         partial = kwargs.pop('partial', False)
         if partial is False:
-            message = { "detail": "Method \"PUT\" not allowed." }
+            message = {"detail": "Method \"PUT\" not allowed."}
             return Response(message, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        serializer = self.get_serializer(user, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            user, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
@@ -151,10 +152,10 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
             return Response(message, status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
     def perform_destroy(self, instance):
         instance.delete()
-        
+
 
 # Resets the jwt_secret, invalidating all token issued
 class UserLogoutAllView(views.APIView):
@@ -179,6 +180,7 @@ class PostPageNumberPagination(pagination.PageNumberPagination):
     # Max amount allowed from client request's to change page_size
     max_page_size = 100
 
+
 class CompanyPostPageNumberPagination(pagination.PageNumberPagination):
     page_size = 25
     # Method allowed from client to change query page_size
@@ -193,7 +195,7 @@ class ListJobPost(generics.ListCreateAPIView):
     serializer_class = JobPreviewSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = PostPageNumberPagination
- 
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -233,7 +235,8 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
 
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
@@ -260,7 +263,7 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
             return Response(message, status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(job)
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
     def perform_destroy(self, instance):
         instance.delete()
 
@@ -276,7 +279,7 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     pagination_class = CompanyPostPageNumberPagination
     # lookup_field = "company"
-    
+
     def get_queryset(self):
         company = self.request.user
         queryset = JobPost.objects.filter(company=company)
@@ -329,7 +332,6 @@ def get_user_subscription(request):
     return None
 
 
-
 def send_email(request):
     sg = sendgrid.SendGridAPIClient(
         apikey=config('SENDGRID_API_KEY')
@@ -337,7 +339,8 @@ def send_email(request):
     from_email = Email('contact@openjobsource.com')
     to_email = Email('cs10jobboard@gmail.com')
     subject = 'Testing!'
-    msg_html = render_to_string('templates/email_confirm.html', {'email': sendgrid})
+    msg_html = render_to_string(
+        'templates/email_confirm.html', {'email': sendgrid})
     content = Content(
         html_message=msg_html,
     )
@@ -347,15 +350,13 @@ def send_email(request):
     return HttpResponse('Email sent!')
 
 
-
 def get_selected_membership(request):
-	membership_type = request.session['selected_membership_type']
-	selected_membership_qs = Membership.objects.filter(
-            membership_type=membership_type)
-	if selected_membership_qs.exists():
-		return selected_membership_qs.first()
-	return None
-
+    membership_type = request.session['selected_membership_type']
+    selected_membership_qs = Membership.objects.filter(
+        membership_type=membership_type)
+    if selected_membership_qs.exists():
+        return selected_membership_qs.first()
+    return None
 
 
 # for selecting a paid membership
@@ -400,7 +401,7 @@ class MembershipSelectView(generics.ListAPIView):
                     'get this value from Stripe'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        #assign any changes to membership type to the session
+        # assign any changes to membership type to the session
         request.session['selected_membership_type'] = selected_membership.membership_type
         return HttpResponseRedirect(reverse('memberships:payment'))
 
@@ -415,7 +416,7 @@ class PaymentView(generics.CreateAPIView):
     )
     permission_classes = (permissions.IsAuthenticated,)
 
-    
+
 # Tokenizes purchase
 # class PaymentView(generics.CreateAPIView):
 
