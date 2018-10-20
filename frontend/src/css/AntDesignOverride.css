@@ -146,3 +146,7 @@
     height: 14px;
     top: 50%;
 }
+
+.ant-radio-button ~ span {
+    user-select: none;
+}
