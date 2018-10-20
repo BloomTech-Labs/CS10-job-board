@@ -19,6 +19,7 @@ class CompanyJobList extends React.Component {
             filtered: null,
             count: null,
             published_count: null,
+            unpublished_count: null,
             jobs: null,
             published: null,
             unpublished: null,
@@ -32,7 +33,8 @@ class CompanyJobList extends React.Component {
             job: null,
             drawer: false,
             drawerPlacement: "right",
-            currentQuery: null
+            currentQuery: null,
+            popconfirmPublish: null
         }
     }
 
@@ -64,6 +66,10 @@ t
                 published: response.data.results.filter(job => job.is_active == true),
                 unpublished: response.data.results.filter(jobs => jobs.is_active == false),
                 loading: false
+            });
+            this.setState({
+                published_count: this.state.published.length,
+                unpublished_count: this.state.unpublished.length
             });
         })
         .catch(err => {
@@ -218,25 +224,44 @@ t
     // TODO: Change position of drawer
 
 
-    handlePublish = e => {
-
+    setPopconfirmPublish = e => {
+        this.setState({ popconfirmPublish: e });
     }
-
-    // 
-    // togglePublish = (id, is_active )=> {
-    //     const token = localStorage.getItem('token');
-    //     const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-    //     axios.patch(`${process.env.REACT_APP_API}company/jobs/${id}/`, {is_active: is_active}, requestOptions)
-    //         .then(response => {
-    //             const 
-    //             this.fetchJobs()
-    //         })
-    // }
+    
+    togglePublish = (id, is_active )=> {
+        this.setState({ error: null, message: null, loading: true });
+        const token = localStorage.getItem('token');
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        axios.patch(`${process.env.REACT_APP_API}company/jobs/${id}/`, { is_active: !is_active }, requestOptions)
+            .then(response => {
+                if (is_active) this.setState({ message: `Job published!`});
+                else this.setState({ message: `Job successfully unpublished!`});
+                this.fetchJobs();
+            })
+            .catch(err => {
+                this.setState({ error: `Error publishing job. Please try again.`, loading: false});
+            });
+    }
 
 
 
     render() {
-        const { error, message, loading, jobs, search, count, published_count, padding, job, drawer, drawerPlacement, currentQuery } = this.state;
+        const {
+            error,
+            message,
+            loading,
+            jobs,
+            search,
+            count,
+            published_count,
+            unpublished_count,
+            padding,
+            job,
+            drawer,
+            drawerPlacement,
+            currentQuery,
+            popconfirmPublish
+        } = this.state;    
 
         const displayDensityMenu = (
            <Menu>
@@ -278,12 +303,14 @@ t
                             actions={[
                                 <button className="company-job-edit-link" onClick={() => this.openDrawer(job.id)}>edit</button>,
                                 <Popconfirm
-                                    title="Are you sure you want to publish this job?"
-                                    okText="Publish"
+                                    title = {
+                                        popconfirmPublish ? `Are you sure you want to publish this job?` : `Are you sure you want to unpublish this job?`
+                                    }
+                                    okText={popconfirmPublish ? `Publish` : `Unpublish`}
                                     cancelText="Cancel"
                                     onConfirm={() => this.togglePublish(job.id, job.is_active)}
                                 >
-                                    <Switch checked={job.is_active}/>
+                                    <Switch checked={job.is_active} onChange={this.setPopconfirmPublish}/>
                                 </Popconfirm>
                             ]}
                             style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
@@ -309,12 +336,11 @@ t
                 ) : (null)}
 
                 <div>
-                     <CompanyJobCounter count={count} published_count={published_count}/>
+                     <CompanyJobCounter count={count} published_count={published_count} unpublished_count={unpublished_count}/>
                 </div>
 
                 <Form className="company-job-search">
                     <Input className="search" type="text" placeholder="search jobs" onChange={this.searchJobs} name="search" value={search}/>
-                    <Button type="primary" onClick={null}>Search</Button>
                 </Form>
                 
                 <div className="job-list-actions">
