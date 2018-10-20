@@ -350,22 +350,19 @@ def send_email(request):
 
 
 def get_selected_membership(request):
-<<<<<<< HEAD
     membership_type = request.session['selected_membership_type']
     selected_membership_qs = Membership.objects.filter(
         membership_type=membership_type)
     if selected_membership_qs.exists():
         return selected_membership_qs.first()
     return None
-=======
-	membership = request.session['selected_membership']
-	selected_membership_qs = UserMembership.objects.filter(
+    membership = request.session['selected_membership']
+    selected_membership_qs = UserMembership.objects.filter(
             membership=membership)
-	if selected_membership_qs.exists():
-		return selected_membership_qs.first()
-	return None
-
->>>>>>> f3359f774b0d4a1fe155df29e50cf6c79a17e870
+    
+    if selected_membership_qs.exists():
+        return selected_membership_qs.first()
+        return None
 
 # class UserMembshipView(generics.RetrieveUpdateDestroyAPIView):
 #     model = UserMembership
@@ -418,13 +415,8 @@ class UserMembershipView(generics.ListCreateAPIView):
                     'get this value from Stripe'))
                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-<<<<<<< HEAD
-        # assign any changes to membership type to the session
-        request.session['selected_membership_type'] = selected_membership.membership_type
-=======
         #assign any changes to membership type to the session
         request.session['selected_membership'] = selected_membership.membership
->>>>>>> f3359f774b0d4a1fe155df29e50cf6c79a17e870
         return HttpResponseRedirect(reverse('memberships:payment'))
 
 
