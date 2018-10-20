@@ -102,6 +102,16 @@
     transition: all 0.3s ease;
 }
 
+.company-job-list-density > .ant-dropdown-menu-item {
+    padding: 0;
+}
+
+.company-job-list-density div {
+    width: 105px;
+    padding: 10px 24px;
+    user-select: none;
+}
+
 .company-job-drawer .ant-drawer-close-x {
     display: inline-flex;
     justify-content: center;
