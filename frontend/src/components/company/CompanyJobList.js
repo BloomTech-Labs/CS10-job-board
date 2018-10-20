@@ -4,7 +4,6 @@ import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Men
 import { withRouter } from 'react-router-dom';
 import { CompanyJobCounter, CompanyJobEdit } from '../';
 
-const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
@@ -63,8 +62,8 @@ t
                 count: response.data.count,
                 next: response.data.next,
                 previous: response.data.previous,
-                published: response.data.results.filter(job => job.is_active == true),
-                unpublished: response.data.results.filter(jobs => jobs.is_active == false),
+                published: response.data.results.filter(job => job.is_active === true),
+                unpublished: response.data.results.filter(jobs => jobs.is_active === false),
                 loading: false
             });
             this.setState({
