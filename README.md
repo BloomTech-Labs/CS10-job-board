@@ -74,18 +74,18 @@ Adding Dependencies:
 # Frontend
 
 
-Netlify is configured to deploy from the master branch of this repo.
+Netlify is configured to deploy from the `deployed_live_site` branch of this repo.
 Any pull request made to the project will be tested by Netlify's CI.
 
 ### Architecture & Components
 
 #### Export / Import
-##### Components
+##### _Components_
 - All components are exported from `src/components/index.js`
 - To import a component inside another component, import directly from this `index.js` file. ie. `import { Example } from '../'`. If components are in the same directory, still import from index.js instead of `'./'`.
 - Use single quotes for imports, ie `from 'react'`.
 - Avoid nesting folders more than one level inside `src/components/`
- ##### CSS
+ ##### _CSS_
 - All CSS files are imported into `src/css/index.css`
 - `index.css` is then imported into `App.js`
 - _No need to import CSS files directly into a component at all._
@@ -149,12 +149,6 @@ To push the latest stable changes to Heroku:
  5. In the Heroku app dashboard, navigate to the `Deploy` tab. At the bottom is the option `Manual Deploy`. Select the branch `deployed_live_site`, and click the `Deploy Branch` button. 
 
 **If problems arise during deployment:**
-
->-  _To create Faker data in Heroku shell:_ 
->    `/manage.py shell` \
->   `/manage.py import seeder`
-
-**If problems arise during deployment:**
 >
 >- Start a heroku bash: `heroku run bash -a job-board-backend` after loggin in to Heroku CLI with an autheticated account: 
 >
@@ -166,6 +160,12 @@ To push the latest stable changes to Heroku:
 >   Click on `Heroku Postgres :: Database` \
 >   Click on `Settings` in new window pop up \
 >   Click `Reset Database` (deletes all data)
+
+**Adding Faker data in Heroku:**
+
+>- Start a heroku bash: `heroku run bash -a job-board-backend` after loggin in to Heroku CLI with an autheticated account: \
+>    `./manage.py shell` \
+>   `./manage.py import seeder`
 >
 
 

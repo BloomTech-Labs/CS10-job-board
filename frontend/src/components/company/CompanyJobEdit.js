@@ -8,14 +8,14 @@ const FormItem = Form.Item;
 
 const { TextArea } = Input;
 
-class JobPost extends React.Component {
+class CompanyJobEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       message: null,
       error: null,
       formModal: false,
-      company: this.props.company,
+      company: null,
       company_name: null,
       title: null,
       description: null,
@@ -23,21 +23,37 @@ class JobPost extends React.Component {
       requirements: null,
       min_salary: null,
       max_salary: null,
-      tags: [],
-      is_active: false,
-      resetFieldsModal: false
+      tags: null,
+      is_active: null,
+      resetFieldsModal: false,
     };
   }
 
+//   componentWillUpdate
+  componentDidMount() {
+      if (this.props.job) {
+          this.setState({ 
+            company: this.props.job.company,
+            company_name: this.props.job.company_name,
+            title: this.props.job.title,
+            description: this.props.job.description,
+            job_location: this.props.job.job_location,
+            requirements: this.props.job.requirements,
+            min_salary: this.props.job.min_salary,
+            max_salary: this.props.job.max_salary,
+            tags: this.props.job.tags,
+            is_active: this.props.job.is_active,
+          });
+      }
+  }
 
-  handleJobPost = e => {
+
+  handleJobEdit = e => {
     e.preventDefault();
     const { company_name, title, description, job_location, requirements, min_salary, max_salary, tags, is_active } = this.state;
     this.setState({ error: null, message: null});
     // Authentication
     const token = localStorage.getItem('token');
-    this.props.checkToken(e, this.props.token, token);
-    // Validation
     if (company_name && title && description && job_location && requirements && min_salary && max_salary) {
       
       if (min_salary > max_salary) {
@@ -47,17 +63,14 @@ class JobPost extends React.Component {
       } else {
         // POST Request
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        axios.post(`${process.env.REACT_APP_API}company/jobs/`, this.state, requestOptions)
+        axios.patch(`${process.env.REACT_APP_API}company/jobs/${this.props.job.id}/`, this.state, requestOptions)
           .then(response => {
+              console.log(response);
             if (is_active) {
-              this.setState({ message: `Job Posted!` });
+              this.setState({ message: `Job Updated!` });
             } else {
               this.setState({ message: `Draft Saved!`});
             }
-            setTimeout(() => {
-              this.clearForm();
-              this.toggleFormModal();
-            }, 2500);
           })
           .catch(err => {
             this.setState({ error: `Error processing request. Please try again.`})
@@ -122,27 +135,30 @@ class JobPost extends React.Component {
     const {
       message,
       error,
-      formModal,
+      company_name,
+      title,
+      description,
+      job_location,
+      requirements,
       min_salary,
       max_salary,
       tags,
       is_active,
-      resetFieldsModal
+      resetFieldsModal,
     } = this.state;
     // Ant-d property from Form.create()
     const { getFieldDecorator } = this.props.form;
 
     return (
-      <div>
-        <Button type="secondary" onClick={this.toggleFormModal}>Post a Job</Button>
+          <Form className="job-post" id="job-edit-form" >
 
-
-        <Modal title="Post A Job"
-        visible={formModal}
-        onCancel={this.toggleFormModal}
-        footer={[null, null,]} >
-
-          <Form className="job-post" id="job-post-form" >
+            {/* Error / Success messages */}
+            {error ? (
+              <Alert message={error} type="error" closable onClose={() => this.setState({ error: null })} showIcon />
+              ) : (null)}
+            {message ? (
+              <Alert message={message} type="success" closable onClose={() => this.setState({ message: null })} showIcon />
+            ) : (null)}
           
             <FormItem label="Company Name" >
               {getFieldDecorator('company_name', {
@@ -152,7 +168,8 @@ class JobPost extends React.Component {
                   min: 1,
                   max: 200,
                   hasFeedback: true,
-                }]
+                }],
+                initialValue: company_name
               })(
                 <Input type="text" placeholder="e.g. Google" name="company_name" onChange={this.onChange} id="co-2"/>
               )}
@@ -166,7 +183,8 @@ class JobPost extends React.Component {
                 min: 2,
                 max: 200, 
                 hasFeedback: true,
-              }]
+              }],
+                initialValue: title
             })(
               <Input type="text" placeholder="e.g. Software Engineer" name="title" onChange={this.onChange}/>
             )}
@@ -180,7 +198,8 @@ class JobPost extends React.Component {
                   min: 1,
                   max: 12000,
                   hasFeedback: true,
-                }]
+                }],
+                initialValue: description
               })(
                 <TextArea type="text" placeholder="Describe the responsibilities of this position." name="description" onChange={this.onChange}/>
               )}
@@ -194,7 +213,8 @@ class JobPost extends React.Component {
                   min: 2,
                   max: 200,
                   hasFeedback: true,
-                }]
+                }],
+                initialValue: job_location
               })(
                 <Input type="text" placeholder="e.g. Philadelphia" name="job_location" onChange={this.onChange}/>
               )}
@@ -209,7 +229,8 @@ class JobPost extends React.Component {
                 max: 12000,
                 hasFeedback: true,
                 help: `About 2000 words maximum`
-              }]
+              }],
+              initialValue: requirements
             })(
               <TextArea type="text" placeholder="Add skills/experience the applicant should have." name="requirements" onChange={this.onChange}/>
             )}
@@ -253,34 +274,24 @@ class JobPost extends React.Component {
               </FormItem>
               <Button type="ghost" onClick={this.toggleResetFieldsModal}>Reset all fields</Button>
               <Modal
-              okText="Delete all fields"
+              okText="Reset all fields"
               okType="danger"
               visible={resetFieldsModal}
               onCancel={this.toggleResetFieldsModal}
               onOk={this.clearForm}
               >
-                <p>Are you sure you want to delete all fields?</p>
+                <p>Are you sure you want to reset all fields?</p>
               </Modal>
-              <Button type="primary" onClick={this.handleJobPost}>{is_active ? `Publish` : `Save Draft`}</Button>
+              <Button type="primary" onClick={this.handleJobEdit}>{is_active ? `Update` : `Save Draft`}</Button>
             </div>
             <br />
-            {/* Error / Success messages */}
-            {error ? (
-              <Alert message={error} type="error" closable showIcon />
-              ) : (null)}
-            {message ? (
-              <Alert message={message} type="success" closable showIcon />
-            ) : (null)}
 
           </Form>
-
-        </Modal>
-      </div>
     );
   }
 }
 
 
-export default JobPost = Form.create()(withRouter(JobPost));
+export default CompanyJobEdit = Form.create()(withRouter(CompanyJobEdit));
 
 

@@ -43,33 +43,39 @@ class TagCreate extends React.Component {
     const { tags } = this.props;
     const { inputVisible, inputValue } = this.state;
     return (
-      <div className="tag">
-        {tags.map((tag, index) => {
-          let isLongTag = tag.length > 14;
-          const tagElem = (
-            <Tag key={tag} closable={index !== -1} afterClose={() => this.handleClose(tag)}>
-              {isLongTag ? `${tag.slice(0, 14)}...` : tag}
-            </Tag>
-          );
-          return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
-        })}
-        {inputVisible && (
-          <Input
-            ref={this.saveInputRef}
-            type="text"
-            size="small"
-            value={inputValue}
-            onChange={this.handleInputChange}
-            onBlur={this.handleInputConfirm}
-            onPressEnter={this.handleInputConfirm}
-          />
-        )}
-        {!inputVisible && (
-          <Tag onClick={this.showInput}>
-            <Icon type="plus" /> Add skills
-          </Tag>
-        )}
- 
+      <div>
+          {tags ? ( 
+            <div className="tag">
+
+
+              {tags.map((tag, index) => {
+                let isLongTag = tag.length > 14;
+                const tagElem = (
+                  <Tag key={tag} closable={index !== -1} afterClose={() => this.handleClose(tag)}>
+                    {isLongTag ? `${tag.slice(0, 14)}...` : tag}
+                  </Tag>
+                );
+                return isLongTag ? <Tooltip title={tag} key={tag}>{tagElem}</Tooltip> : tagElem;
+              })}
+
+              {(inputVisible && (
+                <Input
+                  ref={this.saveInputRef}
+                  type="text"
+                  size="small"
+                  value={inputValue}
+                  onChange={this.handleInputChange}
+                  onBlur={this.handleInputConfirm}
+                  onPressEnter={this.handleInputConfirm}
+                />
+              ))}
+              {!inputVisible && (
+                <Tag onClick={this.showInput}>
+                  <Icon type="plus" /> Add skills
+                </Tag>
+              )}
+            </div>
+          ) : (null)}
       </div>
     );
   }
