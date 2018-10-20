@@ -129,9 +129,30 @@ t
     // Filter search
 
     searchJobs = e => {
-        this.setState({ search: e.target.value.toUpperCase() });
-        this.setState({ })
-
+        this.setState({ search: e.target.value });
+        let searchTerm = e.target.value;
+        const activeJobsArray = this.state.currentQuery ? this.state[`${this.state.currentQuery}`] : this.state.jobs;
+        for (let i = 0; i < activeJobsArray.length; i++) {
+            let job = activeJobsArray[i];
+            let found = null;
+            // iterate through each key value pair in the job object
+            for (let key in job) {
+                const value = job[key];
+                if (typeof(value) === "string") {
+                    // Case-insensitive search
+                    if (value.toLowerCase().indexOf(`${searchTerm.toLowerCase()}`) > -1) {
+                        const item = document.getElementById(`${activeJobsArray[i].id}`);
+                        item.style.display = "flex";
+                        found = true;
+                    }
+                }
+            }
+            if (!found) {
+                // hide elements that don't match search query
+                const item = document.getElementById(`${activeJobsArray[i].id}`);
+                item.style.display = "none";
+            }
+        }
     }
 
     // Next 3 fns: Sets display density of job list
@@ -253,6 +274,7 @@ t
                     return (
                         <List.Item 
                             key={job.id}
+                            id={job.id}
                             actions={[
                                 <button className="company-job-edit-link" onClick={() => this.openDrawer(job.id)}>edit</button>,
                                 <Popconfirm
