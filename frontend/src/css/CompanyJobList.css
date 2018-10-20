@@ -87,3 +87,37 @@
 .company-job-search input {
     margin-right: 10px;
 }
+
+.company-job-edit-link {
+    min-width: 0;
+    padding: 0;
+    background: none !important;
+    border: none;
+    box-shadow: none;
+    border-radius: 50%;
+}
+
+.company-job-edit-link:hover {
+    color: #40a9ff;
+    transition: all 0.3s ease;
+}
+
+.company-job-drawer .ant-drawer-close-x {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    border-radius: 50%;
+    width: 36px;
+    background: white;
+}
+
+.company-job-drawer .ant-drawer-close-x svg{
+    height: 22px;
+    width: 22px;
+}
+
+.company-job-drawer .ant-drawer-close-x:hover {
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}

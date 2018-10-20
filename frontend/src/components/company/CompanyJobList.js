@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios';
-import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio, Tooltip, Popconfirm } from 'antd';
+import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio, Tooltip, Popconfirm, Drawer } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { CompanyJobCounter } from '../';
+import { CompanyJobCounter, CompanyJobEdit } from '../';
 
 const FormItem = Form.Item;
 const RadioButton = Radio.Button;
@@ -16,16 +16,25 @@ class CompanyJobList extends React.Component {
             message: null,
             loading: false,
             search: "",
+            filtered: null,
             count: null,
             published_count: null,
+            unpublished_count: null,
             jobs: null,
+            published: null,
+            unpublished: null,
             next: null,
             previous: null,
             padding: null,
             checkedList: [],
             checkAll: false,
             bulk: false,
-            jobType: null
+            jobType: null,
+            job: null,
+            drawer: false,
+            drawerPlacement: "right",
+            currentQuery: null,
+            popconfirmPublish: null
         }
     }
 
@@ -35,46 +44,43 @@ class CompanyJobList extends React.Component {
 t 
     componentDidMount() {
         if (!this.state.jobs) {
-            this.handleJobRequest();
+            this.fetchJobs();
         }
 
     }
     
-    fetchJobs = query => {
+    fetchJobs = () => {
         this.setState({ loading: true, error: null, message: null });
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
         let api = `${process.env.REACT_APP_API}company/jobs/`;
-        let url = query ? api + query : api;
-        axios.get(url , requestOptions)
+        // const { currentQuery } = this.state;
+        // let url = currentQuery ? api + `?${currentQuery}` : api;
+        axios.get(api , requestOptions)
         .then(response => {
             this.setState({ 
                 jobs: response.data.results,
                 count: response.data.count,
                 next: response.data.next,
                 previous: response.data.previous,
+                published: response.data.results.filter(job => job.is_active == true),
+                unpublished: response.data.results.filter(jobs => jobs.is_active == false),
                 loading: false
+            });
+            this.setState({
+                published_count: this.state.published.length,
+                unpublished_count: this.state.unpublished.length
             });
         })
         .catch(err => {
             this.setState({ error: `Error processing request. Try Again.`, loading: false});
         });
     }
-    
-    handleJobRequest = e => {
-        // During component mount, no e exists
-        if (e) {
-            // Clicking radio button passes query param to fetchJobs
-            if (e.target.value === 'Published') {
-                this.fetchJobs(`?published`);
-            } else if (e.target.value === 'Unpublished') {
-                this.fetchJobs(`?unpublished`);
-            } else {
-                this.fetchJobs();
-            }
-        } else {
-            this.fetchJobs();
-        }
+
+    setQuery = e => {
+        const query = e.target.value.toLowerCase();
+        if (query === 'unpublished' || query === 'published') this.setState({ currentQuery: query });
+        else this.setState({ currentQuery: null });
     }
     
     // delete REST request
@@ -116,13 +122,42 @@ t
             loop(requestOptions, deleteJob).then(response => {
                 // Timeout to ensure delete by server before requesting new list of jobs
                 setTimeout(() => {
-                    this.handleJobRequest();
-                    this.setState({ message: `Successfully removed ${numOfJobs} jobs.`, bulk: false, loading: false });
+                    this.fetchJobs();
+                    this.setState({ message: `Successfully removed ${numOfJobs} jobs.`, bulk: false, loading: false, checkedList: [] });
                 }, 1000);
             })
             .catch(err => {
                 this.setState({ error: `Error deleting jobs. Try again or refresh.`, bulk: false, loading: false});
             });
+        }
+    }
+
+    // Filter search
+
+    searchJobs = e => {
+        this.setState({ search: e.target.value });
+        let searchTerm = e.target.value;
+        const activeJobsArray = this.state.currentQuery ? this.state[`${this.state.currentQuery}`] : this.state.jobs;
+        for (let i = 0; i < activeJobsArray.length; i++) {
+            let job = activeJobsArray[i];
+            let found = null;
+            // iterate through each key value pair in the job object
+            for (let key in job) {
+                const value = job[key];
+                if (typeof(value) === "string") {
+                    // Case-insensitive search
+                    if (value.toLowerCase().indexOf(`${searchTerm.toLowerCase()}`) > -1) {
+                        const item = document.getElementById(`${activeJobsArray[i].id}`);
+                        item.style.display = "flex";
+                        found = true;
+                    }
+                }
+            }
+            if (!found) {
+                // hide elements that don't match search query
+                const item = document.getElementById(`${activeJobsArray[i].id}`);
+                item.style.display = "none";
+            }
         }
     }
 
@@ -176,9 +211,57 @@ t
         }
     }
 
+    // show JobEdit.js view drawer
+    openDrawer = id => {
+        this.setState({ job: this.state.jobs.filter(job => job.id === id)[0] });
+        this.setState({ drawer: true });
+    }
+
+    closeDrawer = () => {
+        this.setState({ job: null, drawer: false });
+    }
+
+    // TODO: Change position of drawer
+
+
+    setPopconfirmPublish = e => {
+        this.setState({ popconfirmPublish: e });
+    }
+    
+    togglePublish = (id, is_active )=> {
+        this.setState({ error: null, message: null, loading: true });
+        const token = localStorage.getItem('token');
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        axios.patch(`${process.env.REACT_APP_API}company/jobs/${id}/`, { is_active: !is_active }, requestOptions)
+            .then(response => {
+                if (is_active) this.setState({ message: `Job published!`});
+                else this.setState({ message: `Job successfully unpublished!`});
+                this.fetchJobs();
+            })
+            .catch(err => {
+                this.setState({ error: `Error publishing job. Please try again.`, loading: false});
+            });
+    }
+
+
 
     render() {
-        const { error, message, loading, jobs, search, count, published_count, padding } = this.state;
+        const {
+            error,
+            message,
+            loading,
+            jobs,
+            search,
+            count,
+            published_count,
+            unpublished_count,
+            padding,
+            job,
+            drawer,
+            drawerPlacement,
+            currentQuery,
+            popconfirmPublish
+        } = this.state;    
 
         const displayDensityMenu = (
            <Menu>
@@ -197,12 +280,49 @@ t
            );
 
         const jobTypeMenu = (
-            <RadioGroup defaultValue="all" onChange={this.handleJobRequest} size="small">
+            <RadioGroup defaultValue="all" onChange={this.setQuery} size="small">
                 <RadioButton value="All">All</RadioButton>
                 <RadioButton value="Published">Published</RadioButton>
                 <RadioButton value="Unpublished">Unpublished</RadioButton>
+                <Tooltip placement="top" trigger="hover" title={<span>Refresh</span>} mouseEnterDelay={0.8}>
+                    <Button className="company-job-edit-link" onClick={this.fetchJobs} value="refresh-jobs" style={{marginLeft: "6px"}}>
+                        <Icon type="sync" spin={loading} />
+                    </Button>
+                </Tooltip>
             </RadioGroup>
+
         )
+
+        const mapJobs = query => {
+            return (
+                query.map(job => {
+                    return (
+                        <List.Item 
+                            key={job.id}
+                            id={job.id}
+                            actions={[
+                                <button className="company-job-edit-link" onClick={() => this.openDrawer(job.id)}>edit</button>,
+                                <Popconfirm
+                                    title = {
+                                        popconfirmPublish ? `Are you sure you want to publish this job?` : `Are you sure you want to unpublish this job?`
+                                    }
+                                    okText={popconfirmPublish ? `Publish` : `Unpublish`}
+                                    cancelText="Cancel"
+                                    onConfirm={() => this.togglePublish(job.id, job.is_active)}
+                                >
+                                    <Switch checked={job.is_active} onChange={this.setPopconfirmPublish}/>
+                                </Popconfirm>
+                            ]}
+                            style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
+                        >
+                            <Checkbox onChange={this.checkJob} id={`${job.id}`} className="job-item"/>
+                            <em className="ant-list-item-action-split-modified"></em>
+                            <p>{job.title}</p>
+                        </List.Item>
+                    );
+                })
+            )
+        };
 
 
         return (
@@ -216,22 +336,16 @@ t
                 ) : (null)}
 
                 <div>
-                     <CompanyJobCounter count={count} published_count={published_count}/>
+                     <CompanyJobCounter count={count} published_count={published_count} unpublished_count={unpublished_count}/>
                 </div>
 
                 <Form className="company-job-search">
-                    <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} name="search" value={search}/>
-                    <Button type="primary" onClick={null}>Search</Button>
+                    <Input className="search" type="text" placeholder="search jobs" onChange={this.searchJobs} name="search" value={search}/>
                 </Form>
                 
                 <div className="job-list-actions">
+                
                     {jobTypeMenu}
-
-                    <Tooltip placement="top" trigger="hover" title={<span>Refresh</span>} mouseEnterDelay={0.8}>
-                        <a onClick={this.handleJobRequest}>
-                            <Icon type="sync" spin={loading}/>
-                        </a>
-                    </Tooltip>
 
                     <div className="whitespace"></div>
                     <Tooltip placement="top" trigger="hover" title={<span>Delete</span>} mouseEnterDelay={0.8}>
@@ -269,24 +383,22 @@ t
                             <p key={2}>Published</p>
                         ]}
                         >
-                                {jobs.map(job => {
-                                return (
-                                    <List.Item 
-                                        key={job.id}
-                                        actions={[
-                                            <a href="#">edit</a>,
-                                            <Switch onChange={this.togglePublish} checked={job.is_active}/>
-                                        ]}
-                                        style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
-                                    >
-                                        <Checkbox onChange={this.checkJob} id={`${job.id}`} className="job-item"/>
-                                        <em className="ant-list-item-action-split-modified"></em>
-                                        <p>{job.title}</p>
-                                    </List.Item>
-                                );
-                            })}
+                            {mapJobs(currentQuery ? this.state[`${this.state.currentQuery}`] : this.state.jobs )}
                         </List>
                 ) : (null)}
+
+                <Drawer
+                    width={580}
+                    visible={drawer}
+                    placement={drawerPlacement}
+                    toggleDrawer={this.toggleDrawer}
+                    onClose={this.closeDrawer}
+                    className="company-job-drawer"
+                >
+                    {/* Pass job key to rerender different jobs w/o unmounting component*/}
+                        <CompanyJobEdit key={job ? job.id : null} job={job} />
+                </Drawer>
+        
             </div>
         );
     }

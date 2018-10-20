@@ -165,7 +165,7 @@ class CompanyAccount extends React.Component {
                 message: 'Please add the company name',
               }],
             })(
-              <Input placeholder="ie Google" name="company_name" onChange={this.onChange} />
+              <Input placeholder="e.g. Google" name="company_name" onChange={this.onChange} id="co-1"/>
             )}
           </FormItem>
 
