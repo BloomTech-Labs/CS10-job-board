@@ -1,6 +1,6 @@
 from mixer.backend.django import mixer
 from django.utils import timezone
-from jobs.models import JobPost, UserManager, User, UserMembership, UserPayment, Subscription
+from jobs.models import JobPost, UserManager, User, UserMembership, UserPayment
 import uuid
 import pytest
  

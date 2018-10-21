@@ -31,7 +31,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 import rest_framework_jwt.authentication
 
 # Models
-from .models import User, JobPost, UserMembership, Subscription, UserPayment
+from .models import User, JobPost, UserMembership, UserPayment
 
 # Serializers
 from .api import (

@@ -56,7 +56,7 @@ UserMembership
 
 Post Save
 
-Subscription
+<!-- Subscription
 -user membership
 -stripe subscription id (foreignkey to UserMembership)
--is active?
+-is active? -->
