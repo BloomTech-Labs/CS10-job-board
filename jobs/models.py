@@ -102,6 +102,7 @@ class JobPost(models.Model):
 # 4 types of memberships
 MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack', '12'), ('Unlimited', 'unlimited'))
 
+
 #create a class for defining the type of member a user is
 class UserMembership(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -120,21 +121,25 @@ class Payment(models.Model):
         return self.user.email
 
 
-# Creates a Membership instance for User after Payment token saved
-# def post_pay_usermembership_create(sender, instance, created, *args, **kwargs):
-#     print(sender, instance, created, **kwargs)
-#     if created:
-#         UserMembership.objects.get_or_create(user=instance.user)
-#     user_membership, created = UserMembership.objects.get_or_create(user=instance)
-#     # if the user has not signed up, create stripe id for them
-#     if user_membership.stripe_id is None or user_membership.stripe_id == '':
-#         new_customer_id = stripe.Customer.create(email=instance.email)
-#         user_membership.stripe_id = new_customer_id['id']
-#         # set_product_id = stripe.
-#         user_membership.save()
+    # Creates a Membership instance for User after Payment token saved
+    def post_pay_usermembership_create(sender, instance, *args, **kwargs):
+        user_membership = UserMembership.objects.filter(user=instance.user).first()
+        if user_membership is None:
+            new_customer = stripe.Customer.create(
+                email=instance.user,
+                source=instance.stripe_token
+            )
+            new_membership = UserMembership.objects.create(user=instance.user)
+            new_membership.stripe_id = new_customer['id']
+            # set_product_id = stripe.
+            new_membership.save()
+            
+        
+        # user_membership, created = UserMembership.objects.get_or_create(user=instance)
+        # if the user has not signed up, create stripe id for them
+        # if user_membership.stripe_id is None or user_membership.stripe_id == '':
 
-
-# post_save.connect(post_pay_usermembership_create, sender=Payment)
+    post_save.connect(post_pay_usermembership_create)
 
 
 
