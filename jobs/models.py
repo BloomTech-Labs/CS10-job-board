@@ -100,28 +100,33 @@ class JobPost(models.Model):
 
 
 # 4 types of memberships
-MEMBERSHIP_CHOICES = (('Free', 'default'),('1 Post', '1'), ('12 Posts', '12'), ('Unlimited Posts', 'unlimited'))
 
 
 #create a class for defining the type of member a user is
 class UserMembership(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stripe_id = models.CharField(max_length=40)
-    membership = models.CharField(choices=MEMBERSHIP_CHOICES, default='Free', max_length=30)
+    SUBSCRIPTION_CHOICES = (('F', 'Free'), ('U', 'Unlimited'))
+    subscription = models.CharField(choices=SUBSCRIPTION_CHOICES, default='F', max_length=30)
 
     def __str__(self):
         return self.user.email
 
 
-class Payment(models.Model):
+
+
+class UserPayment(models.Model):
     user = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     stripe_token = models.CharField(max_length=128, blank=True)
+    PAYMENT_CHOICES = (('1', '1 Post'), ('12', '12 Posts'), ('U', 'Unlimited Posts'))
+    purchased = models.CharField(choices=PAYMENT_CHOICES, max_length=30)
+    created_date = models.DateTimeField(default=timezone.now, editable=False)
 
     def __str__(self):
         return self.user.email
 
 
-    # Creates a Membership instance for User after Payment token saved
+    # Creates a Membership instance for User after Payment token saved if none exists
     def post_pay_usermembership_create(sender, instance, *args, **kwargs):
         user_membership = UserMembership.objects.filter(user=instance.user).first()
         if user_membership is None:
@@ -131,8 +136,13 @@ class Payment(models.Model):
             )
             new_membership = UserMembership.objects.create(user=instance.user)
             new_membership.stripe_id = new_customer['id']
-            # set_product_id = stripe.
             new_membership.save()
+        
+
+
+        new_charge = stripe.Charge.create(
+            
+        )
 
     post_save.connect(post_pay_usermembership_create)
 
@@ -156,20 +166,20 @@ class Payment(models.Model):
     # post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
 
 
-class Subscription(models.Model):
-	user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
-	stripe_subscription_id = models.CharField(max_length=40)
-	active = models.BooleanField(default=True)
+# class Subscription(models.Model):
+# 	user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
+# 	stripe_subscription_id = models.CharField(max_length=40)
+# 	active = models.BooleanField(default=True)
 
-	def __str__(self):
-		return self.user_membership.user.email
+# 	def __str__(self):
+# 		return self.user_membership.user.email
 
-	@property
-	def get_created_date(self):
-		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-		return datetime.fromtimestamp(subscription.created)
+# 	@property
+# 	def get_created_date(self):
+# 		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+# 		return datetime.fromtimestamp(subscription.created)
 
-	@property
-	def get_next_billing_date(self):
-		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-		return datetime.fromtimestamp(subscription.current_period_end)
+# 	@property
+# 	def get_next_billing_date(self):
+# 		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+# 		return datetime.fromtimestamp(subscription.current_period_end)
