@@ -100,7 +100,7 @@ class JobPost(models.Model):
 
 
 # 4 types of memberships
-MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack', '12'), ('Unlimited', 'unlimited'))
+MEMBERSHIP_CHOICES = (('Free', 'default'),('1 Post', '1'), ('12 Posts', '12'), ('Unlimited Posts', 'unlimited'))
 
 
 #create a class for defining the type of member a user is
@@ -133,11 +133,6 @@ class Payment(models.Model):
             new_membership.stripe_id = new_customer['id']
             # set_product_id = stripe.
             new_membership.save()
-            
-        
-        # user_membership, created = UserMembership.objects.get_or_create(user=instance)
-        # if the user has not signed up, create stripe id for them
-        # if user_membership.stripe_id is None or user_membership.stripe_id == '':
 
     post_save.connect(post_pay_usermembership_create)
 
