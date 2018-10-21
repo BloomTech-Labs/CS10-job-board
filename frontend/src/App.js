@@ -34,7 +34,7 @@ class App extends React.Component {
     const token = localStorage.getItem('token');
     if (token) {
       axios.post(`${process.env.REACT_APP_LOGIN_API}refresh/`, { token: token })
-        .then(response => {
+      .then(response => {
           this.logIn(response.data);
         })
         .catch(err => {
@@ -70,7 +70,10 @@ class App extends React.Component {
       this.props.history.push('/account');
       this.setState({ message: `Please complete your company profile.`});
     } else if (data.user.is_employer) {
-      this.props.history.push('/dashboard');
+      const path = this.props.history.location.pathname;
+      if (path === '/' || path === '/signin' || path === '/company') {
+         this.props.history.push('/dashboard');
+      }
     } else {
       this.props.history.push('/jobs');
     }
