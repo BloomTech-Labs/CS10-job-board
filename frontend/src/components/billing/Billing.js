@@ -14,7 +14,7 @@ class Billing extends React.Component {
                         <Elements>
                             <CheckoutForm 
                                 token={this.props.token}
-                                logOut={this.props.logOut} 
+                                logOut={this.props.logOut}
                             />
                         </Elements>
                     </div>
@@ -23,7 +23,7 @@ class Billing extends React.Component {
                         <Elements>
                             <CheckoutForm 
                                 token={this.props.token}
-                                logOut={this.props.logOut} 
+                                logOut={this.props.logOut}
                             />
                         </Elements>
                     </div>
@@ -32,7 +32,7 @@ class Billing extends React.Component {
                         <Elements>
                             <CheckoutForm 
                                 token={this.props.token}
-                                logOut={this.props.logOut} 
+                                logOut={this.props.logOut}
                             />
                         </Elements>
                     </div>

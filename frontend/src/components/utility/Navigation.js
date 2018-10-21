@@ -4,7 +4,7 @@ import { Menu, Dropdown, Icon } from 'antd';
 import { Search, JobPost } from '../';
 
 const Navigation = props => {
-    const { employer, logOut, checkToken, token, user } = props;
+    const { employer, logOut, token, user } = props;
     const menu = (
         <Menu>
             <Menu.Item key="0">
@@ -32,7 +32,7 @@ const Navigation = props => {
             <div className="whitespace"></div>
             <Search />
             {employer ? (  
-                    <JobPost logOut={logOut} checkToken={checkToken} token={token} company={user}/>
+                    <JobPost logOut={logOut} token={token} company={user}/>
                 ) : (null)}
             <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
                 <a className="ant-dropdown-link">

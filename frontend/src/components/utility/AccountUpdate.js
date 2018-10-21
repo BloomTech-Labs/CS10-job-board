@@ -35,7 +35,8 @@ class AccountUpdate extends React.Component {
         const requestOptions = { headers: { Authorization: `JWT ${token}`}};
         const { email, current_password, new_password, attempts } = this.state;
         // Simple token comparison
-        this.props.checkToken(e, this.props.token, token);
+        if (token !== this.props.token) {
+            this.props.logOut(e, `Error authenticating account. Please log in again.`);
         // POST to verify token; returns JWT if valid
         axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
             .then(response => {
@@ -95,7 +96,8 @@ class AccountUpdate extends React.Component {
         this.setState({ error: null, message: null });
         const token = localStorage.getItem('token');
         // Simple token comparison
-        this.props.checkToken(e, this.props.token, token);
+        if (token !== this.props.token) {
+            this.props.logOut(e, `Error authenticating account. Please log in again.`);
         // POST to verify token; returns the same JWT if valid
         axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
         .then(response => {
