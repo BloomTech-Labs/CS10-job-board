@@ -313,6 +313,27 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
+########### SendGrid ###########
+
+
+def send_email(request):
+    sg = sendgrid.SendGridAPIClient(
+        apikey=config('SENDGRID_API_KEY')
+    )
+    from_email = Email('contact@openjobsource.com')
+    to_email = Email('cs10jobboard@gmail.com')
+    subject = 'Testing!'
+    msg_html = render_to_string(
+        'templates/email_confirm.html', {'email': sendgrid})
+    content = Content(
+        html_message=msg_html,
+    )
+    mail = Mail(from_email, subject, to_email, content)
+    response = sg.client.mail.send.post(request_body=mail.get())
+
+    return HttpResponse('Email sent!')
+
+
 ########### Membership & Stripe ###########
 
 
@@ -356,11 +377,11 @@ class UserMembershipView(views.APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
 
-def get_user_membership(id):
-    user_membership = UserMembership.objects.filter(id=id)
-    if user_membership.exists():
-        return True
-    return False
+# def get_user_membership(id):
+#     user_membership = UserMembership.objects.filter(id=id)
+#     if user_membership.exists():
+#         return True
+#     return False
 
 
 # def get_user_subscription(request):
@@ -371,23 +392,6 @@ def get_user_membership(id):
 #         return user_subscription
 #     return None
 
-
-def send_email(request):
-    sg = sendgrid.SendGridAPIClient(
-        apikey=config('SENDGRID_API_KEY')
-    )
-    from_email = Email('contact@openjobsource.com')
-    to_email = Email('cs10jobboard@gmail.com')
-    subject = 'Testing!'
-    msg_html = render_to_string(
-        'templates/email_confirm.html', {'email': sendgrid})
-    content = Content(
-        html_message=msg_html,
-    )
-    mail = Mail(from_email, subject, to_email, content)
-    response = sg.client.mail.send.post(request_body=mail.get())
-
-    return HttpResponse('Email sent!')
 
 
 # def get_selected_membership(request):
