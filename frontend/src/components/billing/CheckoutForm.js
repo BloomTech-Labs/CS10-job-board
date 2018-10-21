@@ -26,18 +26,19 @@ class CheckoutForm extends React.Component {
         // console.log(response);
         const stripe_token = response.token.id;
         const token = localStorage.getItem('token');
-        // console.log(token, this.props.token);
+        // console.log(stripe_token, typeof(stripe_token));
         // compare token to token set in App.js when user logged in.
         if (token !== this.props.token) {
           this.props.logOut(e, `Error authenticating account. Please log in again.`);
         } else {
           const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-          axios.post(`${process.env.REACT_APP_API}pay/`, stripe_token, requestOptions )
+          axios.post(`${process.env.REACT_APP_API}pay/`, {stripe_token: stripe_token, user: this.props.user}, requestOptions )
             .then(response => {
+              console.log(response);
               this.setState({ message: `Payment successful!`});
             })
             .catch(err => {
-              this.setState({ error: `Problem processing your payment. Try again.`});
+              this.setState({ error: `Problem saving your payment. Try again.`});
             });
         }
       })
