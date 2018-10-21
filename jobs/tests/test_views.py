@@ -2,7 +2,7 @@ from django.test import Client
 import inspect
 
 
-from jobs.views import UserCreateView, UserIDSerializer, UserLogoutAllView, UserView, PostPageNumberPagination, CompanyPostPageNumberPagination, ListJobPost, ViewJobPost, ModifyJobPost, ListCompanyJobPosts, PaymentView
+from jobs.views import UserCreateView, UserIDSerializer, UserLogoutAllView, UserView, PostPageNumberPagination, CompanyPostPageNumberPagination, ListJobPost, ViewJobPost, ModifyJobPost, ListCompanyJobPosts, UserPaymentView
 
 # Tests all instances of classes in view.py. May need to check for some errors (unexpected keyword argument) in views.py
 class TestViewInstances():
@@ -38,6 +38,6 @@ class TestViewInstances():
         inspect.isclass(ListCompanyJobPosts)
 
     def test_set_up_payment_view(self):
-        inspect.isclass(PaymentView)
+        inspect.isclass(UserPaymentView)
 
     

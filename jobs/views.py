@@ -31,7 +31,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 import rest_framework_jwt.authentication
 
 # Models
-from .models import User, JobPost, UserMembership, Subscription, Payment
+from .models import User, JobPost, UserMembership, Subscription, UserPayment
 
 # Serializers
 from .api import (
@@ -41,7 +41,7 @@ from .api import (
     UserRegistrationSerializer,
     UserViewSerializer,
     UserMembershipSerializer,
-    PaymentViewSerializer,
+    UserPaymentViewSerializer,
     JWTSerializer
 )
 import stripe
@@ -337,9 +337,9 @@ def send_email(request):
 ########### Membership & Stripe ###########
 
 
-class PaymentView(generics.CreateAPIView):
-    queryset = Payment.objects.all()
-    serializer_class = PaymentViewSerializer
+class UserPaymentView(generics.CreateAPIView):
+    queryset = UserPayment.objects.all()
+    serializer_class = UserPaymentViewSerializer
     authentication_classes = (
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
@@ -347,23 +347,23 @@ class PaymentView(generics.CreateAPIView):
     )
     permission_classes = (permissions.IsAuthenticated,)
 
-    def create(self, request, *args, **kwargs):
-        print(request.data)
-        # membership_exists = get_user_membership(request.user.pk)
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(status=status.HTTP_201_CREATED, headers=headers)
+    # def create(self, request, *args, **kwargs):
+    #     print(request.data)
+    #     # membership_exists = get_user_membership(request.user.pk)
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(status=status.HTTP_201_CREATED, headers=headers)
 
-    def perform_create(self, serializer):
-        serializer.save()
+    # def perform_create(self, serializer):
+    #     serializer.save()
 
-    def get_success_headers(self, data):
-        try:
-            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
-        except (TypeError, KeyError):
-            return {}
+    # def get_success_headers(self, data):
+    #     try:
+    #         return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+    #     except (TypeError, KeyError):
+    #         return {}
 
 
 class UserMembershipView(views.APIView):
