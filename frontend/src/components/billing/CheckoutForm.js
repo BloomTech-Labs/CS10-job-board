@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from 'axios';
-import { Alert } from 'antd';
+import { Alert, Form, Input } from 'antd';
 import { CardElement, injectStripe } from 'react-stripe-elements';
+
+const FormItem = Form.Item;
 
 class CheckoutForm extends React.Component {
   constructor(props) {
@@ -17,11 +19,16 @@ class CheckoutForm extends React.Component {
     this.setState({ pay: true });
   }
 
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
   handlePayment = e => {
     e.preventDefault();
     this.setState({ error: null, message: null });
+    const { cardholder_name } = this.state;
     // Tokenize purchase with stripe object from injectStripe component
-    this.props.stripe.createToken({ name: "Name" })
+    this.props.stripe.createToken({ name: `${cardholder_name}` })
       .then(response => {
         // console.log(response);
         const stripe_token = response.token.id;
@@ -49,6 +56,8 @@ class CheckoutForm extends React.Component {
 
   render() {
     const { error, message, pay } = this.state;
+    const { getFieldDecorator } = this.props.form;
+
     return (
       <div className="checkout-form">
         {error ? (
@@ -57,12 +66,24 @@ class CheckoutForm extends React.Component {
         {message ? (
           <Alert message={message} type="success" closable showIcon banner/>
         ) : (null)}
-        <p>Would you like to complete the purchase?</p>
-        <CardElement />
+          <FormItem label="Cardholder Name">
+            {getFieldDecorator('cardholder_name', {
+              rules: [{
+                required: true,
+                message: 'Please add the cardholder name',
+              }],
+            })(
+              <Input placeholder="Full name on the card" name="cardholder_name" onChange={this.onChange}/>
+            )}
+          </FormItem>
+        <div style={{ margin: "40px 0"}}>
+            <CardElement />
+        </div>
         <button onClick={this.handlePayment}>Buy</button>
       </div>
     );
   }
 }
 
-export default injectStripe(CheckoutForm);
+// export default injectStripe(CheckoutForm);
+export default CheckoutForm = Form.create()(injectStripe(CheckoutForm));
