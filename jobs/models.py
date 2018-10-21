@@ -112,25 +112,48 @@ class UserMembership(models.Model):
         return self.user.email
 
 
-    # Creates a Membership instance for User
-    def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
-        if created:
-            UserMembership.objects.get_or_create(user=instance)
-
-        user_membership, created = UserMembership.objects.get_or_create(user=instance)
-        # if the user has not signed up, create stripe id for them
-        if user_membership.stripe_id is None or user_membership.stripe_id == '':
-            new_customer_id = stripe.Customer.create(email=instance.email)
-            user_membership.stripe_id = new_customer_id['id']
-            # set_product_id = stripe.
-            user_membership.save()
-    
-    post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
-
-
 class Payment(models.Model):
-    # user = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
-    stripe_token = models.CharField(max_length=2000, blank=True)
+    user = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
+    stripe_token = models.CharField(max_length=128, blank=True)
+
+    def __str__(self):
+        return self.user.email
+
+
+# Creates a Membership instance for User after Payment token saved
+# def post_pay_usermembership_create(sender, instance, created, *args, **kwargs):
+#     print(sender, instance, created, **kwargs)
+#     if created:
+#         UserMembership.objects.get_or_create(user=instance.user)
+#     user_membership, created = UserMembership.objects.get_or_create(user=instance)
+#     # if the user has not signed up, create stripe id for them
+#     if user_membership.stripe_id is None or user_membership.stripe_id == '':
+#         new_customer_id = stripe.Customer.create(email=instance.email)
+#         user_membership.stripe_id = new_customer_id['id']
+#         # set_product_id = stripe.
+#         user_membership.save()
+
+
+# post_save.connect(post_pay_usermembership_create, sender=Payment)
+
+
+
+
+
+
+    # def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
+    #     if created:
+    #         UserMembership.objects.get_or_create(user=instance)
+
+    #     user_membership, created = UserMembership.objects.get_or_create(user=instance)
+    #     # if the user has not signed up, create stripe id for them
+    #     if user_membership.stripe_id is None or user_membership.stripe_id == '':
+    #         new_customer_id = stripe.Customer.create(email=instance.email)
+    #         user_membership.stripe_id = new_customer_id['id']
+    #         # set_product_id = stripe.
+    #         user_membership.save()
+    
+    # post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
 
 
 class Subscription(models.Model):
