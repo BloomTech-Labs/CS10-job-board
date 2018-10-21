@@ -313,22 +313,63 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-########### Membership Views and Methods ###########
-
-def get_user_membership(request):
-    user_membership_qs = UserMembership.objects.filter(user=request.user)
-    if user_membership_qs.exists():
-        return user_membership_qs.first()
-    return None
+########### Membership & Stripe ###########
 
 
-def get_user_subscription(request):
-    user_subscription_qs = Subscription.objects.filter(
-        user_membership=get_user_membership(request))
-    if user_subscription_qs.exists():
-        user_subscription = user_subscription_qs.first()
-        return user_subscription
-    return None
+class PaymentView(generics.CreateAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentViewSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        print(request.data)
+        # membership_exists = get_user_membership(request.user.pk)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def get_success_headers(self, data):
+        try:
+            return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+        except (TypeError, KeyError):
+            return {}
+
+
+class UserMembershipView(views.APIView):
+    model = UserMembership
+    serializer_class = UserMembershipSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
+
+
+def get_user_membership(id):
+    user_membership = UserMembership.objects.filter(id=id)
+    if user_membership.exists():
+        return True
+    return False
+
+
+# def get_user_subscription(request):
+#     user_subscription_qs = Subscription.objects.filter(
+#         user_membership=get_user_membership(request))
+#     if user_subscription_qs.exists():
+#         user_subscription = user_subscription_qs.first()
+#         return user_subscription
+#     return None
 
 
 def send_email(request):
@@ -349,86 +390,71 @@ def send_email(request):
     return HttpResponse('Email sent!')
 
 
-def get_selected_membership(request):
-    membership_type = request.session['selected_membership_type']
-    selected_membership_qs = Membership.objects.filter(
-        membership_type=membership_type)
-    if selected_membership_qs.exists():
-        return selected_membership_qs.first()
-    return None
-    membership = request.session['selected_membership']
-    selected_membership_qs = UserMembership.objects.filter(
-            membership=membership)
+# def get_selected_membership(request):
+#     membership_type = request.session['selected_membership_type']
+#     selected_membership_qs = Membership.objects.filter(
+#         membership_type=membership_type)
+#     if selected_membership_qs.exists():
+#         return selected_membership_qs.first()
+#     return None
+#     membership = request.session['selected_membership']
+#     selected_membership_qs = UserMembership.objects.filter(
+#             membership=membership)
     
-    if selected_membership_qs.exists():
-        return selected_membership_qs.first()
-        return None
-
-# class UserMembshipView(generics.RetrieveUpdateDestroyAPIView):
-#     model = UserMembership
-
+#     if selected_membership_qs.exists():
+#         return selected_membership_qs.first()
+#         return None
 
 
 # for selecting a paid membership
-class UserMembershipView(generics.ListCreateAPIView):
-    model = UserMembership
-    serializer_class = UserMembershipSerializer
-    authentication_classes = (
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permission_classes = (permissions.IsAuthenticated,)
+# class UserMembershipView(generics.ListCreateAPIView):
+#     model = UserMembership
+#     serializer_class = UserMembershipSerializer
+#     authentication_classes = (
+#         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+#         authentication.SessionAuthentication,
+#         authentication.BasicAuthentication
+#     )
+#     permission_classes = (permissions.IsAuthenticated,)
 
-    def get_queryset(self):
-        id = self.request.user.id
-        queryset = UserMembership.objects.filter(id=id)
-        return queryset
+#     def get_queryset(self):
+#         id = self.request.user.id
+#         queryset = UserMembership.objects.filter(id=id)
+#         return queryset
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        current_membership = get_user_membership(self.request)
-        context['current_membership'] = str(current_membership.membership)
-        # print(context)
+#     def get_context_data(self, *args, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         current_membership = get_user_membership(self.request)
+#         context['current_membership'] = str(current_membership.membership)
+#         # print(context)
 
-        return context
+#         return context
 
-    def post(self, request, **kwargs):
-        selected_membership = request.POST.get('membership')
-        user_subscription = get_user_subscription(request)
-        user_membership = get_user_membership(request)
+#     def post(self, request, **kwargs):
+#         selected_membership = request.POST.get('membership')
+#         user_subscription = get_user_subscription(request)
+#         user_membership = get_user_membership(request)
 
-        selected_membership_qs = UserMembership.objects.filter(
-            membership=selected_membership
-        )
-        if selected_membership_qs.exists():
-            selected_membership = selected_membership_qs.first()
+#         selected_membership_qs = UserMembership.objects.filter(
+#             membership=selected_membership
+#         )
+#         if selected_membership_qs.exists():
+#             selected_membership = selected_membership_qs.first()
 
-        '''
-        ============
-        VALIDATION
-        ============
-        '''
-        if user_membership.membership == selected_membership:
-            if user_subscription != None:
-                messages.info(request, "You already have this membership. Your next payment is due {}".format(
-                    'get this value from Stripe'))
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+#         '''
+#         ============
+#         VALIDATION
+#         ============
+#         '''
+#         if user_membership.membership == selected_membership:
+#             if user_subscription != None:
+#                 messages.info(request, "You already have this membership. Your next payment is due {}".format(
+#                     'get this value from Stripe'))
+#                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-        #assign any changes to membership type to the session
-        request.session['selected_membership'] = selected_membership.membership
-        return HttpResponseRedirect(reverse('memberships:payment'))
-
-
-class PaymentView(generics.CreateAPIView):
-    queryset = Payment.objects.all()
-    serializer_class = PaymentViewSerializer
-    authentication_classes = (
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permission_classes = (permissions.IsAuthenticated,)
+#         #assign any changes to membership type to the session
+#         request.session['selected_membership'] = selected_membership.membership
+#         return HttpResponseRedirect(reverse('memberships:payment'))
 
 
 # Tokenizes purchase
