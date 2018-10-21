@@ -3,10 +3,6 @@ import axios from 'axios';
 import { Button, Popconfirm } from 'antd';
 
 class LogoutAll extends React.Component {
-    constructor(props) {
-        super(props)
-    }
-
 
     logoutAll = e => {
         e.preventDefault();
@@ -39,7 +35,7 @@ class LogoutAll extends React.Component {
                 cancelText="Cancel"
                 onConfirm={this.logoutAll}
                 >
-                    <a className="ant-btn ant-btn-danger" href="#"> Logout All Sessions</a>
+                    <Button className="ant-btn ant-btn-danger"> Logout All Sessions</Button>
                 </Popconfirm>
             </div>
         );
