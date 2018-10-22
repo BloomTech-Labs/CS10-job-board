@@ -16,6 +16,7 @@ class Billing extends React.Component {
                                 token={this.props.token}
                                 logOut={this.props.logOut}
                                 user={this.props.user}
+                                product={`sku_DoNhM1EGgKGLeg`}
                             />
                         </Elements>
                     </div>
@@ -26,6 +27,7 @@ class Billing extends React.Component {
                                 token={this.props.token}
                                 logOut={this.props.logOut}
                                 user={this.props.user}
+                                product={`sku_DoNp2frdbkieqn`}
                             />
                         </Elements>
                     </div>
@@ -36,6 +38,7 @@ class Billing extends React.Component {
                                 token={this.props.token}
                                 logOut={this.props.logOut}
                                 user={this.props.user}
+                                product={`plan_DoNu8JmqFRMrze`}
                             />
                         </Elements>
                     </div>
