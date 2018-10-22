@@ -65,7 +65,6 @@ class CompanyJobEdit extends React.Component {
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
         axios.patch(`${process.env.REACT_APP_API}company/jobs/${this.props.job.id}/`, this.state, requestOptions)
           .then(response => {
-              console.log(response);
             if (is_active) {
               this.setState({ message: `Job Updated!` });
             } else {
