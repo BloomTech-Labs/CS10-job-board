@@ -123,31 +123,48 @@ class UserPayment(models.Model):
         return self.user.email
 
 
-    # Creates a Membership instance for User after Payment token saved if none exists
+########### Stripe API ###########
+
+# Creates a Membership instance for User after Payment token saved if none exists
+# Uses post_save Django signal to run when a UserPayment object is creatd from /pay API
 def post_pay_usermembership_create(sender, instance, *args, **kwargs):
-    # get_or_create returns two variables in a tuple, the second being a boolean
+    # get_or_create returns two variables in a tuple, the second being a boolean about creation status
     user_membership, created = UserMembership.objects.get_or_create(user=instance.user)
-    print(created, args)
     if created:
         new_customer = stripe.Customer.create(
             email=instance.user,
             source=instance.stripe_token
         )
-        # new_membership = UserMembership.objects.create(user=instance.user)
         user_membership.stripe_id = new_customer['id']
         user_membership.save()
-    
-    new_charge = stripe.Order.create(
-        currency='usd',
-        customer=user_membership.stripe_id,
-        items=[
-            {
-                "type": "sku",
-                "parent" : f'{instance.purchased}'
-            }
-        ]
-    )
-    
+
+    # If subscription purchase, assign plan to customer with Subscription API
+    if instance.purchased is 'plan_DoNu8JmqFRMrze':
+        stripe.Subscription.create(
+            customer=user_membership.stripe_id,
+            items=[
+                {
+                    "plan": "plan_DoNu8JmqFRMrze"
+                }
+            ]
+        )
+    # Else purchase a job post product with Order API
+    else:
+        new_order = stripe.Order.create(
+            currency='usd',
+            customer=user_membership.stripe_id,
+            items=[
+                {
+                    "type": "sku",
+                    "parent" : f'{instance.purchased}'
+                }
+            ]
+        )
+        # Pay created order
+        new_order.pay(
+            customer=user_membership.stripe_id
+        )
+
 
 post_save.connect(post_pay_usermembership_create, sender=UserPayment)
 
