@@ -12,7 +12,7 @@ class Account extends React.Component {
         }
     }
 
-    // PROPS: user, token, logOut, checkToken
+    // PROPS: user, token, logOut
 
     componentDidMount() {
         // fetch account details and mount on state using axios.get()

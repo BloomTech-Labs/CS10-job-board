@@ -43,11 +43,12 @@
 
 .ant-alert-close-icon {
     position: relative;
-    margin-left: 5px;
+    margin-left: 2px;
     top: 0;
     right: 0;
     line-height: inherit;
     font-size: 16px;
+    overflow: visible;
 }
 
 /* Menu Items */
@@ -135,4 +136,18 @@
 .ant-progress-status-success {
     color: #52c41a;
     stroke: #52c41a;
+}
+
+/* Company */
+
+.ant-list-item-action-split-modified {
+    position: relative;
+    margin: 0 5px;
+    background-color: #e8e8e8;
+    height: 14px;
+    top: 50%;
+}
+
+.ant-radio-button ~ span {
+    user-select: none;
 }

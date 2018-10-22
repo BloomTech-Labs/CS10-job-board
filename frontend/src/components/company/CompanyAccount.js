@@ -35,34 +35,37 @@ class CompanyAccount extends React.Component {
     e.preventDefault();
     this.setState({ error: null, message: null, progress: 0 });
     const token = localStorage.getItem('token');
-    this.props.checkToken(e, this.props.token, token);
-    const { company_name, company_logo, company_summary, application_inbox, first_name, last_name } = this.state;
-    const requestBody = { company_name, company_logo, company_summary, application_inbox, first_name, last_name };
-    const formData = new FormData();
-    // creates FormData entries
-    for (let key in requestBody) {
-      if (requestBody[key] !== null) {
-        formData.append(key, requestBody[key]);
+    if (token !== this.props.token) {
+      this.props.logOut(e, `Error authenticating account. Please log in again.`);
+    } else {
+      const { company_name, company_logo, company_summary, application_inbox, first_name, last_name } = this.state;
+      const requestBody = { company_name, company_logo, company_summary, application_inbox, first_name, last_name };
+      const formData = new FormData();
+      // creates FormData entries
+      for (let key in requestBody) {
+        if (requestBody[key] !== null) {
+          formData.append(key, requestBody[key]);
+        }
       }
-    }
-    const requestOptions = { 
-      headers: { Authorization: `JWT ${token}`},
-      onUploadProgress: progressEvent => { 
-      this.setState({ progress: Math.round(progressEvent.loaded / progressEvent.total * 100)});
-      }
-    };
-    axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
-      .then(response => {
-        this.setState({ message: `Account successfully updated!`});
-        setTimeout(() => {
-          this.setState({ progress: 0, message: null });
-        }, 5000);
-      })
-      .catch(err => {
-        this.setState({ 
-          error: `Error processing your request. Try Again.`
+      const requestOptions = { 
+        headers: { Authorization: `JWT ${token}`},
+        onUploadProgress: progressEvent => { 
+        this.setState({ progress: Math.round(progressEvent.loaded / progressEvent.total * 100)});
+        }
+      };
+      axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
+        .then(response => {
+          this.setState({ message: `Account successfully updated!`});
+          setTimeout(() => {
+            this.setState({ progress: 0, message: null });
+          }, 5000);
+        })
+        .catch(err => {
+          this.setState({ 
+            error: `Error processing your request. Try Again.`
+          });
         });
-      });
+    }
   }
 
   onChange = e => {
@@ -165,7 +168,7 @@ class CompanyAccount extends React.Component {
                 message: 'Please add the company name',
               }],
             })(
-              <Input placeholder="ie Google" name="company_name" onChange={this.onChange} />
+              <Input placeholder="e.g. Google" name="company_name" onChange={this.onChange} id="co-1"/>
             )}
           </FormItem>
 

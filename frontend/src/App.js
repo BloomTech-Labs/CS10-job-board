@@ -34,7 +34,7 @@ class App extends React.Component {
     const token = localStorage.getItem('token');
     if (token) {
       axios.post(`${process.env.REACT_APP_LOGIN_API}refresh/`, { token: token })
-        .then(response => {
+      .then(response => {
           this.logIn(response.data);
         })
         .catch(err => {
@@ -70,15 +70,12 @@ class App extends React.Component {
       this.props.history.push('/account');
       this.setState({ message: `Please complete your company profile.`});
     } else if (data.user.is_employer) {
-      this.props.history.push('/dashboard');
+      const path = this.props.history.location.pathname;
+      if (path === '/' || path === '/signin' || path === '/company') {
+         this.props.history.push('/dashboard');
+      }
     } else {
       this.props.history.push('/jobs');
-    }
-  }
-
-  checkToken = (e, appToken, localStorageToken) => {
-    if (appToken !== localStorageToken) {
-      this.logOut(e, `Problem authenticating account. Please log in again.`);
     }
   }
 
@@ -119,7 +116,7 @@ class App extends React.Component {
 
         {loggedIn ? (
           <div className="nav-wrapper">
-            <Navigation logOut={this.logOut} checkToken={this.checkToken} employer={employer} token={token} user={user}/>
+            <Navigation logOut={this.logOut} employer={employer} token={token} user={user}/>
           </div>
         ) : (
             // Navigation for unauthenticated users
@@ -170,16 +167,16 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <CompanyAccount token={token} logOut={this.logOut} checkToken={this.checkToken} user={user}/>} />            
+              <Route path="/account" render={() => <CompanyAccount token={token} logOut={this.logOut} user={user}/>} />            
               ) : (
-              <Route path="/account" render={() => <Account token={token} logIn={this.logIn} logOut={this.logOut} checkToken={this.checkToken} user={user}/>} />
+              <Route path="/account" render={() => <Account token={token} logIn={this.logIn} logOut={this.logOut} user={user}/>} />
             )}
             {employer ? (
               <Route exact path="/dashboard" render={() => <CompanyDashboard token={token} logOut={this.logOut}/>} />
             ) : (
               <Route exact path="/dashboard" render={() => <Dashboard token={token} logOut={this.logOut}/>} />
             )}
-            <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut}/>} />
+            <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut} user={user}/>} />
             <Route component={NoMatch} />
           </Switch>
         </div>

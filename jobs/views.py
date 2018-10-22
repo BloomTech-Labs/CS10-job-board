@@ -1,4 +1,4 @@
-import os 
+import os
 import uuid
 from decouple import config
 
@@ -31,7 +31,7 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 import rest_framework_jwt.authentication
 
 # Models
-from .models import User, JobPost, Membership, UserMembership, Subscription, Payment
+from .models import User, JobPost, UserMembership, UserPayment
 
 # Serializers
 from .api import (
@@ -40,10 +40,10 @@ from .api import (
     UserIDSerializer,
     UserRegistrationSerializer,
     UserViewSerializer,
-    MembershipSerializer,
-    PaymentViewSerializer,
+    UserMembershipSerializer,
+    UserPaymentViewSerializer,
     JWTSerializer
-    )
+)
 import stripe
 
 
@@ -97,7 +97,7 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
         authentication.SessionAuthentication,
         authentication.BasicAuthentication
-    )
+        )
     permission_classes = (permissions.IsAuthenticated,)
     parser_classes = (MultiPartParser,)
 
@@ -121,10 +121,11 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
         # Determines if PUT or PATCH request
         partial = kwargs.pop('partial', False)
         if partial is False:
-            message = { "detail": "Method \"PUT\" not allowed." }
+            message = {"detail": "Method \"PUT\" not allowed."}
             return Response(message, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
-        serializer = self.get_serializer(user, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            user, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
@@ -151,10 +152,10 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
             return Response(message, status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
     def perform_destroy(self, instance):
         instance.delete()
-        
+
 
 # Resets the jwt_secret, invalidating all token issued
 class UserLogoutAllView(views.APIView):
@@ -174,17 +175,27 @@ class UserLogoutAllView(views.APIView):
 
 class PostPageNumberPagination(pagination.PageNumberPagination):
     page_size = 10
+    # Method allowed from client to change query page_size
     page_size_query_param = 'post'
-    max_page_size = 20 
+    # Max amount allowed from client request's to change page_size
+    max_page_size = 100
+
+
+class CompanyPostPageNumberPagination(pagination.PageNumberPagination):
+    page_size = 25
+    # Method allowed from client to change query page_size
+    page_size_query_param = 'post'
+    # Max amount allowed from client request's to change page_size
+    max_page_size = 100
 
 
 class ListJobPost(generics.ListCreateAPIView):
     # returns first 10 most recently published jobs
-    queryset = JobPost.objects.exclude(published_date=None)[:10]
+    queryset = JobPost.objects.exclude(published_date=None)
     serializer_class = JobPreviewSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     pagination_class = PostPageNumberPagination
- 
+
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
@@ -224,7 +235,8 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
 
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer = self.get_serializer(
+            instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
@@ -251,7 +263,7 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
             return Response(message, status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(job)
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
+
     def perform_destroy(self, instance):
         instance.delete()
 
@@ -265,17 +277,20 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
-    pagination_class = PostPageNumberPagination
+    pagination_class = CompanyPostPageNumberPagination
     # lookup_field = "company"
-    
+
     def get_queryset(self):
         company = self.request.user
-        return JobPost.objects.filter(company=company)
-        # print(self.request.data)
-        # if self.request.data['is_active'] is True:
-        #     return JobPost.objects.filter(published_date=True)
-        # else:
-        #     return JobPost.objects.filter(company=company)
+        queryset = JobPost.objects.filter(company=company)
+
+        published = self.request.query_params.get('published', None)
+        unpublished = self.request.query_params.get('unpublished', None)
+        if published is not None:
+            queryset = queryset.filter(is_active=True)
+        if unpublished is not None:
+            queryset = queryset.filter(is_active=False).order_by('-created_date')
+        return queryset
 
     def post(self, request, *args, **kwargs):
         # print('REQUEST>>>>', request.user.pk)
@@ -298,23 +313,7 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
-########### Membership Views and Methods ###########
-
-def get_user_membership(request):
-    user_membership_qs = UserMembership.objects.filter(user=request.user)
-    if user_membership_qs.exists():
-        return user_membership_qs.first()
-    return None
-
-
-def get_user_subscription(request):
-    user_subscription_qs = Subscription.objects.filter(
-        user_membership=get_user_membership(request))
-    if user_subscription_qs.exists():
-        user_subscription = user_subscription_qs.first()
-        return user_subscription
-    return None
-
+########### SendGrid ###########
 
 
 def send_email(request):
@@ -324,7 +323,8 @@ def send_email(request):
     from_email = Email('contact@openjobsource.com')
     to_email = Email('cs10jobboard@gmail.com')
     subject = 'Testing!'
-    msg_html = render_to_string('templates/email_confirm.html', {'email': sendgrid})
+    msg_html = render_to_string(
+        'templates/email_confirm.html', {'email': sendgrid})
     content = Content(
         html_message=msg_html,
     )
@@ -334,75 +334,133 @@ def send_email(request):
     return HttpResponse('Email sent!')
 
 
+########### Membership & Stripe ###########
 
-def get_selected_membership(request):
-	membership_type = request.session['selected_membership_type']
-	selected_membership_qs = Membership.objects.filter(
-            membership_type=membership_type)
-	if selected_membership_qs.exists():
-		return selected_membership_qs.first()
-	return None
 
+class UserPaymentView(generics.CreateAPIView):
+    queryset = UserPayment.objects.all()
+    serializer_class = UserPaymentViewSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
+
+    # def create(self, request, *args, **kwargs):
+    #     print(request.data)
+    #     # membership_exists = get_user_membership(request.user.pk)
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(status=status.HTTP_201_CREATED, headers=headers)
+
+    # def perform_create(self, serializer):
+    #     serializer.save()
+
+    # def get_success_headers(self, data):
+    #     try:
+    #         return {'Location': str(data[api_settings.URL_FIELD_NAME])}
+    #     except (TypeError, KeyError):
+    #         return {}
+
+
+class UserMembershipView(views.APIView):
+    model = UserMembership
+    serializer_class = UserMembershipSerializer
+    authentication_classes = (
+        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+        authentication.SessionAuthentication,
+        authentication.BasicAuthentication
+    )
+    permission_classes = (permissions.IsAuthenticated,)
+
+
+# def get_user_membership(id):
+#     user_membership = UserMembership.objects.filter(id=id)
+#     if user_membership.exists():
+#         return True
+#     return False
+
+
+# def get_user_subscription(request):
+#     user_subscription_qs = Subscription.objects.filter(
+#         user_membership=get_user_membership(request))
+#     if user_subscription_qs.exists():
+#         user_subscription = user_subscription_qs.first()
+#         return user_subscription
+#     return None
+
+
+
+# def get_selected_membership(request):
+#     membership_type = request.session['selected_membership_type']
+#     selected_membership_qs = Membership.objects.filter(
+#         membership_type=membership_type)
+#     if selected_membership_qs.exists():
+#         return selected_membership_qs.first()
+#     return None
+#     membership = request.session['selected_membership']
+#     selected_membership_qs = UserMembership.objects.filter(
+#             membership=membership)
+    
+#     if selected_membership_qs.exists():
+#         return selected_membership_qs.first()
+#         return None
 
 
 # for selecting a paid membership
-class MembershipSelectView(generics.ListAPIView):
-    model = Membership
-    queryset = Membership.objects.all()
-    serializer_class = MembershipSerializer
-    authentication_classes = (
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permission_classes = (permissions.IsAuthenticated,)
+# class UserMembershipView(generics.ListCreateAPIView):
+#     model = UserMembership
+#     serializer_class = UserMembershipSerializer
+#     authentication_classes = (
+#         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
+#         authentication.SessionAuthentication,
+#         authentication.BasicAuthentication
+#     )
+#     permission_classes = (permissions.IsAuthenticated,)
 
-    def get_context_data(self, *args, **kwargs):
-        context = super().get_context_data(**kwargs)
-        current_membership = get_user_membership(self.request)
-        context['current_membership'] = str(current_membership.membership)
-        # print(context)
+#     def get_queryset(self):
+#         id = self.request.user.id
+#         queryset = UserMembership.objects.filter(id=id)
+#         return queryset
 
-        return context
+#     def get_context_data(self, *args, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         current_membership = get_user_membership(self.request)
+#         context['current_membership'] = str(current_membership.membership)
+#         # print(context)
 
-    def post(self, request, **kwargs):
-        selected_membership_type = request.POST.get('membership_type')
-        user_subscription = get_user_subscription(request)
-        user_membership = get_user_membership(request)
+#         return context
 
-        selected_membership_qs = Membership.objects.filter(
-            membership_type=selected_membership_type
-        )
-        if selected_membership_qs.exists():
-            selected_membership = selected_membership_qs.first()
+#     def post(self, request, **kwargs):
+#         selected_membership = request.POST.get('membership')
+#         user_subscription = get_user_subscription(request)
+#         user_membership = get_user_membership(request)
 
-        '''
-        ============
-        VALIDATION
-        ============
-        '''
-        if user_membership.membership == selected_membership:
-            if user_subscription != None:
-                messages.info(request, "You already have this membership. Your next payment is due {}".format(
-                    'get this value from Stripe'))
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+#         selected_membership_qs = UserMembership.objects.filter(
+#             membership=selected_membership
+#         )
+#         if selected_membership_qs.exists():
+#             selected_membership = selected_membership_qs.first()
 
-        #assign any changes to membership type to the session
-        request.session['selected_membership_type'] = selected_membership.membership_type
-        return HttpResponseRedirect(reverse('memberships:payment'))
+#         '''
+#         ============
+#         VALIDATION
+#         ============
+#         '''
+#         if user_membership.membership == selected_membership:
+#             if user_subscription != None:
+#                 messages.info(request, "You already have this membership. Your next payment is due {}".format(
+#                     'get this value from Stripe'))
+#                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+#         #assign any changes to membership type to the session
+#         request.session['selected_membership'] = selected_membership.membership
+#         return HttpResponseRedirect(reverse('memberships:payment'))
 
 
-class PaymentView(generics.CreateAPIView):
-    queryset = Payment.objects.all()
-    serializer_class = PaymentViewSerializer
-    authentication_classes = (
-        rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-        authentication.SessionAuthentication,
-        authentication.BasicAuthentication
-    )
-    permission_classes = (permissions.IsAuthenticated,)
-
-    
 # Tokenizes purchase
 # class PaymentView(generics.CreateAPIView):
 
@@ -415,7 +473,7 @@ class PaymentView(generics.CreateAPIView):
 # 		try:
 # 			token = request.POST['stripeToken']
 # 			subscription = stripe.Subscription.create(
-# 			  customer=user_membership.stripe_customer_id,
+# 			  customer=user_membership.stripe_id,
 # 			  items=[
 # 			    {
 # 			      "plan": selected_membership.stripe_plan_id,
@@ -453,7 +511,7 @@ class PaymentView(generics.CreateAPIView):
 # 	sub.save()
 
 # 	try:
-# 		del request.session['selected_membership_type']
+# 		del request.session['selected_membership']
 # 	except:
 # 		pass
 
@@ -475,7 +533,7 @@ class PaymentView(generics.CreateAPIView):
 # 	user_sub.save()
 
 
-# 	free_membership = Membership.objects.filter(membership_type='Free').first()
+# 	free_membership = UserMembership.objects.filter(membership='Free').first()
 # 	user_membership = get_user_membership(request)
 # 	user_membership.membership = free_membership
 # 	user_membership.save()

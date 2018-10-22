@@ -1,0 +1,133 @@
+.company-job-list-container {
+    display: flex;
+    flex-flow: column wrap;
+    align-self: flex-start;
+    margin: 10px;
+    padding: 10px;
+    width: 510px;
+    background: white;
+    box-shadow: 0px 0px 20px 2px rgba(0, 0, 0, 0.1);
+}
+
+.company-job-list-container .ant-list p,
+.company-job-list-container .ant-list h3 {
+    margin: 0;
+}
+
+.company-job-list-container .ant-list-bordered .ant-list-item {
+    padding-right: 0;
+    padding-left: 10px;
+}
+
+.company-job-list-container .ant-list-header {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 8px;
+    padding-left: 10px;
+    align-items: baseline;
+}
+
+.company-job-list-container .anticon-bars {
+    font-size: 24px !important; 
+}
+
+.company-job-list-container .anticon-delete svg {
+    position: relative;
+    margin: 0 20px;
+    font-size: 20px; 
+}
+
+.anticon-delete {
+    position: relative;
+}
+
+.anticon-delete:after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 12px;
+    border-radius: 50%;
+    opacity: 0;
+    height: 36px;
+    width: 36px;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.anticon-delete:hover:after {
+    opacity: 1;
+    transition: all 0.1s ease-out;
+}
+
+.anticon-delete:active:after {
+    background: rgba(0, 0, 0, 0.3);
+}
+
+
+.company-job-list-container .ant-list-header svg {
+    font-size: 20px;
+}
+
+.job-list-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.job-list-actions .anticon-sync {
+    margin: 0 10px;
+}
+
+.company-job-search {
+    display: flex;
+    align-items: baseline;
+    margin: 0 0 20px;
+}
+
+.company-job-search input {
+    margin-right: 10px;
+}
+
+.company-job-edit-link {
+    min-width: 0;
+    padding: 0;
+    background: none !important;
+    border: none;
+    box-shadow: none;
+    border-radius: 50%;
+}
+
+.company-job-edit-link:hover {
+    color: #40a9ff;
+    transition: all 0.3s ease;
+}
+
+.company-job-list-density > .ant-dropdown-menu-item {
+    padding: 0;
+}
+
+.company-job-list-density div {
+    width: 105px;
+    padding: 10px 24px;
+    user-select: none;
+}
+
+.company-job-drawer .ant-drawer-close-x {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 36px;
+    border-radius: 50%;
+    width: 36px;
+    background: white;
+}
+
+.company-job-drawer .ant-drawer-close-x svg{
+    height: 22px;
+    width: 22px;
+}
+
+.company-job-drawer .ant-drawer-close-x:hover {
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}

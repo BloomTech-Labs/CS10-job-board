@@ -47,7 +47,7 @@ class CompanyRegister extends React.Component {
                             .catch(err => {
                                 this.setState({ error: `Wrong email and/or password. Try again or click forgot password to reset it.`});
                             });
-                    }, 2000);
+                    }, 1000);
                 })
                 .catch(err => {
 

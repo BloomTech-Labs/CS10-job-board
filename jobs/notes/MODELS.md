@@ -49,20 +49,14 @@ Employee
 -is employer?
 -publish date
 
-Membership
--slug
--type (free, single, 12pack, unlimited)
--price
--stripe plan id
-
 UserMembership
 -user (foreignkey to default user)
 -stripe customer id
--membership type (foreignkey to Membership)
+-membership
 
 Post Save
 
-Subscription
+<!-- Subscription
 -user membership
 -stripe subscription id (foreignkey to UserMembership)
--is active?
+-is active? -->

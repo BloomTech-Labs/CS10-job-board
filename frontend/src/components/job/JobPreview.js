@@ -1,12 +1,7 @@
 import React from 'react';
 import numeral from 'numeral';
+import { Divider } from "antd";
 
-const StylelizedLine = () => {
-    return (
-        <hr
-        />
-    )
-};
 
 const JobPreview = props => {
     const { job } = props;
@@ -17,7 +12,7 @@ const JobPreview = props => {
                 <h3>{numeral(job.min_salary).format('($0a)')} - {numeral(job.max_salary).format('($0a)')}</h3>
                 <p>{job.description}</p>
             </div>
-            <StylelizedLine />
+            <Divider/>
         </div>
     );
 }

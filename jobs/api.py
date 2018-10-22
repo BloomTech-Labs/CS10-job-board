@@ -1,4 +1,4 @@
-from .models import JobPost, User, UserMembership, Membership, Payment
+from .models import JobPost, User, UserMembership, UserPayment
 from rest_framework import serializers
 # Customization of UserSerializer
 from rest_framework.utils import model_meta
@@ -105,19 +105,17 @@ class JobPreviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'company_logo', 'description', 'min_salary', 'max_salary')
 
 
-class MembershipSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Membership
-        fields = ('membership_type', 'price')
+
+# Memberships & STripe
 
 
 class UserMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMembership
-        fields = ('user', 'stripe_customer_id', 'membership')
+        fields = ('stripe_id', 'membership')
 
 
-class PaymentViewSerializer(serializers.ModelSerializer):
+class UserPaymentViewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Payment
+        model = UserPayment
         fields = '__all__'

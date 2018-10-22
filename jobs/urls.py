@@ -42,9 +42,9 @@ urlpatterns = [
     path('company/jobs/<int:pk>/', views.ModifyJobPost.as_view()),
     # path('memberships/', (name='membership')),
 
-    # Setting up for Membership types
-    path('memberships/', views.MembershipSelectView.as_view(), name='membership'),
-    path('pay/', views.PaymentView.as_view(), name='pay'),
+    # Membership & Stripe API
+    path('membership/', views.UserMembershipView.as_view(), name='membership'),
+    path('pay/', views.UserPaymentView.as_view(), name='pay'),
     # path('update-transactions/<subscription_id>/', views.updateTransactionRecords, name='update-transactions'),
     # path('cancel/', views.cancelSubscription, name='cancel')
 
