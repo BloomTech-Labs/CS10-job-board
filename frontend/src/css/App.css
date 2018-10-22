@@ -24,6 +24,7 @@
 
 html {
   font-size: 62.5%;
+  overflow-y: scroll;
 }
 
 h1, .h1, h2, .h2 {
@@ -129,6 +130,9 @@ button:hover {
   margin: 15px 20px;
 }
 
+.home-navigation a.h1 {
+  margin: 0;
+}
 
 
 /* Main div wrapper for bottom half of app */

@@ -45,7 +45,6 @@ class CheckoutForm extends React.Component {
               purchased: this.props.product 
             }, requestOptions )
             .then(response => {
-              console.log(response);
               this.setState({ message: `Payment successful!`});
             })
             .catch(err => {

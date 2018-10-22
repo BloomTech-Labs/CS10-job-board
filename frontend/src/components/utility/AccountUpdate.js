@@ -160,7 +160,6 @@ class AccountUpdate extends React.Component {
                             this.props.logOut(e, `Too many password attempts.`);
                         })
                         .catch(err => {
-                            console.log(err);
                             this.props.logOut(e, `Too many password attempts.`);
                         });
                 } else {
