@@ -1,6 +1,6 @@
 from mixer.backend.django import mixer
 from django.utils import timezone
-from jobs.models import JobPost, UserManager, User, UserMembership, Payment, Subscription
+from jobs.models import JobPost, UserManager, User, UserMembership, UserPayment
 import uuid
 import pytest
  
@@ -139,40 +139,40 @@ class TestUserMembership:
         else:
             print("post_save_usermembership_create  exists")
 
-# Payment Test Suite
+# UserPayment Test Suite
 @pytest.mark.django_db
 class TestPayment:
     def test_payment(self):
         try:
-            Payment()
+            TestPayment()
         except NameError:
             print('Payment does not exist')
         else:
             print('Payment exists')
 
 
-@pytest.mark.django_db
-class TestSubcription:
-    def test_create_subcription(self):
-        try:
-            Subscription()
-        except NameError:
-            print('Subscription does not exist')
-        else:
-                print('Subscription exists')
+# @pytest.mark.django_db
+# class TestSubcription:
+#     def test_create_subcription(self):
+#         try:
+#             Subscription()
+#         except NameError:
+#             print('Subscription does not exist')
+#         else:
+#                 print('Subscription exists')
 
-    def test_create_subcription_date(self):
-        try:
-            getattr(Subscription, 'get_created_date')
-        except AttributeError:
-            print("get_created_date doesn't exist")
-        else:
-                print("get_created_date exists")
+#     def test_create_subcription_date(self):
+#         try:
+#             getattr(Subscription, 'get_created_date')
+#         except AttributeError:
+#             print("get_created_date doesn't exist")
+#         else:
+#                 print("get_created_date exists")
 
-    def test_create_billing_date(self):
-        try:
-            getattr(Subscription, 'get_next_billing_date')
-        except AttributeError:
-            print("get_next_billing_date doesn't exist")
-        else:
-            print("get_next_billing_date exists")
+#     def test_create_billing_date(self):
+#         try:
+#             getattr(Subscription, 'get_next_billing_date')
+#         except AttributeError:
+#             print("get_next_billing_date doesn't exist")
+#         else:
+#             print("get_next_billing_date exists")

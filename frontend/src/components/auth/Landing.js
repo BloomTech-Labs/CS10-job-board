@@ -1,14 +1,10 @@
 import React from 'react';
 import { Login, Register } from '../';
-import { Button } from 'antd';
-import { withRouter, NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 class Landing extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            login: true
-        };
+    state = {
+        login: true
     }
 
     changeComponent = () => {

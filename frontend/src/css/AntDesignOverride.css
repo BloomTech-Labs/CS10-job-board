@@ -43,11 +43,12 @@
 
 .ant-alert-close-icon {
     position: relative;
-    margin-left: 5px;
+    margin-left: 2px;
     top: 0;
     right: 0;
     line-height: inherit;
     font-size: 16px;
+    overflow: visible;
 }
 
 /* Menu Items */
@@ -145,4 +146,8 @@
     background-color: #e8e8e8;
     height: 14px;
     top: 50%;
+}
+
+.ant-radio-button ~ span {
+    user-select: none;
 }

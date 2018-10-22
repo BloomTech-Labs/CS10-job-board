@@ -99,54 +99,109 @@ class JobPost(models.Model):
         self.save()
 
 
-# 4 types of memberships
-MEMBERSHIP_CHOICES = (('Free', 'default'),('Individual Post', 'ind'), ('12pack', '12'), ('Unlimited', 'unlimited'))
-
-#create a class for defining the type of member a user is
+# Defines subscription type and stripe_id, if any.
 class UserMembership(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     stripe_id = models.CharField(max_length=40)
-    membership = models.CharField(choices=MEMBERSHIP_CHOICES, default='Free', max_length=30)
+    SUBSCRIPTION_CHOICES = (('F', 'Free'), ('plan_DoNu8JmqFRMrze', 'Unlimited'))
+    subscription = models.CharField(choices=SUBSCRIPTION_CHOICES, default='F', max_length=30)
 
     def __str__(self):
         return self.user.email
 
 
-    # Creates a Membership instance for User
-    def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
-        if created:
-            UserMembership.objects.get_or_create(user=instance)
+# Defines a payment object created when a purchase is made.
+# Includes post_save actions to create Stripe Customer ID if it does not exist.
+class UserPayment(models.Model):
+    user = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
+    stripe_token = models.CharField(max_length=128, blank=True)
+    PAYMENT_CHOICES = (('sku_DoNhM1EGgKGLeg', '1 Post'), ('sku_DoNp2frdbkieqn', '12 Posts'), ('plan_DoNu8JmqFRMrze', 'Unlimited Posts'))
+    purchased = models.CharField(choices=PAYMENT_CHOICES, max_length=30)
+    created_date = models.DateTimeField(default=timezone.now, editable=False)
 
-        user_membership, created = UserMembership.objects.get_or_create(user=instance)
-        # if the user has not signed up, create stripe id for them
-        if user_membership.stripe_id is None or user_membership.stripe_id == '':
-            new_customer_id = stripe.Customer.create(email=instance.email)
-            user_membership.stripe_id = new_customer_id['id']
-            # set_product_id = stripe.
-            user_membership.save()
+    def __str__(self):
+        return self.user.email
+
+
+########### Stripe API ###########
+
+# Creates a Membership instance for User after Payment token saved if none exists
+# Uses post_save Django signal to run when a UserPayment object is creatd from /pay API
+def post_pay_usermembership_create(sender, instance, *args, **kwargs):
+    # get_or_create returns two variables in a tuple, the second being a boolean about creation status
+    user_membership, created = UserMembership.objects.get_or_create(user=instance.user)
+    if created:
+        new_customer = stripe.Customer.create(
+            email=instance.user,
+            source=instance.stripe_token
+        )
+        user_membership.stripe_id = new_customer['id']
+        user_membership.save()
+
+    # If subscription purchase, assign plan to customer with Subscription API
+    if instance.purchased is 'plan_DoNu8JmqFRMrze':
+        stripe.Subscription.create(
+            customer=user_membership.stripe_id,
+            items=[
+                {
+                    "plan": "plan_DoNu8JmqFRMrze"
+                }
+            ]
+        )
+    # Else purchase a job post product with Order API
+    else:
+        new_order = stripe.Order.create(
+            currency='usd',
+            customer=user_membership.stripe_id,
+            items=[
+                {
+                    "type": "sku",
+                    "parent" : f'{instance.purchased}'
+                }
+            ]
+        )
+        # Pay created order
+        new_order.pay(
+            customer=user_membership.stripe_id
+        )
+
+
+post_save.connect(post_pay_usermembership_create, sender=UserPayment)
+
+
+
+
+
+
+    # def post_save_usermembership_create(sender, instance, created, *args, **kwargs):
+    #     if created:
+    #         UserMembership.objects.get_or_create(user=instance)
+
+    #     user_membership, created = UserMembership.objects.get_or_create(user=instance)
+    #     # if the user has not signed up, create stripe id for them
+    #     if user_membership.stripe_id is None or user_membership.stripe_id == '':
+    #         new_customer_id = stripe.Customer.create(email=instance.email)
+    #         user_membership.stripe_id = new_customer_id['id']
+    #         # set_product_id = stripe.
+    #         user_membership.save()
     
-    post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
+    # post_save.connect(post_save_usermembership_create, sender=settings.AUTH_USER_MODEL)
 
 
-class Payment(models.Model):
-    # user = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
-    stripe_token = models.CharField(max_length=2000, blank=True)
+# class Subscription(models.Model):
+# 	user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
+# 	stripe_subscription_id = models.CharField(max_length=40)
+# 	active = models.BooleanField(default=True)
 
+# 	def __str__(self):
+# 		return self.user_membership.user.email
 
-class Subscription(models.Model):
-	user_membership = models.ForeignKey(UserMembership, on_delete=models.CASCADE)
-	stripe_subscription_id = models.CharField(max_length=40)
-	active = models.BooleanField(default=True)
+# 	@property
+# 	def get_created_date(self):
+# 		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+# 		return datetime.fromtimestamp(subscription.created)
 
-	def __str__(self):
-		return self.user_membership.user.email
-
-	@property
-	def get_created_date(self):
-		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-		return datetime.fromtimestamp(subscription.created)
-
-	@property
-	def get_next_billing_date(self):
-		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
-		return datetime.fromtimestamp(subscription.current_period_end)
+# 	@property
+# 	def get_next_billing_date(self):
+# 		subscription = stripe.Subscription.retrieve(self.stripe_subscription_id)
+# 		return datetime.fromtimestamp(subscription.current_period_end)

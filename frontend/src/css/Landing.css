@@ -16,3 +16,38 @@
 .hero-div > h2 {
     top: 28px;
 }
+.landing {
+  display: flex;
+  width: 100%;
+}
+
+.landing-title {
+  color: #604CB0;
+  font-size: 7rem;
+  position: relative;
+  letter-spacing: -0.3px;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(245, 245, 245, 0.6);
+}
+
+.landing-copy {
+  color: #312C4B;
+  font-size: 3.2rem;
+  position: relative;
+  letter-spacing: -0.2px;
+}
+
+.landing-form {
+  padding-top: 45px;
+  margin-left: 10px;
+}
+
+.landing-form > form {
+    box-shadow: 2px 2px 5px 0px #C7D5E2;
+}
+
+.landing a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

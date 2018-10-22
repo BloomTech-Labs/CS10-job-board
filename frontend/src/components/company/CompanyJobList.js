@@ -4,7 +4,6 @@ import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Men
 import { withRouter } from 'react-router-dom';
 import { CompanyJobCounter, CompanyJobEdit } from '../';
 
-const FormItem = Form.Item;
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
 
@@ -63,8 +62,8 @@ t
                 count: response.data.count,
                 next: response.data.next,
                 previous: response.data.previous,
-                published: response.data.results.filter(job => job.is_active == true),
-                unpublished: response.data.results.filter(jobs => jobs.is_active == false),
+                published: response.data.results.filter(job => job.is_active === true),
+                unpublished: response.data.results.filter(jobs => jobs.is_active === false),
                 loading: false
             });
             this.setState({
@@ -264,17 +263,17 @@ t
         } = this.state;    
 
         const displayDensityMenu = (
-           <Menu>
+           <Menu className="company-job-list-density">
                <Menu.Item key="0">
-                   <a href="#" onClick={(e) => this.setPaddingCompact(e)}>Compact</a>
+                   <div onClick={(e) => this.setPaddingCompact(e)}>Compact</div>
                </Menu.Item>
 
                <Menu.Item key="1">
-                   <a href="#" onClick={(e) => this.setPaddingNormal(e)}>Normal</a>
+                   <div onClick={(e) => this.setPaddingNormal(e)}>Normal</div>
                </Menu.Item>
 
                <Menu.Item key="2">
-                   <a href="#" onClick={(e) => this.setPaddingLarge(e)}>Large</a>
+                   <div onClick={(e) => this.setPaddingLarge(e)}>Large</div>
                </Menu.Item>
            </Menu>
            );
