@@ -103,6 +103,7 @@ class App extends React.Component {
     const home = location === '/';
     const company = location === '/company';
     const signin = location === '/signin';
+    const job = location.includes('/jobs/');
 
     return (
       <div className="App">
@@ -138,7 +139,7 @@ class App extends React.Component {
                 <div className="home-navigation">
                   <div>
                     <div className="whitespace"></div>
-                    <NavLink to='/'><Button type="secondary">Job Seeker</Button></NavLink>
+                    <NavLink to='/signin'><Button type="secondary">Job Seeker</Button></NavLink>
                     <NavLink to='/signin'><Button type="primary">Sign In</Button></NavLink>
                   </div>
                 </div>
@@ -149,6 +150,19 @@ class App extends React.Component {
                   <div>
                     <div className="whitespace"></div>
                     <NavLink to='/company'><Button type="secondary">Post a Job</Button></NavLink>
+                    <NavLink to='/'><Button type="primary">Jobs</Button></NavLink>
+                  </div>
+                </div>
+              ) : (null)}
+
+              {job ? (
+                <div className="home-navigation">
+                  <div>
+                    <NavLink to='/' className="h1"><h1>Open Jobs</h1></NavLink>
+                    <h3>No Degree, No Problem.<br/>Your next job is just a click away.</h3>
+                    <div className="whitespace"></div>
+                    <NavLink to='/company'><Button type="secondary">Post a Job</Button></NavLink>
+                    <NavLink to='/signin'><Button type="primary">Sign In</Button></NavLink>
                   </div>
                 </div>
               ) : (null)}
