@@ -39,7 +39,11 @@ class CheckoutForm extends React.Component {
           this.props.logOut(e, `Error authenticating account. Please log in again.`);
         } else {
           const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-          axios.post(`${process.env.REACT_APP_API}pay/`, {stripe_token: stripe_token, user: this.props.user}, requestOptions )
+          axios.post(`${process.env.REACT_APP_API}pay/`, {
+              stripe_token: stripe_token,
+              user: this.props.user,
+              purchased: this.props.product 
+            }, requestOptions )
             .then(response => {
               console.log(response);
               this.setState({ message: `Payment successful!`});
