@@ -65,6 +65,8 @@ class Account extends React.Component {
                 <Divider />
                 <LogoutAll logOut={this.props.logOut} setMessages={this.setMessages}/>
                 <Divider />
+
+                <h4>Register as a company :</h4>
                 <Popconfirm
                 title="Are you sure you want to convert your account?"
                 okText="Yes"
