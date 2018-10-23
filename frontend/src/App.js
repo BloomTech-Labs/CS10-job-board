@@ -72,10 +72,13 @@ class App extends React.Component {
     } else if (data.user.is_employer) {
       const path = this.props.history.location.pathname;
       if (path === '/' || path === '/signin' || path === '/company') {
-         this.props.history.push('/dashboard');
+        this.props.history.push('/dashboard');
       }
     } else {
-      this.props.history.push('/jobs');
+      const path = this.props.history.location.pathname;
+      if (path === '/' || path === '/signin' || path === '/company') {
+        this.props.history.push('/jobs');
+      }
     }
   }
 
