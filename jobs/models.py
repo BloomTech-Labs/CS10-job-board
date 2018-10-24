@@ -105,6 +105,7 @@ class UserMembership(models.Model):
     stripe_id = models.CharField(max_length=40)
     SUBSCRIPTION_CHOICES = (('F', 'Free'), ('plan_DoNu8JmqFRMrze', 'Unlimited'))
     subscription = models.CharField(choices=SUBSCRIPTION_CHOICES, default='F', max_length=30)
+    job_credit = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
         return self.user.email
@@ -115,7 +116,7 @@ class UserMembership(models.Model):
 class UserPayment(models.Model):
     user = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     stripe_token = models.CharField(max_length=128, blank=True)
-    PAYMENT_CHOICES = (('sku_DoNhM1EGgKGLeg', '1 Post'), ('sku_DoNp2frdbkieqn', '12 Posts'), ('plan_DoNu8JmqFRMrze', 'Unlimited Posts'))
+    PAYMENT_CHOICES = (('sku_DoNhM1EGgKGLeg', '1 Post'), ('plan_DoNu8JmqFRMrze', 'Unlimited Posts'))
     purchased = models.CharField(choices=PAYMENT_CHOICES, max_length=30)
     created_date = models.DateTimeField(default=timezone.now, editable=False)
 
