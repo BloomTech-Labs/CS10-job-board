@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import { Alert, Form, Input } from 'antd';
+import { Alert, Form, Input, InputNumber } from 'antd';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 
 const FormItem = Form.Item;
@@ -11,7 +11,8 @@ class CheckoutForm extends React.Component {
     this.state = {
       pay: false,
       error: null,
-      message: null
+      message: null,
+      quantity: null
     }
   }
 
@@ -21,6 +22,10 @@ class CheckoutForm extends React.Component {
 
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  updateQuantity = e => {
+    this.setState({ quantity: e });
   }
 
   handlePayment = e => {
@@ -42,7 +47,8 @@ class CheckoutForm extends React.Component {
           axios.post(`${process.env.REACT_APP_API}pay/`, {
               stripe_token: stripe_token,
               user: this.props.user,
-              purchased: this.props.product 
+              purchased: this.props.product,
+              quantity: this.state.quantity
             }, requestOptions )
             .then(response => {
               this.setState({ message: `Payment successful!`});
@@ -58,7 +64,7 @@ class CheckoutForm extends React.Component {
   }
 
   render() {
-    const { error, message, pay } = this.state;
+    const { error, message, pay, quantity } = this.state;
     const { getFieldDecorator } = this.props.form;
 
     return (
@@ -79,6 +85,19 @@ class CheckoutForm extends React.Component {
               <Input placeholder="Full name on the card" name="cardholder_name" onChange={this.onChange}/>
             )}
           </FormItem>
+
+          {this.props.product === `sku_DoNhM1EGgKGLeg` ? (
+            <FormItem label="Number of jobs" style={{ width: "90px"}}>
+              <InputNumber
+                onChange={this.updateQuantity} name="quantity" id="quantity"
+                step={1}
+                min={1}
+                defaultValue={1}
+                max={11}
+                value={quantity}
+              />
+            </FormItem>
+          ) : (null)}
         <div style={{ margin: "40px 0"}}>
             <CardElement />
         </div>
