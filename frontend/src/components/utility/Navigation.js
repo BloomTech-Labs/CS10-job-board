@@ -12,10 +12,13 @@ const Navigation = props => {
                 <NavLink to='/account'>Account</NavLink>
             </Menu.Item>
 
-            <Menu.Item key="1">
-                <Icon type="dollar"/>
-                <NavLink to='/billing'>Billing</NavLink>
-            </Menu.Item>
+            {employer ? (
+                <Menu.Item key="1">
+                    <Icon type="dollar"/>
+                    <NavLink to='/billing'>Billing</NavLink>
+                </Menu.Item>
+            ) : (null)}
+            
             <Menu.Divider />
             <Menu.Item key="3">
                 <Icon type="poweroff"/>

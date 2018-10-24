@@ -102,6 +102,7 @@
     border-color: #604CB0;
     background: none;
     color: #604CB0;
+    align-self: flex-start;
 }
 
 .ant-btn-secondary:hover {
