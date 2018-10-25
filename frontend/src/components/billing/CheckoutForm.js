@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import numeral from "numeral";
-import { Alert, Form, Input, InputNumber } from 'antd';
+import { Alert, Form, Input, InputNumber, Button } from 'antd';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 
 const FormItem = Form.Item;
@@ -14,7 +14,8 @@ class CheckoutForm extends React.Component {
       error: null,
       message: null,
       quantity: 1,
-      total: null
+      total: null,
+      loading: null
     }
   }
 
@@ -32,7 +33,7 @@ class CheckoutForm extends React.Component {
 
   handlePayment = e => {
     e.preventDefault();
-    this.setState({ error: null, message: null });
+    this.setState({ error: null, message: null, loading: true });
     const { cardholder_name } = this.state;
     // Tokenize purchase with stripe object from injectStripe component
     this.props.stripe.createToken({ name: `${cardholder_name}` })
@@ -53,20 +54,20 @@ class CheckoutForm extends React.Component {
               quantity: this.state.quantity
             }, requestOptions )
             .then(response => {
-              this.setState({ message: `Payment successful!`});
+              this.setState({ message: `Payment successful!`, loading: false});
             })
             .catch(err => {
-              this.setState({ error: `Problem saving your payment. Try again.`});
+              this.setState({ error: `Problem saving your payment. Try again.`, loading: false});
             });
         }
       })
       .catch(err => {
-        this.setState({ error: `Problem processing your payment. Try again.`})
+        this.setState({ error: `Problem processing your payment. Try again.`, loading: false});
       });
   }
 
   render() {
-    const { error, message, pay, quantity, total } = this.state;
+    const { error, message, quantity, total, loading } = this.state;
     const { getFieldDecorator } = this.props.form;
 
     return (
@@ -102,11 +103,11 @@ class CheckoutForm extends React.Component {
             </FormItem>
           ) : (null)}
 
-        <div style={{ margin: "40px 0"}}>
+        <div className="stripe-card">
             <CardElement />
         </div>
-        <h3>Total: {total ? `${total}` : `$${quantity * this.props.price}`}</h3>
-        <button onClick={this.handlePayment}>Buy</button>
+        <h3 className="total">Total: {total ? `${total}` : `$${quantity * this.props.price}`}</h3>
+        <Button type="primary" loading={loading} onClick={this.handlePayment}>Buy</Button>
       </div>
     );
   }
