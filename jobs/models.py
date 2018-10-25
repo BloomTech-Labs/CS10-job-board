@@ -116,8 +116,13 @@ class UserMembership(models.Model):
 class UserPayment(models.Model):
     user = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     stripe_token = models.CharField(max_length=128, blank=True)
-    PAYMENT_CHOICES = (('sku_DoNhM1EGgKGLeg', '1 Post'), ('plan_DoNu8JmqFRMrze', 'Unlimited Posts'))
+    PAYMENT_CHOICES = (
+        ('sku_DoNhM1EGgKGLeg', '1 Post'),
+        ('sku_DoNp2frdbkieqn', '12 Posts'),
+        ('plan_DoNu8JmqFRMrze', 'Unlimited Posts')
+    )
     purchased = models.CharField(choices=PAYMENT_CHOICES, max_length=30)
+    quantity = models.IntegerField(default=1)
     created_date = models.DateTimeField(default=timezone.now, editable=False)
 
     def __str__(self):
@@ -157,7 +162,8 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
             items=[
                 {
                     "type": "sku",
-                    "parent" : f'{instance.purchased}'
+                    "parent": f'{instance.purchased}',
+                    "quantity": f'{instance.quantity}'
                 }
             ]
         )
