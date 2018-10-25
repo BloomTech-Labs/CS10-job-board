@@ -12,7 +12,8 @@ class CheckoutForm extends React.Component {
       pay: false,
       error: null,
       message: null,
-      quantity: null
+      quantity: null,
+      total: null
     }
   }
 
@@ -25,7 +26,7 @@ class CheckoutForm extends React.Component {
   }
 
   updateQuantity = e => {
-    this.setState({ quantity: e });
+    this.setState({ quantity: e, total: e * this.props.price });
   }
 
   handlePayment = e => {
@@ -64,7 +65,7 @@ class CheckoutForm extends React.Component {
   }
 
   render() {
-    const { error, message, pay, quantity } = this.state;
+    const { error, message, pay, quantity, total } = this.state;
     const { getFieldDecorator } = this.props.form;
 
     return (
@@ -99,10 +100,11 @@ class CheckoutForm extends React.Component {
               />
             </FormItem>
           ) : (null)}
-          
+
         <div style={{ margin: "40px 0"}}>
             <CardElement />
         </div>
+        <h3>Total: {total ? `$${total}` : `$0`}</h3>
         <button onClick={this.handlePayment}>Buy</button>
       </div>
     );
