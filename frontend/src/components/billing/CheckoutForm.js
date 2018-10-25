@@ -86,6 +86,7 @@ class CheckoutForm extends React.Component {
             )}
           </FormItem>
 
+          {/* If product is 1 Job, show Quantity to buy multiple */}
           {this.props.product === `sku_DoNhM1EGgKGLeg` ? (
             <FormItem label="Number of jobs" style={{ width: "90px"}}>
               <InputNumber
@@ -98,6 +99,7 @@ class CheckoutForm extends React.Component {
               />
             </FormItem>
           ) : (null)}
+          
         <div style={{ margin: "40px 0"}}>
             <CardElement />
         </div>
