@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from 'axios';
+import numeral from "numeral";
 import { Alert, Form, Input, InputNumber } from 'antd';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 
@@ -12,7 +13,7 @@ class CheckoutForm extends React.Component {
       pay: false,
       error: null,
       message: null,
-      quantity: null,
+      quantity: 1,
       total: null
     }
   }
@@ -26,7 +27,7 @@ class CheckoutForm extends React.Component {
   }
 
   updateQuantity = e => {
-    this.setState({ quantity: e, total: e * this.props.price });
+    this.setState({ quantity: e, total: numeral(e * this.props.price).format('$0.00') });
   }
 
   handlePayment = e => {
@@ -104,7 +105,7 @@ class CheckoutForm extends React.Component {
         <div style={{ margin: "40px 0"}}>
             <CardElement />
         </div>
-        <h3>Total: {total ? `$${total}` : `$0`}</h3>
+        <h3>Total: {total ? `${total}` : `$${quantity * this.props.price}`}</h3>
         <button onClick={this.handlePayment}>Buy</button>
       </div>
     );
