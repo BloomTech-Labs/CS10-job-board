@@ -2,20 +2,12 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Elements, StripeProvider} from 'react-stripe-elements';
 import {CheckoutForm} from '../';
-
-const CheckoutCard = props => (
-    <div className="checkout-card">
-        <h1>{props.title}</h1>
-        <h3>{`$${props.price}`}</h3>
-        <button onClick={props.hideOthers} name={`${props.sku}`} data-price={props.price}>Select</button>
-    </div>
-)
+import { Icon } from 'antd';
 
 class Billing extends React.Component {
     state = {
         products: null,
-        activeSku: null,
-        activePrice: null
+        activeProduct: null
     }
 
     componentDidMount() {
@@ -35,47 +27,73 @@ class Billing extends React.Component {
     }
 
     hideOthers = e => {
-        this.setState({ activeSku: e.target.name, activePrice: e.target.dataset.price });
+        const { products } = this.state;
+        this.setState({ activeProduct: products.filter(product => product.sku === e.target.name ) });
     }
 
     render() {
-        const { products, activePrice, activeSku } = this.state;
+        const { products, activeProduct } = this.state;
+        const CheckoutCard = props => (
+            <div className="checkout-card">
+                <h1>{props.title}</h1>
+                <h3>{`$${props.price}`}</h3>
+                <button onClick={props.hideOthers} name={`${props.sku}`}>Select</button>
+            </div>
+        );
+        const checkoutCardActive = {
+            position: "absolute",
+            left: "0",
+            transition: "all 0.6s ease"
+        }
+
 
         return (
             <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_KEY}`}>
                 <div className="billing">
 
-                    { products ? (
+                    { products && !activeProduct ? (
                         products.map(product => {
                             return (
-                                <div className="checkout-card-container">
-                                    {
-                                        activeSku === null || activeSku === product.sku ? (
-                                            <CheckoutCard 
-                                                key={product.sku}
-                                                title={product.title}
-                                                price={product.price}
-                                                sku={product.sku}
-                                                token={this.props.token}
-                                                logOut={this.props.logOut}
-                                                hideOthers={this.hideOthers}
-                                                />
-                                        ) : (null)
-                                    }
+                                <div className="checkout-card-container" key={product.sku}>
+                                    <CheckoutCard 
+                                        title={product.title}
+                                        price={product.price}
+                                        sku={product.sku}
+                                        token={this.props.token}
+                                        logOut={this.props.logOut}
+                                        hideOthers={this.hideOthers}
+                                    />
                                 </div>
                             )
                         })
                     ) : (null)
                     }
-                    <div className="checkout-card-container">
-                        <Elements>
-                            <CheckoutForm 
-                                user={this.props.user}
-                                product={`${activeSku}`}
-                                price={activePrice}
-                            />
-                        </Elements>
-                    </div>
+
+                    { activeProduct ? (
+                        <div className="active-product">
+                            <div className="checkout-card-container">
+                                <CheckoutCard 
+                                    title={activeProduct.title}
+                                    price={activeProduct.price}
+                                    sku={activeProduct.sku}
+                                    token={this.props.token}
+                                    logOut={this.props.logOut}
+                                    hideOthers={this.hideOthers}
+                                />
+                                <Icon type="close" />
+                            </div>
+                            <div className="checkout-form-container">
+                                <Elements>
+                                    <CheckoutForm 
+                                        user={this.props.user}
+                                        sku={`${activeProduct.sku}`}
+                                        price={activeProduct.price}
+                                    />
+                                </Elements>
+                            </div>
+                        </div>
+                    ) : (null)}
+
                 </div>
             </StripeProvider>
         );
