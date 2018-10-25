@@ -8,13 +8,30 @@
     display: flex;
     flex-flow: column wrap;
     width: 100%;
-    max-width: 320px;
-    min-width: 300px;
     background: white;
     margin: 10px;
     border-radius: 4px;
     padding: 20px;
-    max-height: 480px;
+}
+
+.checkout-card-container {
+    flex: 1 1;
+    margin: 0 5px;
+    max-width: 300px;
+}
+
+.checkout-form-container {
+    flex: 1 1;
+    margin: 0 15px;
+    padding: 10px;
+    max-width: 340px;
+}
+
+.active-product {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: flex-start;
 }
 
 .checkout-card h1,
