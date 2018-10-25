@@ -28,7 +28,7 @@ class Billing extends React.Component {
 
     hideOthers = e => {
         const { products } = this.state;
-        this.setState({ activeProduct: products.filter(product => product.sku === e.target.name ) });
+        this.setState({ activeProduct: products.filter(product => product.sku === e.target.name )[0] });
     }
 
     render() {
