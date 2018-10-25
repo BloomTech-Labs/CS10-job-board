@@ -64,7 +64,7 @@ class Billing extends React.Component {
                 )}
             </div>
         );
-
+        
         return (
             <StripeProvider apiKey={`${process.env.REACT_APP_STRIPE_KEY}`}>
                 <div className="billing">
@@ -89,40 +89,39 @@ class Billing extends React.Component {
                     }
 
                     {activeProduct ? (
-
-                        <div className="active-product">
-                            <div className="checkout-card-container">
-                                <h2>Selected:</h2>
-                                <Icon type="close" onClick={this.closeActive}/>
-                                <CheckoutCard 
-                                    title={activeProduct.title}
-                                    price={activeProduct.price}
-                                    description={activeProduct.description}
-                                    sku={activeProduct.sku}
-                                    token={this.props.token}
-                                    logOut={this.props.logOut}
-                                    hideOthers={this.hideOthers}
-                                    active={true}
-                                />
-                            </div>
-                            <CSSTransition
-                                in={active}
-                                timeout={1000}
-                                classNames="checkout-form-container"
-                            >
-                                <div className="checkout-form-container">
-                                    <Elements>
-                                        <CheckoutForm 
-                                            user={this.props.user}
-                                            sku={`${activeProduct.sku}`}
-                                            price={activeProduct.price}
-                                        />
-                                    </Elements>
-                                </div>
-                            </CSSTransition>
+                        <div className="checkout-card-container">
+                            <h2>Selected:</h2>
+                            <Icon type="close" onClick={this.closeActive}/>
+                            <CheckoutCard 
+                                title={activeProduct.title}
+                                price={activeProduct.price}
+                                description={activeProduct.description}
+                                sku={activeProduct.sku}
+                                token={this.props.token}
+                                logOut={this.props.logOut}
+                                hideOthers={this.hideOthers}
+                                active={true}
+                            />
                         </div>
-
                     ) : (null)}
+
+                    <CSSTransition
+                        in={active}
+                        timeout={1000}
+                        classNames="checkout-form-container"
+                    >
+                        <div className="checkout-form-container">
+                            {activeProduct ? (
+                                <Elements>
+                                    <CheckoutForm 
+                                        user={this.props.user}
+                                        sku={`${activeProduct.sku}`}
+                                        price={activeProduct.price}
+                                        />
+                                </Elements>
+                            ) : (null)}
+                        </div>
+                    </CSSTransition>
 
                 </div>
             </StripeProvider>
