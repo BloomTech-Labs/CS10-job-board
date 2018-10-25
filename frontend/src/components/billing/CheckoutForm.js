@@ -48,7 +48,7 @@ class CheckoutForm extends React.Component {
           axios.post(`${process.env.REACT_APP_API}pay/`, {
               stripe_token: stripe_token,
               user: this.props.user,
-              purchased: this.props.product,
+              purchased: this.props.sku,
               quantity: this.state.quantity
             }, requestOptions )
             .then(response => {
@@ -88,7 +88,7 @@ class CheckoutForm extends React.Component {
           </FormItem>
 
           {/* If product is 1 Job, show Quantity to buy multiple */}
-          {this.props.product === `sku_DoNhM1EGgKGLeg` ? (
+          {this.props.sku === `sku_DoNhM1EGgKGLeg` ? (
             <FormItem label="Number of jobs" style={{ width: "90px"}}>
               <InputNumber
                 onChange={this.updateQuantity} name="quantity" id="quantity"
