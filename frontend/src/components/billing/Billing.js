@@ -31,6 +31,10 @@ class Billing extends React.Component {
         this.setState({ activeProduct: products.filter(product => product.sku === e.target.name )[0] });
     }
 
+    closeActive = e => {
+        this.setState({ activeProduct: null });
+    }
+
     render() {
         const { products, activeProduct } = this.state;
         const CheckoutCard = props => (
@@ -72,6 +76,7 @@ class Billing extends React.Component {
                     { activeProduct ? (
                         <div className="active-product">
                             <div className="checkout-card-container">
+                                <Icon type="close" onClick={this.closeActive}/>
                                 <CheckoutCard 
                                     title={activeProduct.title}
                                     price={activeProduct.price}
@@ -80,7 +85,6 @@ class Billing extends React.Component {
                                     logOut={this.props.logOut}
                                     hideOthers={this.hideOthers}
                                 />
-                                <Icon type="close" />
                             </div>
                             <div className="checkout-form-container">
                                 <Elements>
