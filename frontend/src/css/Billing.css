@@ -4,13 +4,29 @@
     width: 100%;
 }
 
-.billing .checkout-card {
+.checkout-card {
     display: flex;
     flex-flow: column wrap;
-    width: 25%;
+    width: 100%;
+    max-width: 320px;
+    min-width: 300px;
     background: white;
     margin: 10px;
     border-radius: 4px;
     padding: 20px;
-    max-height: 400px;
+    max-height: 480px;
+}
+
+.checkout-card h1,
+.checkout-card h3 {
+    margin: 0;
+}
+
+.checkout-form {
+    margin-top: 20px;
+}
+
+.checkout-form button {
+    margin-top:  25px;
+    align-self: flex-end;
 }
