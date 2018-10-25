@@ -4,15 +4,7 @@
     width: 100%;
 }
 
-.checkout-card {
-    display: flex;
-    flex-flow: column wrap;
-    width: 100%;
-    background: white;
-    margin: 10px;
-    border-radius: 4px;
-    padding: 20px;
-}
+/* Checkout Card Container */
 
 .checkout-card-container {
     flex: 1 1;
@@ -21,12 +13,32 @@
     max-width: 300px;
 }
 
-.checkout-form-container {
-    flex: 1 1;
-    margin: 0 15px;
-    padding: 10px;
-    max-width: 340px;
+.checkout-card {
+    display: flex;
+    flex-flow: column wrap;
+    justify-content: space-between;
+    width: 100%;
+    height: 340px;
+    background: white;
+    margin: 10px;
+    border-radius: 4px;
+    padding: 20px;
 }
+
+.checkout-card h1,
+.checkout-card h3 {
+    margin: 0;
+}
+
+.checkout-card p {
+    margin-top: 15px;
+}
+
+.checkout-card button {
+    align-self: flex-end;
+}
+
+/* Active product */
 
 .active-product {
     display: flex;
@@ -42,9 +54,19 @@
     font-size: 18px;
 }
 
-.checkout-card h1,
-.checkout-card h3 {
-    margin: 0;
+.active-product .anticon-check-circle {
+    font-size: 24px;
+    color: #52C41A;
+    align-self: flex-end;
+}
+
+/* Stripe form */
+
+.checkout-form-container {
+    flex: 1 1;
+    margin: 0 15px;
+    padding: 10px;
+    max-width: 340px;
 }
 
 .checkout-form {
@@ -52,6 +74,22 @@
 }
 
 .checkout-form button {
-    margin-top:  25px;
+    margin-top: 25px;
     align-self: flex-end;
+}
+
+/* CSS Transitions classes */
+
+.active-product-fade-enter {
+    opacity: 0;
+}
+
+.active-product-fade-enter-done {
+    opacity: 0;
+}
+
+.checkout-card-container h2 {
+    position: absolute;
+    top: 37px;
+    left: -110px;
 }
