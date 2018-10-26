@@ -20,10 +20,35 @@
     font-size: 18px;
 }
 
+.checkout-card-container h2 {
+    position: absolute;
+    top: 28px;
+    left: -110px;
+}
+
 .checkout-card-container .anticon-check-circle {
     font-size: 24px;
     color: #52C41A;
     align-self: flex-end;
+}
+
+    /* Transition classes */
+
+.active-card-enter {
+    position: relative;
+    /* transition: all 2s ease; */
+    left: -30px;
+    opacity: 0;
+}
+
+.active-card-enter-active {
+    opacity: 1;
+    left: 0;
+    transition: all 0.3s ease;
+}
+
+.active-card-enter-done {
+    position: relative;
 }
 
 /* Checkout Card */
@@ -57,15 +82,6 @@
 
 .checkout-card button {
     align-self: flex-end;
-}
-
-/* Active product */
-
-.active-product {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    align-items: flex-start;
 }
 
 /* Stripe form */
@@ -104,35 +120,18 @@
 
 .checkout-form-container-enter {
     position: relative;
-    right: 60px;
+    right: 40px;
     opacity: 1;
     visibility: visible;
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 }
 
 .checkout-form-container-enter-active {
     right: 0;
-    transition: all 0.3 ease;
 }
 
 .checkout-form-container-enter-done {
     position: relative;
     opacity: 1;
     visibility: visible;
-}
-
-/* CSS Transitions classes */
-
-.active-product-fade-enter {
-    opacity: 0;
-}
-
-.active-product-fade-enter-done {
-    opacity: 0;
-}
-
-.checkout-card-container h2 {
-    position: absolute;
-    top: 37px;
-    left: -110px;
 }
