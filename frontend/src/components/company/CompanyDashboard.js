@@ -13,7 +13,7 @@ class CompanyDashboard extends Component {
         return (
             <div className="dashboard">
                 <CompanyJobList />
-                <CompanyJobBalance />
+                <CompanyJobBalance {...this.props}/>
             </div>
         );
     }
