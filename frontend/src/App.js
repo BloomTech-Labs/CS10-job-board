@@ -119,7 +119,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { loggedIn, error, message, token, jobs, employer, user } = this.state;
+    const { loggedIn, error, message, token, jobs, employer, user, stripe_id, subscription, job_credit } = this.state;
     let location = this.props.history.location.pathname;
     const home = location === '/';
     const company = location === '/company';
@@ -202,12 +202,29 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <CompanyAccount token={token} logOut={this.logOut} user={user}/>} />            
+              <Route path="/account" render={() => {
+                <CompanyAccount 
+                  token={token}
+                  logOut={this.logOut}
+                  user={user}
+                  job_credit={job_credit}
+                  subscription={subscription}
+                  stripe_id={stripe_id}
+                 />
+              }} />            
               ) : (
               <Route path="/account" render={() => <Account token={token} logIn={this.logIn} logOut={this.logOut} user={user}/>} />
             )}
             {employer ? (
-              <Route exact path="/dashboard" render={() => <CompanyDashboard token={token} logOut={this.logOut}/>} />
+              <Route exact path="/dashboard" render={() => {
+                <CompanyDashboard 
+                  token={token} 
+                  logOut={this.logOut}
+                  user={user}
+                  job_credit={job_credit}
+                  subscription={subscription}
+                  stripe_id={stripe_id}/>
+              }} />
             ) : (
               <Route exact path="/dashboard" render={() => <Dashboard token={token} logOut={this.logOut}/>} />
             )}
