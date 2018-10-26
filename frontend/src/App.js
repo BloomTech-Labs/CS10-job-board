@@ -119,7 +119,7 @@ class App extends React.Component {
   }
 
   render() {
-    const { loggedIn, error, message, token, jobs, employer, user, stripe_id, subscription, job_credit } = this.state;
+    const { loggedIn, error, message, jobs, employer, user, stripe_id, subscription, job_credit } = this.state;
     let location = this.props.history.location.pathname;
     const home = location === '/';
     const company = location === '/company';
@@ -138,7 +138,7 @@ class App extends React.Component {
 
         {loggedIn ? (
           <div className="nav-wrapper">
-            <Navigation logOut={this.logOut} employer={employer} token={token} user={user}/>
+            <Navigation logOut={this.logOut} employer={employer} user={user}/>
           </div>
         ) : (
             // Navigation for unauthenticated users
@@ -204,7 +204,6 @@ class App extends React.Component {
             {employer ? (
               <Route path="/account" render={() =>
                 <CompanyAccount 
-                  token={token}
                   logOut={this.logOut}
                   user={user}
                   job_credit={job_credit}
@@ -213,12 +212,11 @@ class App extends React.Component {
                  />
               } />            
               ) : (
-              <Route path="/account" render={() => <Account token={token} logIn={this.logIn} logOut={this.logOut} user={user}/>} />
+              <Route path="/account" render={() => <Account logIn={this.logIn} logOut={this.logOut} user={user}/>} />
             )}
             {employer ? (
               <Route exact path="/dashboard" render={() => 
                 <CompanyDashboard 
-                  token={token} 
                   logOut={this.logOut}
                   user={user}
                   job_credit={job_credit}
@@ -226,9 +224,9 @@ class App extends React.Component {
                   stripe_id={stripe_id}/>
               } />
             ) : (
-              <Route exact path="/dashboard" render={() => <Dashboard token={token} logOut={this.logOut}/>} />
+              <Route exact path="/dashboard" render={() => <Dashboard logOut={this.logOut}/>} />
             )}
-            <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut} user={user}/>} />
+            <Route path="/billing" render={() => <Billing logOut={this.logOut} user={user}/>} />
             <Route component={NoMatch} />
           </Switch>
         </div>
