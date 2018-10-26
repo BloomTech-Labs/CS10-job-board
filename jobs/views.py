@@ -365,7 +365,7 @@ class UserPaymentView(generics.CreateAPIView):
     #         return {}
 
 
-class UserMembership(generics.CreateAPIView, generics.RetrieveUpdateAPIView):
+class UserMembershipView(generics.CreateAPIView, generics.RetrieveUpdateAPIView):
     model = UserMembership
     serializer_class = UserMembershipSerializer
     authentication_classes = (
@@ -375,14 +375,9 @@ class UserMembership(generics.CreateAPIView, generics.RetrieveUpdateAPIView):
     )
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get_queryset(self):
-        user = self.request.user.pk
-        print(user)
-        return UserMembership.objects.filter(user=user)
-
     # Override retrieve Django REST mixin
     def retrieve(self, request, *args, **kwargs):
-        instance = UserMembership.objects.filter(user=request.user.pk).first()
+        instance = UserMembership.objects.filter(user_id=request.user.pk).first()
         if instance is not None:
             serializer = self.get_serializer(instance)
             return Response(serializer.data)
