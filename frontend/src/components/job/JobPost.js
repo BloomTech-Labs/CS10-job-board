@@ -36,38 +36,34 @@ class JobPost extends React.Component {
     this.setState({ error: null, message: null});
     // Authentication
     const token = localStorage.getItem('token');
-    if (token !== this.props.token) {
-      this.props.logOut(e, `Error authenticating account. Please log in again.`);
-    } else {
-      // Validation
-      if (company_name && title && description && job_location && requirements && min_salary && max_salary) {
-        
-        if (min_salary > max_salary) {
-          this.setState({ error: `Maximum Salary is less than Minimum Salary`});
-        } else if (tags.length > 50) {
-          this.setState({ error: `No more than 50 tags`});
-        } else {
-          // POST Request
-          const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-          axios.post(`${process.env.REACT_APP_API}company/jobs/`, this.state, requestOptions)
-            .then(response => {
-              if (is_active) {
-                this.setState({ message: `Job Posted!` });
-              } else {
-                this.setState({ message: `Draft Saved!`});
-              }
-              setTimeout(() => {
-                this.clearForm();
-                this.toggleFormModal();
-              }, 2500);
-            })
-            .catch(err => {
-              this.setState({ error: `Error processing request. Please try again.`})
-            });
-        }
+    // Validation
+    if (company_name && title && description && job_location && requirements && min_salary && max_salary) {
+      
+      if (min_salary > max_salary) {
+        this.setState({ error: `Maximum Salary is less than Minimum Salary`});
+      } else if (tags.length > 50) {
+        this.setState({ error: `No more than 50 tags`});
       } else {
-        this.setState({ error: `Please fill out all of the required fields`});
+        // POST Request
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        axios.post(`${process.env.REACT_APP_API}company/jobs/`, this.state, requestOptions)
+          .then(response => {
+            if (is_active) {
+              this.setState({ message: `Job Posted!` });
+            } else {
+              this.setState({ message: `Draft Saved!`});
+            }
+            setTimeout(() => {
+              this.clearForm();
+              this.toggleFormModal();
+            }, 2500);
+          })
+          .catch(err => {
+            this.setState({ error: `Error processing request. Please try again.`})
+          });
       }
+    } else {
+      this.setState({ error: `Please fill out all of the required fields`});
     }
   }
 

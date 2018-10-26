@@ -78,7 +78,6 @@ class Billing extends React.Component {
                                         price={product.price}
                                         description={product.description}
                                         sku={product.sku}
-                                        token={this.props.token}
                                         logOut={this.props.logOut}
                                         hideOthers={this.hideOthers}
                                     />
@@ -103,7 +102,6 @@ class Billing extends React.Component {
                                 price={activeProduct.price}
                                 description={activeProduct.description}
                                 sku={activeProduct.sku}
-                                token={this.props.token}
                                 logOut={this.props.logOut}
                                 hideOthers={this.hideOthers}
                                 active={true}
