@@ -105,14 +105,11 @@ class JobPreviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'company_logo', 'description', 'min_salary', 'max_salary')
 
 
-
-# Memberships & STripe
-
-
+# Memberships & Stripe
 class UserMembershipSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserMembership
-        fields = ('stripe_id', 'membership')
+        fields = ('stripe_id', 'subscription', 'job_credit')
 
 
 class UserPaymentViewSerializer(serializers.ModelSerializer):
