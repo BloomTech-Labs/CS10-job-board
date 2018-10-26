@@ -51,11 +51,11 @@ class CheckoutForm extends React.Component {
             this.setState({ message: `Payment successful!`, loading: false});
           })
           .catch(err => {
-            this.setState({ error: `Problem saving your payment. Try again.`, loading: false});
+            this.setState({ error: `Problem processing your payment. Try again.`, loading: false});
           });
       })
       .catch(err => {
-        this.setState({ error: `Problem processing your payment. Try again.`, loading: false});
+        this.setState({ error: `Problem processing your card. Try again.`, loading: false});
       });
   }
 
