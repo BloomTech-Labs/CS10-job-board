@@ -374,7 +374,7 @@ class UserMembershipView(generics.CreateAPIView, generics.RetrieveUpdateAPIView)
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
-
+  
     # Override retrieve Django REST mixin
     def retrieve(self, request, *args, **kwargs):
         instance = UserMembership.objects.filter(user_id=request.user.pk).first()
@@ -384,21 +384,20 @@ class UserMembershipView(generics.CreateAPIView, generics.RetrieveUpdateAPIView)
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-# def get_user_membership(id):
-#     user_membership = UserMembership.objects.filter(id=id)
-#     if user_membership.exists():
-#         return True
-#     return False
+    # Override update Django REST mixiin
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = UserMembership.objects.filter(user_id=request.user.pk).first()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
 
+        if getattr(instance, '_prefetched_objects_cache', None):
+            # If 'prefetch_related' has been applied to a queryset, we need to
+            # forcibly invalidate the prefetch cache on the instance.
+            instance._prefetched_objects_cache = {}
 
-# def get_user_subscription(request):
-#     user_subscription_qs = Subscription.objects.filter(
-#         user_membership=get_user_membership(request))
-#     if user_subscription_qs.exists():
-#         user_subscription = user_subscription_qs.first()
-#         return user_subscription
-#     return None
-
+        return Response(serializer.data)
 
 
 # def get_selected_membership(request):
