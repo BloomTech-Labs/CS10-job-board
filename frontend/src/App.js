@@ -202,7 +202,7 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => {
+              <Route path="/account" render={() =>
                 <CompanyAccount 
                   token={token}
                   logOut={this.logOut}
@@ -211,12 +211,12 @@ class App extends React.Component {
                   subscription={subscription}
                   stripe_id={stripe_id}
                  />
-              }} />            
+              } />            
               ) : (
               <Route path="/account" render={() => <Account token={token} logIn={this.logIn} logOut={this.logOut} user={user}/>} />
             )}
             {employer ? (
-              <Route exact path="/dashboard" render={() => {
+              <Route exact path="/dashboard" render={() => 
                 <CompanyDashboard 
                   token={token} 
                   logOut={this.logOut}
@@ -224,7 +224,7 @@ class App extends React.Component {
                   job_credit={job_credit}
                   subscription={subscription}
                   stripe_id={stripe_id}/>
-              }} />
+              } />
             ) : (
               <Route exact path="/dashboard" render={() => <Dashboard token={token} logOut={this.logOut}/>} />
             )}
