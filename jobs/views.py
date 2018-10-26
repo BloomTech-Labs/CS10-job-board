@@ -104,8 +104,7 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
         id = self.request.user.pk
         return User.objects.filter(id=id)
 
-    # Methods update, perform_update, partial_update, destroy, perform_destory
-    #   all from Django REST Framework source-code mixins:
+    # Methods update, destroy all from Django REST Framework source-code mixins:
     # https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py
     # To customize, must overwrite but also add in default source-code.
 
@@ -135,13 +134,6 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
 
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def partial_update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return self.update(request, *args, **kwargs)
-
     def destroy(self, request, *args, **kwargs):
         user = self.get_object()
         # Checks user id on request == user id making delete request:
@@ -151,9 +143,6 @@ class UserView(generics.RetrieveUpdateDestroyAPIView):
             return Response(message, status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def perform_destroy(self, instance):
-        instance.delete()
 
 
 # Resets the jwt_secret, invalidating all token issued
