@@ -13,6 +13,21 @@
     max-width: 300px;
 }
 
+.checkout-card-container .anticon-close {
+    position: absolute;
+    top: 20px;
+    right: 0px;
+    font-size: 18px;
+}
+
+.checkout-card-container .anticon-check-circle {
+    font-size: 24px;
+    color: #52C41A;
+    align-self: flex-end;
+}
+
+/* Checkout Card */
+
 .checkout-card {
     display: flex;
     flex-flow: column wrap;
@@ -30,8 +45,14 @@
     margin: 0;
 }
 
-.checkout-card p {
+.checkout-card ul {
     margin-top: 15px;
+    width: 96%;
+    list-style: none;
+}
+
+.checkout-card li {
+    margin-bottom: 8px;
 }
 
 .checkout-card button {
@@ -47,19 +68,6 @@
     align-items: flex-start;
 }
 
-.active-product .anticon-close {
-    position: absolute;
-    top: 20px;
-    right: 0px;
-    font-size: 18px;
-}
-
-.active-product .anticon-check-circle {
-    font-size: 24px;
-    color: #52C41A;
-    align-self: flex-end;
-}
-
 /* Stripe form */
 
 .checkout-form-container {
@@ -67,15 +75,50 @@
     margin: 0 15px;
     padding: 10px;
     max-width: 340px;
+    opacity: 0;
+    visibility: hidden;
+    align-self: flex-start;
+    position: absolute;
 }
 
 .checkout-form {
-    margin-top: 20px;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 340px;
+}
+
+.stripe-card {
+    margin: 25px 0 15px;
+}
+
+.checkout-form .total {
+    align-self: flex-end;
 }
 
 .checkout-form button {
     margin-top: 25px;
     align-self: flex-end;
+}
+
+/* Stripe form animations (<CSSTransitions/> classes) */
+
+.checkout-form-container-enter {
+    position: relative;
+    right: 60px;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.5s ease;
+}
+
+.checkout-form-container-enter-active {
+    right: 0;
+    transition: all 0.3 ease;
+}
+
+.checkout-form-container-enter-done {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
 }
 
 /* CSS Transitions classes */
