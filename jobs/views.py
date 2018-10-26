@@ -205,8 +205,7 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
     )
     permission_classes = (permissions.IsAuthenticated,)
 
-    # Methods update, perform_update, partial_update, destroy, perform_destory
-    #   all from Django REST Framework source-code mixins:
+    # Methods update, destroy from Django REST Framework source-code mixins:
     # https://github.com/encode/django-rest-framework/blob/master/rest_framework/mixins.py
     # To customize, must overwrite but also add in default source-code.
 
@@ -325,24 +324,6 @@ class UserPaymentView(generics.CreateAPIView):
     )
     permission_classes = (permissions.IsAuthenticated,)
 
-    # def create(self, request, *args, **kwargs):
-    #     print(request.data)
-    #     # membership_exists = get_user_membership(request.user.pk)
-    #     serializer = self.get_serializer(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_create(serializer)
-    #     headers = self.get_success_headers(serializer.data)
-    #     return Response(status=status.HTTP_201_CREATED, headers=headers)
-
-    # def perform_create(self, serializer):
-    #     serializer.save()
-
-    # def get_success_headers(self, data):
-    #     try:
-    #         return {'Location': str(data[api_settings.URL_FIELD_NAME])}
-    #     except (TypeError, KeyError):
-    #         return {}
-
 
 class UserMembershipView(generics.CreateAPIView, generics.RetrieveUpdateAPIView):
     model = UserMembership
@@ -353,7 +334,7 @@ class UserMembershipView(generics.CreateAPIView, generics.RetrieveUpdateAPIView)
         authentication.BasicAuthentication
     )
     permission_classes = (permissions.IsAuthenticated,)
-  
+
     # Override retrieve Django REST mixin
     def retrieve(self, request, *args, **kwargs):
         instance = UserMembership.objects.filter(user_id=request.user.pk).first()
@@ -377,153 +358,3 @@ class UserMembershipView(generics.CreateAPIView, generics.RetrieveUpdateAPIView)
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
-
-
-# def get_selected_membership(request):
-#     membership_type = request.session['selected_membership_type']
-#     selected_membership_qs = Membership.objects.filter(
-#         membership_type=membership_type)
-#     if selected_membership_qs.exists():
-#         return selected_membership_qs.first()
-#     return None
-#     membership = request.session['selected_membership']
-#     selected_membership_qs = UserMembership.objects.filter(
-#             membership=membership)
-    
-#     if selected_membership_qs.exists():
-#         return selected_membership_qs.first()
-#         return None
-
-
-# for selecting a paid membership
-# class UserMembershipView(generics.ListCreateAPIView):
-#     model = UserMembership
-#     serializer_class = UserMembershipSerializer
-#     authentication_classes = (
-#         rest_framework_jwt.authentication.JSONWebTokenAuthentication,
-#         authentication.SessionAuthentication,
-#         authentication.BasicAuthentication
-#     )
-#     permission_classes = (permissions.IsAuthenticated,)
-
-#     def get_queryset(self):
-#         id = self.request.user.id
-#         queryset = UserMembership.objects.filter(id=id)
-#         return queryset
-
-#     def get_context_data(self, *args, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         current_membership = get_user_membership(self.request)
-#         context['current_membership'] = str(current_membership.membership)
-#         # print(context)
-
-#         return context
-
-#     def post(self, request, **kwargs):
-#         selected_membership = request.POST.get('membership')
-#         user_subscription = get_user_subscription(request)
-#         user_membership = get_user_membership(request)
-
-#         selected_membership_qs = UserMembership.objects.filter(
-#             membership=selected_membership
-#         )
-#         if selected_membership_qs.exists():
-#             selected_membership = selected_membership_qs.first()
-
-#         '''
-#         ============
-#         VALIDATION
-#         ============
-#         '''
-#         if user_membership.membership == selected_membership:
-#             if user_subscription != None:
-#                 messages.info(request, "You already have this membership. Your next payment is due {}".format(
-#                     'get this value from Stripe'))
-#                 return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-#         #assign any changes to membership type to the session
-#         request.session['selected_membership'] = selected_membership.membership
-#         return HttpResponseRedirect(reverse('memberships:payment'))
-
-
-# Tokenizes purchase
-# class PaymentView(generics.CreateAPIView):
-
-# 	user_membership = get_user_membership(request)
-# 	selected_membership = get_selected_membership(request)
-# 	publishKey = settings.STRIPE_PUBLISHABLE_KEY
-
-
-# 	if request.method == "POST":
-# 		try:
-# 			token = request.POST['stripeToken']
-# 			subscription = stripe.Subscription.create(
-# 			  customer=user_membership.stripe_id,
-# 			  items=[
-# 			    {
-# 			      "plan": selected_membership.stripe_plan_id,
-# 			    },
-# 			  ],
-# 			  source=token # 4242424242424242
-# 			)
-
-# 			return redirect(reverse('memberships:update-transactions',
-# 				kwargs={
-# 					'subscription_id': subscription.id
-# 				}))
-
-# 		except stripe.CardError as e:
-# 			messages.info(request, "Your card has been declined")
-
-# 	context = {
-# 		'publishKey': publishKey,
-# 		'selected_membership': selected_membership
-# 	}
-
-# 	return render(request, "templates/membership_payment.html", context)
-
-
-# def updateTransactionRecords(request, subscription_id):
-# 	user_membership = get_user_membership(request)
-# 	selected_membership = get_selected_membership(request)
-
-# 	user_membership.membership = selected_membership
-# 	user_membership.save()
-
-# 	sub, created = Subscription.objects.get_or_create(user_membership=user_membership)
-# 	sub.stripe_subscription_id = subscription_id
-# 	sub.active = True
-# 	sub.save()
-
-# 	try:
-# 		del request.session['selected_membership']
-# 	except:
-# 		pass
-
-# 	messages.info(request, 'Successfully created {} membership'.format(selected_membership))
-# 	return redirect('/memberships')
-
-
-# def cancelSubscription(request):
-# 	user_sub = get_user_subscription(request)
-
-# 	if user_sub.active == False:
-# 		messages.info(request, "You dont have an active membership")
-# 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-# 	sub = stripe.Subscription.retrieve(user_sub.stripe_subscription_id)
-# 	sub.delete()
-
-# 	user_sub.active = False
-# 	user_sub.save()
-
-
-# 	free_membership = UserMembership.objects.filter(membership='Free').first()
-# 	user_membership = get_user_membership(request)
-# 	user_membership.membership = free_membership
-# 	user_membership.save()
-
-# 	messages.info(request, "Successfully cancelled membership. We have sent an email")
-# 	# sending an email here
-
-# 	return redirect('/memberships')
