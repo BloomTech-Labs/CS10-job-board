@@ -1,7 +1,15 @@
-.company-balance {
-    margin: 10px;
-    background: white;
-    border-radius: 4px;
-    display: flex;
-    align-self: flex-start;
+.company-balance .flex {
+    width: 100%;
+    align-items: baseline;
+}
+
+.company-balance .anticon-shopping {
+    position: relative;
+    top: 2px;
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.company-job-count p {
+    margin-right: 10px;
 }
