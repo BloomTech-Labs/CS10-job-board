@@ -26,7 +26,10 @@ class App extends React.Component {
       token: null,
       jobs: null,
       employer: false,
-      user: null
+      user: null,
+      stripe_id: null,
+      subscription: null,
+      job_credit: null
     }
   }
 
@@ -70,6 +73,7 @@ class App extends React.Component {
       this.props.history.push('/account');
       this.setState({ message: `Please complete your company profile.`});
     } else if (data.user.is_employer) {
+      this.fetchMembership(data.token);
       const path = this.props.history.location.pathname;
       if (path === '/' || path === '/signin' || path === '/company') {
         this.props.history.push('/dashboard');
@@ -94,6 +98,20 @@ class App extends React.Component {
       user: null
     });
     this.props.history.push('/signin');
+  }
+
+  fetchMembership = token => {
+    axios.get(`${process.env.REACT_APP_API}membership/`, { headers: { Authorization: `JWT ${token}`}})
+      .then(response => {
+        this.setState({
+          job_credit: response.data.job_credit,
+          stripe_id: response.data.stripe_id,
+          subscription: response.data.subscription
+        });
+      })
+      .catch(err => {
+        this.setState({ error: `Error getting membership status. Please refresh or try again.` });
+      });
   }
 
   setJobs = jobs => {
