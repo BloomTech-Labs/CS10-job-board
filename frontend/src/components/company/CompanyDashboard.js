@@ -12,8 +12,7 @@ class CompanyDashboard extends Component {
     render() {
         return (
             <div className="dashboard">
-                <CompanyJobList />
-                <CompanyJobBalance {...this.props}/>
+                <CompanyJobList job_credit={this.props.job_credit}/>
             </div>
         );
     }

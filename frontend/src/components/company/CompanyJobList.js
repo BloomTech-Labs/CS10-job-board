@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Form, Button, Checkbox, Alert, Icon, Input, List, Switch, Dropdown, Menu, Radio, Tooltip, Popconfirm, Drawer } from 'antd';
 import { withRouter } from 'react-router-dom';
-import { CompanyJobCounter, CompanyJobEdit } from '../';
+import { CompanyJobCounter, CompanyJobEdit, CompanyJobBalance } from '../';
 
 const RadioButton = Radio.Button;
 const RadioGroup = Radio.Group;
@@ -334,8 +334,10 @@ t
                   <Alert message={message} type="success" closable showIcon />
                 ) : (null)}
 
-                <div>
-                     <CompanyJobCounter count={count} published_count={published_count} unpublished_count={unpublished_count}/>
+                <div className="flex baseline">
+                    <CompanyJobBalance job_credit={this.props.job_credit}/>
+                    <div className="whitespace"></div>
+                    <CompanyJobCounter count={count} published_count={published_count} unpublished_count={unpublished_count}/>
                 </div>
 
                 <Form className="company-job-search">
