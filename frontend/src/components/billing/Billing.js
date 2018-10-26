@@ -88,7 +88,13 @@ class Billing extends React.Component {
                     ) : (null)
                     }
 
-                    {activeProduct ? (
+                    <CSSTransition
+                        in={active}
+                        timeout={300}
+                        classNames="active-card"
+                        >
+                        <div>
+                                {activeProduct ? (
                         <div className="checkout-card-container">
                             <h2>Selected:</h2>
                             <Icon type="close" onClick={this.closeActive}/>
@@ -103,11 +109,13 @@ class Billing extends React.Component {
                                 active={true}
                             />
                         </div>
-                    ) : (null)}
+                            ) : (null)}
+                        </div>
+                    </CSSTransition>
 
                     <CSSTransition
                         in={active}
-                        timeout={1000}
+                        timeout={300}
                         classNames="checkout-form-container"
                     >
                         <div className="checkout-form-container">
