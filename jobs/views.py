@@ -246,13 +246,6 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
 
         return Response(serializer.data)
 
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def partial_update(self, request, *args, **kwargs):
-        kwargs['partial'] = True
-        return self.update(request, *args, **kwargs)
-
     def destroy(self, request, *args, **kwargs):
         job = self.get_object()
         # Checks job id on request == user id making delete request:
@@ -262,9 +255,6 @@ class ModifyJobPost(generics.RetrieveUpdateDestroyAPIView):
             return Response(message, status=status.HTTP_403_FORBIDDEN)
         self.perform_destroy(job)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def perform_destroy(self, instance):
-        instance.delete()
 
 
 # Returns list of Jobs posted by a company account
