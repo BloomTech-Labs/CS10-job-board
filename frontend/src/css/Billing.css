@@ -112,8 +112,14 @@
 }
 
 .checkout-form button {
-    margin-top: 25px;
     align-self: flex-end;
+}
+
+.checkout-form .anticon-check-circle {
+    font-size: 32px;
+    margin-bottom: 17px;
+    align-self: flex-end;
+    color: #52C41A;
 }
 
 /* Stripe form animations (<CSSTransitions/> classes) */

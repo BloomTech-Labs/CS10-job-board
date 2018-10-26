@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import numeral from "numeral";
-import { Alert, Form, Input, InputNumber, Button } from 'antd';
+import { Alert, Form, Input, Icon, InputNumber, Button } from 'antd';
 import { CardElement, injectStripe } from 'react-stripe-elements';
 
 const FormItem = Form.Item;
@@ -15,7 +15,8 @@ class CheckoutForm extends React.Component {
       message: null,
       quantity: 1,
       total: null,
-      loading: null
+      loading: null,
+      success: false
     }
   }
 
@@ -48,7 +49,7 @@ class CheckoutForm extends React.Component {
             quantity: this.state.quantity
           }, requestOptions )
           .then(response => {
-            this.setState({ message: `Payment successful!`, loading: false});
+            this.setState({ message: `Payment successful!`, loading: false, success: true });
           })
           .catch(err => {
             this.setState({ error: `Problem processing your payment. Try again.`, loading: false});
@@ -60,7 +61,7 @@ class CheckoutForm extends React.Component {
   }
 
   render() {
-    const { error, message, quantity, total, loading } = this.state;
+    const { error, message, quantity, total, loading, success } = this.state;
     const { getFieldDecorator } = this.props.form;
 
     return (
@@ -71,6 +72,7 @@ class CheckoutForm extends React.Component {
         {message ? (
           <Alert message={message} type="success" closable showIcon banner/>
         ) : (null)}
+
           <FormItem label="Cardholder Name">
             {getFieldDecorator('cardholder_name', {
               rules: [{
@@ -100,7 +102,12 @@ class CheckoutForm extends React.Component {
             <CardElement />
         </div>
         <h3 className="total">Total: {total ? `${total}` : `$${quantity * this.props.price}`}</h3>
-        <Button type="primary" loading={loading} onClick={this.handlePayment}>Buy</Button>
+        <div className="whitespace"></div>
+        {success ? (
+          <Icon type="check-circle"/>
+        ) : (
+          <Button type="primary" loading={loading} onClick={this.handlePayment}>Buy</Button>
+        )}
       </div>
     );
   }
