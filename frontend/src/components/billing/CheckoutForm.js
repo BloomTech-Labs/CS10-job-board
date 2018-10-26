@@ -57,7 +57,7 @@ class CheckoutForm extends React.Component {
           });
       })
       .catch(err => {
-        this.setState({ error: `Problem processing your card. Try again.`, loading: false});
+        this.setState({ error: `Problem validating your card. Try again.`, loading: false});
       });
   }
 
