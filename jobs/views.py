@@ -11,7 +11,6 @@ from django.template import Context
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
-from django.views.generic import ListView
 
 # SendGrid
 import sendgrid
@@ -366,7 +365,7 @@ class UserPaymentView(generics.CreateAPIView):
     #         return {}
 
 
-class UserMembershipView(views.APIView):
+class UserMembership(generics.CreateAPIView, generics.RetrieveUpdateAPIView):
     model = UserMembership
     serializer_class = UserMembershipSerializer
     authentication_classes = (
@@ -376,6 +375,19 @@ class UserMembershipView(views.APIView):
     )
     permission_classes = (permissions.IsAuthenticated,)
 
+    def get_queryset(self):
+        user = self.request.user.pk
+        print(user)
+        return UserMembership.objects.filter(user=user)
+
+    # Override retrieve Django REST mixin
+    def retrieve(self, request, *args, **kwargs):
+        instance = UserMembership.objects.filter(user=request.user.pk).first()
+        if instance is not None:
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 # def get_user_membership(id):
 #     user_membership = UserMembership.objects.filter(id=id)

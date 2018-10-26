@@ -1,4 +1,5 @@
 import React from 'react';
+import { CSSTransition } from "react-transition-group";
 import axios from 'axios';
 import numeral from "numeral";
 import { Alert, Form, Input, Icon, InputNumber, Button } from 'antd';
@@ -70,7 +71,7 @@ class CheckoutForm extends React.Component {
           <Alert message={error} type="error" closable showIcon banner/>
           ) : (null)}
         {message ? (
-          <Alert message={message} type="success" closable showIcon banner/>
+          <Alert message={message} type="success" closable showIcon={false} banner/>
         ) : (null)}
 
           <FormItem label="Cardholder Name">
@@ -104,10 +105,17 @@ class CheckoutForm extends React.Component {
         <h3 className="total">Total: {total ? `${total}` : `$${quantity * this.props.price}`}</h3>
         <div className="whitespace"></div>
         {success ? (
-          <Icon type="check-circle"/>
+          <Icon type="check-circle" theme="filled"/>
         ) : (
           <Button type="primary" loading={loading} onClick={this.handlePayment}>Buy</Button>
         )}
+        {/* <CSSTransition
+          in={success}
+          timeout={300}
+          classNames="invoice-link"
+        >
+
+        </CSSTransition> */}
       </div>
     );
   }
