@@ -155,6 +155,11 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
                 }
             ]
         )
+
+        # Save subscription status on UserMembership
+        user_membership.subscription = 'plan_DoNu8JmqFRMrze'
+        user_membership.save()
+
     # Else purchase a job post product with Stripe Order API
     else:
         new_order = stripe.Order.create(
