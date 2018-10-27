@@ -335,7 +335,7 @@ t
                 ) : (null)}
 
                 <div className="flex baseline">
-                    <CompanyJobBalance job_credit={this.props.job_credit}/>
+                    <CompanyJobBalance job_credit={this.props.job_credit} subscription={this.props.subscription}/>
                     <div className="whitespace"></div>
                     <CompanyJobCounter count={count} published_count={published_count} unpublished_count={unpublished_count}/>
                 </div>
