@@ -132,8 +132,8 @@ class UserPayment(models.Model):
 
 ########### Stripe API ###########
 
-# Creates a Membership instance for User after Payment token saved if none exists
-# Uses post_save Django signal to run when a UserPayment object is creatd from /pay API
+# Creates a Membership instance for User after Payment token is saved, if none exists
+# Uses the post_save Django signal to run when a UserPayment object is creatd from /pay API
 def post_pay_usermembership_create(sender, instance, *args, **kwargs):
     # get_or_create returns two variables in a tuple, the second being a boolean about creation status
     user_membership, created = UserMembership.objects.get_or_create(user=instance.user)
@@ -145,7 +145,7 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
         user_membership.stripe_id = new_customer['id']
         user_membership.save()
 
-    # If subscription purchase, assign plan to customer with Subscription API
+    # If subscription purchase, assign plan to customer with Stripe Subscription API
     if instance.purchased is 'plan_DoNu8JmqFRMrze':
         stripe.Subscription.create(
             customer=user_membership.stripe_id,
@@ -155,7 +155,7 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
                 }
             ]
         )
-    # Else purchase a job post product with Order API
+    # Else purchase a job post product with Stripe Order API
     else:
         new_order = stripe.Order.create(
             currency='usd',
@@ -173,7 +173,17 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
             customer=user_membership.stripe_id
         )
 
+        # Set quantity on userMembership model
+            # 12 Pack
+        if instance.purchased is 'sku_DoNp2frdbkieqn':
+            user_membership.job_credit += 12
+        else: 
+            # 1 Job Post (max is 11)
+            user_membership.job_credit += instance.quantity
+        user_membership.save()
 
+
+# Django post_save signal
 post_save.connect(post_pay_usermembership_create, sender=UserPayment)
 
 
