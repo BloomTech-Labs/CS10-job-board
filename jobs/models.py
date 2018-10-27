@@ -99,6 +99,17 @@ class JobPost(models.Model):
         self.save()
 
 
+# Django post_save signal listener to decrement job_credit on UserMembership
+def post_job_save_update_usermembership(sender, instance, created, *args, **kwargs):
+    if instance.is_active is True:
+        user_membership = UserMembership.objects.get(user=instance.company)
+        user_membership.job_credit -= 1
+        user_membership.save()
+
+
+post_save.connect(post_job_save_update_usermembership, sender=JobPost)
+
+
 # Defines subscription type and stripe_id, if any.
 class UserMembership(models.Model):
     # id of UserMemberhship is user_id because primary_key=True for the OneToOneField
