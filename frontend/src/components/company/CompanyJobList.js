@@ -26,6 +26,7 @@ class CompanyJobList extends React.Component {
             previous: null,
             padding: null,
             checkedList: [],
+            lastClicked: null,
             checkAll: false,
             bulk: false,
             jobType: null,
@@ -40,7 +41,7 @@ class CompanyJobList extends React.Component {
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
     }
-t 
+
     componentDidMount() {
         if (!this.state.jobs) {
             this.fetchJobs();
@@ -181,8 +182,17 @@ t
     checkJob = e => {
         const shiftPressed = e.nativeEvent.shiftKey;
         if (shiftPressed) {
-            this.checkJobShiftKey(e.target.checked, e.target.id);
+            if (this.state.lastClicked === e.target.id) {
+                if (e.target.checked === true) {
+                    this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
+                } else {
+                    this.setState({ checkedList: this.state.checkedList.filter(item => item !== e.target.id)});
+                }
+            } else {
+                this.checkJobShiftKey(e.target.checked, e.target.id);
+            }
         } else {
+            this.setState({ lastClicked: e.target.id });
             if (e.target.checked === true) {
                 this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
             } else {
@@ -192,36 +202,44 @@ t
     }
 
     checkJobShiftKey = (checked, id) => {
-        const lastChecked = this.state.checkedList[this.state.checkedList.length - 1];
-        if (lastChecked) {
+        const { lastClicked } = this.state;
+        if (lastClicked) {
             const currentChecked = id;
             const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
             let checkedListIds = [];
             let push = false;
             for (let i = 0; i < checkboxes.length; i++) {
                 const input = checkboxes[i];
-                if (input.id === lastChecked || input.id === currentChecked) {
+                if (input.id === lastClicked || input.id === currentChecked) {
                     push = !push;
-                    if (input.id === lastChecked) {
-                        continue;
-                    } 
-                    // must add currentChecked before breaking loop, if currentChecked is after lastChecked
-                    // else if currentChecked is before lastChecked, will be added in second if(push) statement
+                    // if (input.id === lastClicked) {
+                    //     continue;
+                    // } 
+                    // must add currentChecked before breaking loop, if currentChecked is after lastClicked
+                    // else if currentChecked is before lastClicked, will be added in second if(push) statement
                     if (!push) {
                         if (checked) {
                             checkedListIds.push(input.id);
+                        } else if (!checked) {
+                            console.log('last/current', checked, input.id, input.checked);
+                            console.log(checkedListIds.indexOf(input.id));
+                            checkedListIds.splice(checkedListIds.indexOf(input.id), 1);
                         }
                         break;
                     }
                 }
-                // adds items in between lastChecked and currentChecked
+                // adds items in between lastClicked and currentChecked
                 if (push) {
+                    console.log(input.onClick, input);
                     input.onClick = null;
+                    console.log(input.onClick);
                     if (checked && !input.checked) {
                         input.click();
                         checkedListIds.push(input.id);
                     } else if (!checked && input.checked) {
                         input.click();
+                        console.log(checkedListIds.indexOf(input.id));
+                        checkedListIds.splice(checkedListIds.indexOf(input.id), 1);
                     }
                     input.onClick = this.checkJob;
                 }
@@ -369,7 +387,7 @@ t
                             ]}
                             style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
                         >
-                            <Checkbox onChange={this.checkJob} id={`${job.id}`} className="job-item"/>
+                            <Checkbox onClick={this.checkJob} id={`${job.id}`} className="job-item"/>
                             <em className="ant-list-item-action-split-modified"></em>
                             <p>{job.title}</p>
                         </List.Item>
