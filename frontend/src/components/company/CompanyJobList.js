@@ -177,37 +177,92 @@ t
         this.setState({ padding: "25px"});
     }
 
-    // Toggles click state of all displayed jobs
+    // Default onClick handler for checkboxes
+    checkJob = e => {
+        const shiftPressed = e.nativeEvent.shiftKey;
+        if (shiftPressed) {
+            this.checkJobShiftKey(e.target.checked, e.target.id);
+        } else {
+            if (e.target.checked === true) {
+                this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
+            } else {
+                this.setState({ checkedList: this.state.checkedList.filter(item => item !== e.target.id)});
+            }
+        }
+    }
 
+    checkJobShiftKey = (checked, id) => {
+        const lastChecked = this.state.checkedList[this.state.checkedList.length - 1];
+        if (lastChecked) {
+            const currentChecked = id;
+            const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
+            let checkedListIds = [];
+            let push = false;
+            for (let i = 0; i < checkboxes.length; i++) {
+                const input = checkboxes[i];
+                if (input.id === lastChecked || input.id === currentChecked) {
+                    push = !push;
+                    if (input.id === lastChecked) {
+                        continue;
+                    } 
+                    // must add currentChecked before breaking loop, if currentChecked is after lastChecked
+                    // else if currentChecked is before lastChecked, will be added in second if(push) statement
+                    if (!push) {
+                        if (checked) {
+                            checkedListIds.push(input.id);
+                        }
+                        break;
+                    }
+                }
+                // adds items in between lastChecked and currentChecked
+                if (push) {
+                    input.onClick = null;
+                    if (checked && !input.checked) {
+                        input.click();
+                        checkedListIds.push(input.id);
+                    } else if (!checked && input.checked) {
+                        input.click();
+                    }
+                    input.onClick = this.checkJob;
+                }
+            }
+            const { checkedList } = this.state;
+            // console.log('state', checkedList);
+            // console.log('ids to add', checkedListIds);
+            let filteredList = checkedListIds.filter(id => checkedList.indexOf(id) === - 1);
+            // console.log('filteredList', filteredList);
+            this.setState({ checkedList: checkedList.concat(filteredList) });
+            // console.log('state post set', this.state.checkedList);
+        }
+    }
+
+    // onClick handler for first checkbox
     checkAll = e => {
-        // get a list of checkboxes inside the job list & click them
-        let checkedList = document.querySelectorAll(".job-item .ant-checkbox-input");
+        // get a list of all checkboxes to check / uncheck
+        const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
+        this.setState({ checkedList: this.checkRange(e.target.checked, checkboxes) });
+    }
+
+
+    checkRange = (checked, checkedList) => {
         let checkedListIds = [];
         for (let i = 0; i < checkedList.length; i++) {
             const input = checkedList[i];
-            checkedListIds.push(input.id);
+            if (checked) {
+                checkedListIds.push(input.id);
+            }
             // removes onClick reference to not trigger this.checkJob(), assigned to each individual checkbox
             input.onClick = null;
             // Must check both states of parent checkbox and individual checkbox to get proper behavior
-            if (e.target.checked && !input.checked) {
+            if (checked && !input.checked) {
                 input.click();
-            } else if (!e.target.checked && input.checked) {
+            } else if (!checked && input.checked) {
                 input.click()
             }
             // reassignes the onClick reference to this.checkJob()
             checkedList[i].onClick = this.checkJob;
         }
-        // if parent checkbox is checked replace state with list, else if not checked, replace checkedList with empty array
-        this.setState({ checkedList:  e.target.checked ? checkedListIds : [] });
-    }
-
-    // individaul checkbox event handler, concats/filters array of checkedList state depending on checked state
-    checkJob = e => {
-        if (e.target.checked === true) {
-            this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
-        } else {
-            this.setState({ checkedList: this.state.checkedList.filter(item => item !== e.target.id)});
-        }
+        return checkedListIds;
     }
 
     // show JobEdit.js view drawer
