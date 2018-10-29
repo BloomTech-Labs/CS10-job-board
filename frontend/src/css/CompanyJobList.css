@@ -20,10 +20,23 @@
 }
 
 .company-job-list-container .ant-list-header {
+    padding: 10px;
+    background: #F4F4F4;
+    box-shadow: 0 2px 5px -2px #e8e8e8;
+    background-clip: padding-box;
+}
+
+.company-job-list-container .ant-list-header .ant-list-item-action-split {
+    position: relative;
+    top: 3px;
+    height: 16px;
+    background-color: #cccccc;
+    margin: 0 27px 0 8px;
+}
+
+.company-job-list-container .ant-list-header > div {
     display: flex;
     justify-content: space-between;
-    padding-right: 8px;
-    padding-left: 10px;
     align-items: baseline;
 }
 
@@ -67,6 +80,8 @@
     font-size: 20px;
 }
 
+/* Job Item action icons */
+
 .job-list-actions {
     display: flex;
     justify-content: space-between;
@@ -78,6 +93,8 @@
     margin: 0 10px;
 }
 
+/* Job Search */
+
 .company-job-search {
     display: flex;
     align-items: baseline;
@@ -87,6 +104,20 @@
 .company-job-search input {
     margin-right: 10px;
 }
+
+/* Display density */
+
+.company-job-list-density>.ant-dropdown-menu-item {
+    padding: 0;
+}
+
+.company-job-list-density div {
+    width: 105px;
+    padding: 10px 24px;
+    user-select: none;
+}
+
+/* Edit Link */
 
 .company-job-edit-link {
     min-width: 0;
@@ -102,15 +133,7 @@
     transition: all 0.3s ease;
 }
 
-.company-job-list-density > .ant-dropdown-menu-item {
-    padding: 0;
-}
-
-.company-job-list-density div {
-    width: 105px;
-    padding: 10px 24px;
-    user-select: none;
-}
+/* Edit drawer for jobs */
 
 .company-job-drawer .ant-drawer-close-x {
     display: inline-flex;
@@ -132,8 +155,7 @@
     transition: all 0.3s ease;
 }
 
-.company-job-list-container .ant-list-header {
-    background: #F4F4F4;
-    box-shadow: 0 2px 5px -2px #e8e8e8;
-    background-clip: padding-box;
+.ant-popover-message-title p {
+    margin: 0;
+    text-align: right;
 }
