@@ -181,29 +181,32 @@ class CompanyJobList extends React.Component {
     // Default onClick handler for checkboxes
     checkJob = e => {
         const { clicked, checkedList } = this.state;
-        if (checkedList.length === 0) {
-            this.setState({ clicked: [] });
-        }
+        // shift key condition - to select multiple items
         const shiftPressed = e.nativeEvent.shiftKey;
         if (shiftPressed) {
+            // last clicked is last clicked without shift key active
             let lastClicked = clicked[clicked.length - 1];
             if (lastClicked) {
-                if (lastClicked === e.target.id) {
-                    if (e.target.checked === true) {
-                        this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
-                    } else {
-                        this.setState({ checkedList: this.state.checkedList.filter(item => item !== e.target.id)});
-                    }
-                } else {
-                    this.checkJobShiftKey(e.target.checked, e.target.id, lastClicked);
-                }
+                this.checkJobShiftKey(e.target.checked, e.target.id, lastClicked);
             } else {
+            // if clicked array is empty
                 if (e.target.checked === true) {
-                    this.setState({ checkedList: this.state.checkedList.concat(e.target.id)});
+                    this.setState({ 
+                        checkedList: checkedList.concat(e.target.id),
+                        clicked: clicked.concat(e.target.id)
+                    });
                 } else {
-                    this.setState({ checkedList: this.state.checkedList.filter(item => item !== e.target.id)});
-                }  
+                    this.setState({ 
+                        checkedList: this.state.checkedList.filter(item => item !== e.target.id),
+                        clicked: clicked.filter(item => item !== e.target.id)
+                    });
+                    // reset clicked array if checkedList is empty
+                    if (checkedList.length === 0) {
+                        this.setState({ clicked: [] });
+                    }
+                }
             }
+        // if shift key is not pressed
         } else {
             if (e.target.checked === true) {
                 this.setState({ 
@@ -215,6 +218,10 @@ class CompanyJobList extends React.Component {
                     checkedList: this.state.checkedList.filter(item => item !== e.target.id),
                     clicked: clicked.filter(item => item !== e.target.id)
                 });
+                // reset clicked array if checkedList is empty
+                if (checkedList.length === 0) {
+                    this.setState({ clicked: [] });
+                }
             }
         }
     }
@@ -223,47 +230,91 @@ class CompanyJobList extends React.Component {
         const currentChecked = id;
         const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
         let checkedListIds = [];
+        let removeItems = [];
         let push = false;
         for (let i = 0; i < checkboxes.length; i++) {
             const input = checkboxes[i];
-            if (input.id === lastClicked || input.id === currentChecked) {
+            // if item matches both last clicked and currently checked, loop through rest to deselect
+            if (input.id === lastClicked && input.id === currentChecked) {
+
+                if (checked) {
+                    checkedListIds.push(input.id);
+                } else {
+                    removeItems.push(input.id);
+                }
+                // remove remaining items if checked
+                for (let p = i + 1; p < checkboxes.length; p++) {
+                    const input = checkboxes[p];
+                    if (input.checked) {
+                        removeItems.push(input.id);
+                        input.click();
+                    } else {
+                        break;
+                    }
+                }
+                // break once all remaining are unchecked
+                break;
+            }
+            // if a node matches either last clicked or currently checked, flip the boolean "push"
+            else if (input.id === lastClicked || input.id === currentChecked) {
                 push = !push;
-                // if (input.id === lastClicked) {
-                //     continue;
-                // } 
-                // must add currentChecked before breaking loop, if currentChecked is after lastClicked
-                // else if currentChecked is before lastClicked, will be added in second if(push) statement
-                if (!push) {
+                // if push is true, it is the first time to be flipped:
+                //      if input matches currently checked, then it indicates a backwards selection
+                //      in the DOM node list. (currentChecked comes before lastClicked in list)
+                if (push === true && input.id === currentChecked) {
+                    // if the event is checked, add the input to later add to state
                     if (checked) {
                         checkedListIds.push(input.id);
-                    } else if (!checked) {
-                        checkedListIds.splice(checkedListIds.indexOf(input.id), 1);
+                    } else {
+                        removeItems.push(input.id);
+                    }
+                }
+                // if push is false inside this else if block, it is the end of the selection list
+                //      inside the loop of the DOM nodes. If the id matches currently checked, then 
+                //      the selection can shrink by removing clicked items after currently selected.
+                if (push === false && input.id === currentChecked) {
+                    if (checked) {
+                        checkedListIds.push(input.id);
+                    } else {
+                        removeItems.push(input.id);
+                    }
+                    // loop through remaining DOM nodes to uncheck
+                    for (let p = i + 1; p < checkboxes.length; p++) {
+                        const input = checkboxes[p];
+                        if (input.checked) {
+                            removeItems.push(input.id);
+                            input.click();
+                        } else {
+                            break;
+                        }
                     }
                     break;
                 }
             }
-            // adds items in between lastClicked and currentChecked
+            // adds items in between lastClicked and currentChecked if push boolean is true
             if (push) {
-                const event = new MouseEvent("click", {
-                    bubbles: true,
-                    shiftKey: true
-                });
                 if (checked && !input.checked) {
-                    input.dispatchEvent(event);
+                    input.click();
                     checkedListIds.push(input.id);
-                } else if (!checked && input.checked) {
-                    input.dispatchEvent(event);
-                    checkedListIds.splice(checkedListIds.indexOf(input.id), 1);
                 }
             }
         }
-        const { checkedList } = this.state;
-        // console.log('state', checkedList);
-        // console.log('ids to add', checkedListIds);
-        let filteredList = checkedListIds.filter(id => checkedList.indexOf(id) === - 1);
-        // console.log('filteredList', filteredList);
-        this.setState({ checkedList: checkedList.concat(filteredList) });
-        // console.log('state post set', this.state.checkedList);
+        const { checkedList, clicked } = this.state;
+        let filteredCheckedList = checkedListIds.filter(id => checkedList.indexOf(id) === -1);
+        const newCheckedList = checkedList.concat(filteredCheckedList);
+        this.setState({ 
+            checkedList: newCheckedList,
+            clicked: clicked
+        });
+        // 
+        if (removeItems.length > 0) {
+            let updatedChecked = this.state.checkedList.filter(id => removeItems.indexOf(id) === -1);
+            let updatedClicked = this.state.clicked.filter(id => removeItems.indexOf(id) === -1);
+            this.setState({ 
+                checkedList: updatedChecked,
+                clicked: updatedClicked
+            });
+        }
     }
 
     // onClick handler for first checkbox
@@ -281,17 +332,13 @@ class CompanyJobList extends React.Component {
         let checkedListIds = [];
         for (let i = 0; i < checkedList.length; i++) {
             const input = checkedList[i];
-            const event = new MouseEvent("click", {
-                bubbles: true,
-                shiftKey: true
-            });
             if (checked) {
                 checkedListIds.push(input.id);
             }
             if (checked && !input.checked) {
-                input.dispatchEvent(event);
+                input.click();
             } else if (!checked && input.checked) {
-                input.dispatchEvent(event);
+                input.click();
             }
         }
         return checkedListIds;
