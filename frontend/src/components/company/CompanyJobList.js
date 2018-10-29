@@ -376,6 +376,19 @@ class CompanyJobList extends React.Component {
             });
     }
 
+    boostPost = id => {
+        this.setState({ error: null, message: null, loading: true });
+        const token = localStorage.getItem('token');
+        const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        axios.patch(`${process.env.REACT_APP_API}company/jobs/${id}/`, { post_expiration: null }, requestOptions)
+            .then(response => {
+                this.setState({ message: `Job boosted!`});
+                this.fetchJobs();
+            })
+            .catch(err => {
+                this.setState({ error: `Error boosting job. Please try again.`, loading: false});
+            });
+    }
 
 
     render() {
@@ -434,6 +447,19 @@ class CompanyJobList extends React.Component {
                             key={job.id}
                             id={job.id}
                             actions={[
+                                job.is_active ? (
+                                <Popconfirm
+                                    title= {<div>
+                                        <p>Are you sure you want to boost this post?</p>
+                                        <p>(Cost: 1 Job Post)</p>
+                                    </div>}
+                                    okText={`Boost`}
+                                    cancelText={`Cancel`}
+                                    onConfirm={() => this.boostPost(job.id, job.is_active)}
+                                >
+                                    <Icon type="thunderbolt" name="boost"/>
+                                </Popconfirm>
+                                ) : (<div style={{ width: "1px", height: "8px"}}></div>),
                                 <button className="company-job-edit-link" onClick={() => this.openDrawer(job.id)}>edit</button>,
                                 <Popconfirm
                                     title = {
@@ -510,12 +536,13 @@ class CompanyJobList extends React.Component {
                         loadMore
                         gutter={1}
                         header={[
-                            <div key={1} className="flex baseline">
-                                <Checkbox 
-                                    onChange={this.checkAll}/>
-                                <em className="ant-list-item-action-split-modified"></em>
-                            </div>,
-                            <p key={2}>Published</p>
+                            <div key={1}>
+                                <Checkbox onChange={this.checkAll}/>
+                                <div className="whitespace"></div>
+                                <p>Boost</p>
+                                <em className="ant-list-item-action-split"></em>
+                                <p>Published</p>
+                            </div>
                         ]}
                         >
                             {mapJobs(currentQuery ? this.state[`${this.state.currentQuery}`] : this.state.jobs )}
