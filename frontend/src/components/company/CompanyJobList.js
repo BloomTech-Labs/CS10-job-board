@@ -531,7 +531,7 @@ class CompanyJobList extends React.Component {
                     className="company-job-drawer"
                 >
                     {/* Pass job key to rerender different jobs w/o unmounting component*/}
-                        <CompanyJobEdit key={job ? job.id : null} job={job} />
+                        <CompanyJobEdit key={job ? job.id : null} job={job} fetchJobs={this.fetchJobs}/>
                 </Drawer>
         
             </div>
