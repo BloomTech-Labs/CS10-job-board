@@ -270,23 +270,16 @@ class ListCompanyJobPosts(generics.ListCreateAPIView):
         return queryset
 
     def post(self, request, *args, **kwargs):
-        # print('REQUEST>>>>', request.user.pk)
 
         # Checks company id on request == user id making post request:
         #   (prevents company 1 posting for company 2)
         if request.data['company'] is not self.request.user.pk:
             message = {'FORBIDDEN'}
             return Response(message, status=status.HTTP_403_FORBIDDEN)
-        # If job post is published, set published_date to current time
-        if request.data['is_active'] is True:
-            request.data['published_date'] = timezone.now()
-        # print('REQUEST>>>>', request.data)
         serializer = self.get_serializer(data=request.data)
-        # print('SERIALIZER>>>>>>', serializer)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        # print('SERIALIZER.DATA>>>>>>', serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
