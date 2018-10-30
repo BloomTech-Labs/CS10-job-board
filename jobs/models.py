@@ -89,23 +89,44 @@ class JobPost(models.Model):
     tags = TaggableManager(verbose_name="Tags", help_text="Enter tags separated by commas", blank=True)
     created_date = models.DateTimeField(default=timezone.now, editable=False)
     published_date = models.DateTimeField(blank=True, null=True)
-     
-    class Meta:
-        ordering = ['-published_date']
+    post_expiration = models.DateTimeField(blank=True, null=True)
 
-    @property
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['-post_expiration']
+
+    # @published_date.setter
     def publish(self):
         self.published_date = timezone.now()
-        self.save()
+        # self.save()
+
+    # @post_expiration.setter
+    def set_expiration(self):
+        self.post_expiration = timezone.now() + timezone.timedelta(days=30)
 
 
 # Django post_save signal listener to decrement job_credit on UserMembership
 def post_job_save_update_usermembership(sender, instance, created, *args, **kwargs):
-    if instance.is_active is True:
+    # print('post_save', instance.is_active, instance.post_expiration)
+    # If Job Post is new & published
+    if instance.is_active is True and created is True:
         user_membership = UserMembership.objects.get(user=instance.company)
         user_membership.job_credit -= 1
         user_membership.save()
-
+        instance.publish()
+        instance.set_expiration()
+        instance.save()
+    # If Job Post is being published for the first time
+    elif instance.is_active is True and created is False and instance.post_expiration is None:
+        user_membership = UserMembership.objects.get(user=instance.company)
+        user_membership.job_credit -= 1
+        user_membership.save()
+        instance.publish()
+        instance.set_expiration()
+        instance.save()
+    
 
 post_save.connect(post_job_save_update_usermembership, sender=JobPost)
 
