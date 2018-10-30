@@ -26,7 +26,10 @@ class App extends React.Component {
       token: null,
       jobs: null,
       employer: false,
-      user: null
+      user: null,
+      stripe_id: null,
+      subscription: null,
+      job_credit: null
     }
   }
 
@@ -70,6 +73,7 @@ class App extends React.Component {
       this.props.history.push('/account');
       this.setState({ message: `Please complete your company profile.`});
     } else if (data.user.is_employer) {
+      this.fetchMembership(data.token);
       const path = this.props.history.location.pathname;
       if (path === '/' || path === '/signin' || path === '/company') {
         this.props.history.push('/dashboard');
@@ -96,12 +100,26 @@ class App extends React.Component {
     this.props.history.push('/signin');
   }
 
+  fetchMembership = token => {
+    axios.get(`${process.env.REACT_APP_API}membership/`, { headers: { Authorization: `JWT ${token}`}})
+      .then(response => {
+        this.setState({
+          job_credit: response.data.job_credit,
+          stripe_id: response.data.stripe_id,
+          subscription: response.data.subscription
+        });
+      })
+      .catch(err => {
+        this.setState({ error: `Error getting membership status. Please refresh or try again.` });
+      });
+  }
+
   setJobs = jobs => {
     this.setState({ jobs: jobs });
   }
 
   render() {
-    const { loggedIn, error, message, token, jobs, employer, user } = this.state;
+    const { loggedIn, error, message, jobs, employer, user, stripe_id, subscription, job_credit } = this.state;
     let location = this.props.history.location.pathname;
     const home = location === '/';
     const company = location === '/company';
@@ -120,7 +138,7 @@ class App extends React.Component {
 
         {loggedIn ? (
           <div className="nav-wrapper">
-            <Navigation logOut={this.logOut} employer={employer} token={token} user={user}/>
+            <Navigation logOut={this.logOut} employer={employer} user={user}/>
           </div>
         ) : (
             // Navigation for unauthenticated users
@@ -184,16 +202,35 @@ class App extends React.Component {
             <Route path="/jobs/:id" render={() => <Job />} />
             {/* Auth Routes */}
             {employer ? (
-              <Route path="/account" render={() => <CompanyAccount token={token} logOut={this.logOut} user={user}/>} />            
+              <Route path="/account" render={() =>
+                <CompanyAccount 
+                  logOut={this.logOut}
+                  user={user}
+                  job_credit={job_credit}
+                  subscription={subscription}
+                  stripe_id={stripe_id}
+                  fetchMembership={this.fetchMembership}
+                  
+                 />
+              } />            
               ) : (
-              <Route path="/account" render={() => <Account token={token} logIn={this.logIn} logOut={this.logOut} user={user}/>} />
+              <Route path="/account" render={() => <Account logIn={this.logIn} logOut={this.logOut} user={user}/>} />
             )}
             {employer ? (
-              <Route exact path="/dashboard" render={() => <CompanyDashboard token={token} logOut={this.logOut}/>} />
+              <Route exact path="/dashboard" render={() => 
+                <CompanyDashboard 
+                  logOut={this.logOut}
+                  user={user}
+                  job_credit={job_credit}
+                  subscription={subscription}
+                  stripe_id={stripe_id}
+                  fetchMembership={this.fetchMembership}
+                  />
+              } />
             ) : (
-              <Route exact path="/dashboard" render={() => <Dashboard token={token} logOut={this.logOut}/>} />
+              <Route exact path="/dashboard" render={() => <Dashboard logOut={this.logOut}/>} />
             )}
-            <Route path="/billing" render={() => <Billing token={token} logOut={this.logOut} user={user}/>} />
+            <Route path="/billing" render={() => <Billing logOut={this.logOut} user={user}/>} />
             <Route component={NoMatch} />
           </Switch>
         </div>

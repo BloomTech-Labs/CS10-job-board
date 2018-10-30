@@ -1,22 +1,15 @@
 import React from "react";
-import axios from "axios";
+import { Icon } from "antd";
 
-class CompanyJobBalance extends React.Component {
-    state = {
-        stripe_count: null
-    }
-
-    componentDidMount() {
-        // axios call to stripe https://api.stripe.com/v1/orders/customerID ?
-    }
-
-    render() {
-        return (
-            <div className="company-balance">
-                <h3>Stripe Balance</h3>
+const CompanyJobBalance = props => {
+    return (
+        <div className="company-balance">
+            <div className="flex">
+                <Icon type="thunderbolt" />
+                <p>Job Credits: {props.subscription ? 'Unlimited' : props.job_credit}</p>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default CompanyJobBalance;

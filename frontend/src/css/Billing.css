@@ -4,13 +4,140 @@
     width: 100%;
 }
 
-.billing .checkout-card {
+/* Checkout Card Container */
+
+.checkout-card-container {
+    flex: 1 1;
+    margin: 0 5px;
+    position: relative;
+    max-width: 300px;
+}
+
+.checkout-card-container .anticon-close {
+    position: absolute;
+    top: 20px;
+    right: 0px;
+    font-size: 18px;
+}
+
+.checkout-card-container h2 {
+    position: absolute;
+    top: 28px;
+    left: -110px;
+}
+
+.checkout-card-container .anticon-check-circle {
+    font-size: 24px;
+    color: #52C41A;
+    align-self: flex-end;
+}
+
+    /* Transition classes */
+
+.active-card-enter {
+    position: relative;
+    /* transition: all 2s ease; */
+    left: -30px;
+    opacity: 0;
+}
+
+.active-card-enter-active {
+    opacity: 1;
+    left: 0;
+    transition: all 0.3s ease;
+}
+
+.active-card-enter-done {
+    position: relative;
+}
+
+/* Checkout Card */
+
+.checkout-card {
     display: flex;
     flex-flow: column wrap;
-    width: 25%;
+    justify-content: space-between;
+    width: 100%;
+    height: 340px;
     background: white;
     margin: 10px;
     border-radius: 4px;
     padding: 20px;
-    max-height: 400px;
+}
+
+.checkout-card h1,
+.checkout-card h3 {
+    margin: 0;
+}
+
+.checkout-card ul {
+    margin-top: 15px;
+    width: 96%;
+    list-style: none;
+}
+
+.checkout-card li {
+    margin-bottom: 8px;
+}
+
+.checkout-card button {
+    align-self: flex-end;
+}
+
+/* Stripe form */
+
+.checkout-form-container {
+    flex: 1 1;
+    margin: 0 15px;
+    padding: 10px;
+    max-width: 340px;
+    opacity: 0;
+    visibility: hidden;
+    align-self: flex-start;
+    position: absolute;
+}
+
+.checkout-form {
+    justify-content: space-between;
+    width: 100%;
+    min-height: 340px;
+}
+
+.stripe-card {
+    margin: 25px 0 15px;
+}
+
+.checkout-form .total {
+    align-self: flex-end;
+}
+
+.checkout-form button {
+    align-self: flex-end;
+}
+
+.checkout-form .anticon-check-circle {
+    font-size: 32px;
+    margin-bottom: 17px;
+    align-self: flex-end;
+    color: #52C41A;
+}
+
+/* Stripe form animations (<CSSTransitions/> classes) */
+
+.checkout-form-container-enter {
+    position: relative;
+    right: 40px;
+    opacity: 1;
+    visibility: visible;
+    transition: all 0.3s ease;
+}
+
+.checkout-form-container-enter-active {
+    right: 0;
+}
+
+.checkout-form-container-enter-done {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
 }

@@ -112,9 +112,15 @@
     color: #604CB0;
 }
 
-.ant-btn:active, .ant-btn:focus {
+.ant-btn-secondary:active, .ant-btn-secondary:focus {
     color: #604CB0;
     border-color: #604CB0;
+}
+
+.ant-btn-primary:active, .ant-btn-primary:focus {
+    color: white;
+    border-color: #604CB0;
+    background: #896cff;
 }
 
 /* Job Post */
