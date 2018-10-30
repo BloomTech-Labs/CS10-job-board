@@ -209,6 +209,8 @@ class App extends React.Component {
                   job_credit={job_credit}
                   subscription={subscription}
                   stripe_id={stripe_id}
+                  fetchMembership={this.fetchMembership}
+                  
                  />
               } />            
               ) : (
@@ -221,7 +223,9 @@ class App extends React.Component {
                   user={user}
                   job_credit={job_credit}
                   subscription={subscription}
-                  stripe_id={stripe_id}/>
+                  stripe_id={stripe_id}
+                  fetchMembership={this.fetchMembership}
+                  />
               } />
             ) : (
               <Route exact path="/dashboard" render={() => <Dashboard logOut={this.logOut}/>} />

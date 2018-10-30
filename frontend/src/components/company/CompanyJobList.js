@@ -46,12 +46,12 @@ class CompanyJobList extends React.Component {
         if (!this.state.jobs) {
             this.fetchJobs();
         }
-
     }
     
     fetchJobs = () => {
         this.setState({ loading: true, error: null, message: null });
         const token = localStorage.getItem('token');
+        this.props.fetchMembership(token);
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
         let api = `${process.env.REACT_APP_API}company/jobs/`;
         // const { currentQuery } = this.state;

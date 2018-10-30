@@ -12,7 +12,11 @@ class CompanyDashboard extends Component {
     render() {
         return (
             <div className="dashboard">
-                <CompanyJobList job_credit={this.props.job_credit} subscription={this.props.subscription}/>
+                <CompanyJobList
+                    job_credit={this.props.job_credit} 
+                    subscription={this.props.subscription}
+                    fetchMembership={this.props.fetchMembership}
+                    />
             </div>
         );
     }
