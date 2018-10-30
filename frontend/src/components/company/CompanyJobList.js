@@ -380,6 +380,7 @@ class CompanyJobList extends React.Component {
         this.setState({ error: null, message: null, loading: true });
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
+        // setting post_expiration to null triggers a post_save reset of pubslish & expiration of date to now()
         axios.patch(`${process.env.REACT_APP_API}company/jobs/${id}/`, { post_expiration: null }, requestOptions)
             .then(response => {
                 this.setState({ message: `Job boosted!`});
