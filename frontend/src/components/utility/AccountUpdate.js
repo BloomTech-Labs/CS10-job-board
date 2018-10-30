@@ -34,61 +34,56 @@ class AccountUpdate extends React.Component {
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}`}};
         const { email, current_password, new_password, attempts } = this.state;
-        // Simple token comparison
-        if (token !== this.props.token) {
-            this.props.logOut(e, `Error authenticating account. Please log in again.`);
-        } else {
-            // POST to verify token; returns JWT if valid
-            axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
-                .then(response => {
-                    // If token is valid, check password
-                    axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: current_password })
-                        .then(response => {
-                            const formData = new FormData();
-                            formData.append('password', new_password)
-                            // If token & password are valid, send PATCH update
-                            axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
-                                .then(response => {
-                                    this.setState({ message: `Password successfully updated`, attempts: 0 });
-                                    // Reset JWT secret once password is updated.
-                                    axios.post(`${process.env.REACT_APP_API}logout/all/`, {}, requestOptions)
-                                        .then(response => {
-                                            // Login to retrieve a newly signed JWT
-                                            axios.post(`${process.env.REACT_APP_LOGIN_API}`, {email: email, password: new_password})
-                                                .then(response => {
-                                                    localStorage.setItem('token', response.data.token);
-                                                })
-                                                .catch(err => {
-                                                    this.setState({ error: `Error logging in. Please log in again.`});
-                                                });
-                                        })
-                                        .catch(err => {
-                                            this.setState({ error: `Error processing request. Please log in again.`})
-                                        });
-                                })
-                                .catch(err => {
-                                    this.setState({ error: `Error processing your request.`});
-                                });
-                        })
-                        .catch(err => {
-                            if (attempts > 2)  {
-                                // Resets JWT secret signature on User
+        // POST to verify token; returns JWT if valid
+        axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
+            .then(response => {
+                // If token is valid, check password
+                axios.post(`${process.env.REACT_APP_LOGIN_API}`, { email: email, password: current_password })
+                    .then(response => {
+                        const formData = new FormData();
+                        formData.append('password', new_password)
+                        // If token & password are valid, send PATCH update
+                        axios.patch(`${process.env.REACT_APP_API}account/${this.props.user}/`, formData, requestOptions)
+                            .then(response => {
+                                this.setState({ message: `Password successfully updated`, attempts: 0 });
+                                // Reset JWT secret once password is updated.
                                 axios.post(`${process.env.REACT_APP_API}logout/all/`, {}, requestOptions)
                                     .then(response => {
-                                        this.props.logOut(e, `Too many password attempts.`);
+                                        // Login to retrieve a newly signed JWT
+                                        axios.post(`${process.env.REACT_APP_LOGIN_API}`, {email: email, password: new_password})
+                                            .then(response => {
+                                                localStorage.setItem('token', response.data.token);
+                                            })
+                                            .catch(err => {
+                                                this.setState({ error: `Error logging in. Please log in again.`});
+                                            });
                                     })
                                     .catch(err => {
-                                        console.log(err);
-                                        this.props.logOut(e, `Too many password attempts.`);
-                                    })
-                            }
-                            else this.setState({ attempts: attempts + 1 });
-                        });
-                })
-                .catch(err => {
-                    this.props.logOut(e, `Problems authenticating request. Please log in again.`);
-                });
-        }
+                                        this.setState({ error: `Error processing request. Please log in again.`})
+                                    });
+                            })
+                            .catch(err => {
+                                this.setState({ error: `Error processing your request.`});
+                            });
+                    })
+                    .catch(err => {
+                        if (attempts > 2)  {
+                            // Resets JWT secret signature on User
+                            axios.post(`${process.env.REACT_APP_API}logout/all/`, {}, requestOptions)
+                                .then(response => {
+                                    this.props.logOut(e, `Too many password attempts.`);
+                                })
+                                .catch(err => {
+                                    console.log(err);
+                                    this.props.logOut(e, `Too many password attempts.`);
+                                })
+                        }
+                        else this.setState({ attempts: attempts + 1 });
+                    });
+            })
+            .catch(err => {
+                this.props.logOut(e, `Problems authenticating request. Please log in again.`);
+            });
     }
 
     
@@ -97,20 +92,16 @@ class AccountUpdate extends React.Component {
         e.preventDefault();
         this.setState({ error: null, message: null });
         const token = localStorage.getItem('token');
-        // Simple token comparison
-        if (token !== this.props.token) {
-            this.props.logOut(e, `Error authenticating account. Please log in again.`);
-        } else {
-            // POST to verify token; returns the same JWT if valid
-            axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
-            .then(response => {
-                // POST request handled in modal by this.postEmail()
-                this.toggleFormModal();
-            })
-            .catch(err => {
-                this.props.logOut(e, `Problems authenticating request. Please log in again.`);
-            });
-        }
+        // POST to verify token; returns the same JWT if valid
+        axios.post(`${process.env.REACT_APP_LOGIN_API}verify/`, {token: token})
+        .then(response => {
+            // POST request handled in modal by this.postEmail()
+            this.toggleFormModal();
+        })
+        .catch(err => {
+            this.props.logOut(e, `Problems authenticating request. Please log in again.`);
+        });
+
     }
 
     postEmail = e => {

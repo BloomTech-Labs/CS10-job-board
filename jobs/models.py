@@ -89,22 +89,56 @@ class JobPost(models.Model):
     tags = TaggableManager(verbose_name="Tags", help_text="Enter tags separated by commas", blank=True)
     created_date = models.DateTimeField(default=timezone.now, editable=False)
     published_date = models.DateTimeField(blank=True, null=True)
-     
-    class Meta:
-        ordering = ['-published_date']
+    post_expiration = models.DateTimeField(blank=True, null=True)
 
-    @property
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        ordering = ['-post_expiration']
+
+    # @published_date.setter
     def publish(self):
         self.published_date = timezone.now()
-        self.save()
+        # self.save()
+
+    # @post_expiration.setter
+    def set_expiration(self):
+        self.post_expiration = timezone.now() + timezone.timedelta(days=30)
+
+
+# Django post_save signal listener to decrement job_credit on UserMembership
+def post_job_save_update_usermembership(sender, instance, created, *args, **kwargs):
+    # print('post_save', instance.is_active, instance.post_expiration)
+    # If Job Post is new & published
+    if instance.is_active is True and created is True:
+        user_membership = UserMembership.objects.get(user=instance.company)
+        user_membership.job_credit -= 1
+        user_membership.save()
+        instance.publish()
+        instance.set_expiration()
+        instance.save()
+    # If Job Post is being published for the first time
+    elif instance.is_active is True and created is False and instance.post_expiration is None:
+        user_membership = UserMembership.objects.get(user=instance.company)
+        user_membership.job_credit -= 1
+        user_membership.save()
+        instance.publish()
+        instance.set_expiration()
+        instance.save()
+    
+
+post_save.connect(post_job_save_update_usermembership, sender=JobPost)
 
 
 # Defines subscription type and stripe_id, if any.
 class UserMembership(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    # id of UserMemberhship is user_id because primary_key=True for the OneToOneField
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     stripe_id = models.CharField(max_length=40)
     SUBSCRIPTION_CHOICES = (('F', 'Free'), ('plan_DoNu8JmqFRMrze', 'Unlimited'))
     subscription = models.CharField(choices=SUBSCRIPTION_CHOICES, default='F', max_length=30)
+    job_credit = models.IntegerField(default=0, blank=True)
 
     def __str__(self):
         return self.user.email
@@ -115,8 +149,13 @@ class UserMembership(models.Model):
 class UserPayment(models.Model):
     user = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
     stripe_token = models.CharField(max_length=128, blank=True)
-    PAYMENT_CHOICES = (('sku_DoNhM1EGgKGLeg', '1 Post'), ('sku_DoNp2frdbkieqn', '12 Posts'), ('plan_DoNu8JmqFRMrze', 'Unlimited Posts'))
+    PAYMENT_CHOICES = (
+        ('sku_DoNhM1EGgKGLeg', '1 Post'),
+        ('sku_DoNp2frdbkieqn', '12 Posts'),
+        ('plan_DoNu8JmqFRMrze', 'Unlimited Posts')
+    )
     purchased = models.CharField(choices=PAYMENT_CHOICES, max_length=30)
+    quantity = models.IntegerField(default=1)
     created_date = models.DateTimeField(default=timezone.now, editable=False)
 
     def __str__(self):
@@ -125,8 +164,8 @@ class UserPayment(models.Model):
 
 ########### Stripe API ###########
 
-# Creates a Membership instance for User after Payment token saved if none exists
-# Uses post_save Django signal to run when a UserPayment object is creatd from /pay API
+# Creates a Membership instance for User after Payment token is saved, if none exists
+# Uses the post_save Django signal to run when a UserPayment object is creatd from /pay API
 def post_pay_usermembership_create(sender, instance, *args, **kwargs):
     # get_or_create returns two variables in a tuple, the second being a boolean about creation status
     user_membership, created = UserMembership.objects.get_or_create(user=instance.user)
@@ -138,7 +177,7 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
         user_membership.stripe_id = new_customer['id']
         user_membership.save()
 
-    # If subscription purchase, assign plan to customer with Subscription API
+    # If subscription purchase, assign plan to customer with Stripe Subscription API
     if instance.purchased is 'plan_DoNu8JmqFRMrze':
         stripe.Subscription.create(
             customer=user_membership.stripe_id,
@@ -148,7 +187,12 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
                 }
             ]
         )
-    # Else purchase a job post product with Order API
+
+        # Save subscription status on UserMembership
+        user_membership.subscription = 'plan_DoNu8JmqFRMrze'
+        user_membership.save()
+
+    # Else purchase a job post product with Stripe Order API
     else:
         new_order = stripe.Order.create(
             currency='usd',
@@ -156,7 +200,8 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
             items=[
                 {
                     "type": "sku",
-                    "parent" : f'{instance.purchased}'
+                    "parent": f'{instance.purchased}',
+                    "quantity": f'{instance.quantity}'
                 }
             ]
         )
@@ -165,7 +210,17 @@ def post_pay_usermembership_create(sender, instance, *args, **kwargs):
             customer=user_membership.stripe_id
         )
 
+        # Set quantity on userMembership model
+            # 12 Pack
+        if instance.purchased is 'sku_DoNp2frdbkieqn':
+            user_membership.job_credit += 12
+        else: 
+            # 1 Job Post (max is 11)
+            user_membership.job_credit += instance.quantity
+        user_membership.save()
 
+
+# Django post_save signal
 post_save.connect(post_pay_usermembership_create, sender=UserPayment)
 
 

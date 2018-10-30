@@ -70,6 +70,7 @@ class CompanyJobEdit extends React.Component {
             } else {
               this.setState({ message: `Draft Saved!`});
             }
+            this.props.fetchJobs();
           })
           .catch(err => {
             this.setState({ error: `Error processing request. Please try again.`})

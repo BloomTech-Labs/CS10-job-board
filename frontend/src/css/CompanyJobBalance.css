@@ -1,7 +1,18 @@
-.company-balance {
-    margin: 10px;
-    background: white;
-    border-radius: 4px;
-    display: flex;
-    align-self: flex-start;
+.company-balance .flex {
+    width: 100%;
+    align-items: baseline;
+}
+
+.company-balance .anticon-thunderbolt {
+    position: relative;
+    top: 3px;
+    font-size: 15px;
+}
+
+.company-balance .anticon-thunderbolt:hover {
+    cursor: default;
+}
+
+.company-job-count p {
+    margin-right: 10px;
 }
