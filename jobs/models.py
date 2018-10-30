@@ -89,7 +89,7 @@ class JobPost(models.Model):
     tags = TaggableManager(verbose_name="Tags", help_text="Enter tags separated by commas", blank=True)
     created_date = models.DateTimeField(default=timezone.now, editable=False)
     published_date = models.DateTimeField(blank=True, null=True)
-    post_expiration = models.DateTimeField(blank=True, null=True)
+    post_expiration = models.DateTimeField(blank=True, null=True, default=None)
 
     def __str__(self):
         return self.title
