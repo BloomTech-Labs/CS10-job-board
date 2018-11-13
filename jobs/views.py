@@ -43,7 +43,6 @@ from .api import (
     UserPaymentViewSerializer,
     JWTSerializer
 )
-import stripe
 
 
 ################### NOTES ######################
@@ -331,11 +330,8 @@ class UserMembershipView(generics.CreateAPIView, generics.RetrieveUpdateAPIView)
     # Override retrieve Django REST mixin
     def retrieve(self, request, *args, **kwargs):
         instance = UserMembership.objects.filter(user_id=request.user.pk).first()
-        if instance is not None:
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-        else:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
 
     # Override update Django REST mixiin
     def update(self, request, *args, **kwargs):

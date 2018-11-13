@@ -134,7 +134,7 @@ post_save.connect(post_job_save_update_usermembership, sender=JobPost)
 # Defines subscription type and stripe_id, if any.
 class UserMembership(models.Model):
     # id of UserMemberhship is user_id because primary_key=True for the OneToOneField
-    user = models.ForeignKey('jobs.User', on_delete=models.CASCADE)
+    user = models.OneToOneField('jobs.User', on_delete=models.CASCADE, primary_key=True)
     stripe_id = models.CharField(max_length=40)
     SUBSCRIPTION_CHOICES = (('F', 'Free'), ('plan_DoNu8JmqFRMrze', 'Unlimited'))
     subscription = models.CharField(choices=SUBSCRIPTION_CHOICES, default='F', max_length=30)
