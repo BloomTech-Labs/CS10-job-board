@@ -29,11 +29,13 @@ class JobPostFactory(factory.django.DjangoModelFactory):
     published_date = 'published_date'
 
 
-class UserPaymentFactory(factory.django.DjangoModelFactory):
+class UserMembershipFactory(factory.django.DjangoModelFactory):
     class Meta:
-        model = models.UserPayment
+        model = models.UserMembership
 
-    purchased = 'purchased'
-    quantity = 'quantity'
+    user = 'user'
+    stripe_id = 'stripe_id'
+    subscription = 'subscription'
+    job_credit = 'job_credit'
 
     
