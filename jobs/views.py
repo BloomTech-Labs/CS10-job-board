@@ -43,7 +43,6 @@ from .api import (
     UserPaymentViewSerializer,
     JWTSerializer
 )
-import stripe
 
 
 ################### NOTES ######################
