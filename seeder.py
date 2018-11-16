@@ -1,38 +1,38 @@
 from django.core.management.base import BaseCommand
-from fakerdata import UserFactory, JobPostFactory
+from fakerdata import UserFactory, JobPostFactory, UserMembershipFactory
 from random import randint, choice
-from taggit.managers import TaggableManager
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import get_user_model
 from jobs import models
-# from faker import Faker
-# fake = Faker()
+from django.conf import settings
+import stripe
 import factory
 
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 User = get_user_model()
 
-skills_list = [
-'JavaScript', 'Python', 'Node.js', 
-'SQL', 'MongoDB', 'Linux',
-'C', 'Agile','React',
-'Django', 'Ruby on Rails', 'Java'
+SKILLS_LIST = [
+    'JavaScript', 'Python', 'Node.js',
+    'SQL', 'MongoDB', 'Linux',
+    'C', 'Agile', 'React',
+    'Django', 'Ruby on Rails', 'Java'
 ]
 
-company_logos = [
-'media_default_images/auto-speed.png',
-'media_default_images/baby-swim.png',
-'media_default_images/beauty-box.png',
-'media_default_images/cheshire-county-hygiene-services.png',
-'media_default_images/crofts-accountants.png',
-'media_default_images/fast-banana.png',
-'media_default_images/greens-food-suppliers.png',
-'media_default_images/james-and-sons.png',
-'media_default_images/petes-blinds.png',
-'media_default_images/space-cube.png',
-'media_default_images/the-dance-studio.png',
-'media_default_images/the-web-works.png',
-'media_default_images/yoga-baby.png'
+COMPANY_LOGOS = [
+    'media_default_images/auto-speed.png',
+    'media_default_images/baby-swim.png',
+    'media_default_images/beauty-box.png',
+    'media_default_images/cheshire-county-hygiene-services.png',
+    'media_default_images/crofts-accountants.png',
+    'media_default_images/fast-banana.png',
+    'media_default_images/greens-food-suppliers.png',
+    'media_default_images/james-and-sons.png',
+    'media_default_images/petes-blinds.png',
+    'media_default_images/space-cube.png',
+    'media_default_images/the-dance-studio.png',
+    'media_default_images/the-web-works.png',
+    'media_default_images/yoga-baby.png'
 ]
 
 
@@ -46,7 +46,7 @@ class Command(BaseCommand):
 
         if is_employer:
             company_name = factory.Faker('company')
-            company_logo = choice(company_logos)
+            company_logo = choice(COMPANY_LOGOS)
             company_summary = factory.Faker('paragraph', nb_sentences=3, variable_nb_sentences=True, ext_word_list=None)
             application_inbox = factory.Faker('safe_email')
         else:
@@ -68,30 +68,34 @@ class Command(BaseCommand):
         new_user.save()
         print(new_user)
 
-# User model fields:
+    COMPANIES = models.User.objects.exclude(is_employer=False)
 
-# is_employer
-# email
-# password
-# is_active
-# is_staff
-# company_name
-# company_logo
-# company_summary
-# application_inbox
-# first_name
-# last_name
-# profile_photo
-# created_date
-# jwt_secret
+    # Create a UserPayment object / UserMembership object as if they are employers
+    for company in COMPANIES:
+        user = company
+        subscription = 'plan_DoNu8JmqFRMrze'
 
-    companies = models.User.objects.exclude(is_employer=False)
+        # # create a Stripe id
+        new_customer = stripe.Customer.create(
+            email=user.email
+        )
+        
+        new_membership = UserMembershipFactory(
+            user=user,
+            stripe_id=new_customer['id'],
+            subscription=subscription,
+            job_credit='999'
+        )
 
+        new_membership.save()
+        print('membership', new_membership)
+
+    # Create job posts
     for entry in range(100):
 
         # Create publish state
         published = factory.Faker('boolean', chance_of_getting_true=60)
-        company = choice(companies)
+        company = choice(COMPANIES)
         print(company)
 
         if published:
@@ -114,18 +118,16 @@ class Command(BaseCommand):
         new_jobpost.save()
         print(new_jobpost)
 
+    JOB_POSTS = models.JobPost.objects.all()
 
-
-    job_posts = models.JobPost.objects.all()
-
-    for post in job_posts:
+    for post in JOB_POSTS:
 
         # Create Tags
         count = 0
         tag_count = randint(1, 7)
         tags = []
         while count < tag_count:
-            tags.append(choice(skills_list))
+            tags.append(choice(SKILLS_LIST))
             count += 1
 
         print(tags)
@@ -133,19 +135,3 @@ class Command(BaseCommand):
             post.tags.add(tag)
 
         post.save()
-
-# Job Posts fields:
-
-# company
-# company_name
-# title
-# company_logo
-# description
-# job_location
-# requirements
-# min_salary
-# max_salary
-# is_active
-# tags
-# created_date
-# published_date
