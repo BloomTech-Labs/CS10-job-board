@@ -19,7 +19,7 @@ class CompanyJobList extends React.Component {
             count: null,
             published_count: null,
             unpublished_count: null,
-            jobs: null,
+            jobList: null,
             published: null,
             unpublished: null,
             next: null,
@@ -33,7 +33,7 @@ class CompanyJobList extends React.Component {
             job: null,
             drawer: false,
             drawerPlacement: "right",
-            currentQuery: null,
+            jobListType: null,
             popconfirmPublish: null
         }
     }
@@ -43,7 +43,7 @@ class CompanyJobList extends React.Component {
     }
 
     componentDidMount() {
-        if (!this.state.jobs) {
+        if (!this.state.jobList) {
             this.fetchJobs();
         }
     }
@@ -54,19 +54,20 @@ class CompanyJobList extends React.Component {
         this.props.fetchMembership(token);
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
         let api = `${process.env.REACT_APP_API}company/jobs/`;
-        // const { currentQuery } = this.state;
-        // let url = currentQuery ? api + `?${currentQuery}` : api;
+        // const { jobListType } = this.state;
+        // let url = jobListType ? api + `?${jobListType}` : api;
         axios.get(api , requestOptions)
         .then(response => {
             this.setState({ 
-                jobs: response.data.results,
+                jobList: response.data.results,
                 count: response.data.count,
                 next: response.data.next,
                 previous: response.data.previous,
                 published: response.data.results.filter(job => job.is_active === true),
-                unpublished: response.data.results.filter(jobs => jobs.is_active === false),
+                unpublished: response.data.results.filter(job => job.is_active === false),
                 loading: false
             });
+            // call stack ordering to be called after job list is filtered.
             this.setState({
                 published_count: this.state.published.length,
                 unpublished_count: this.state.unpublished.length
@@ -77,10 +78,11 @@ class CompanyJobList extends React.Component {
         });
     }
 
-    setQuery = e => {
+    // Display published, unpublished, or all jobs lists in tab selection
+    setJobListType = e => {
         const query = e.target.value.toLowerCase();
-        if (query === 'unpublished' || query === 'published') this.setState({ currentQuery: query });
-        else this.setState({ currentQuery: null });
+        if (query === 'unpublished' || query === 'published') this.setState({ jobListType: query });
+        else this.setState({ jobListType: null });
     }
     
     // delete REST request
@@ -136,29 +138,21 @@ class CompanyJobList extends React.Component {
 
     searchJobs = e => {
         this.setState({ search: e.target.value });
-        let searchTerm = e.target.value;
-        const activeJobsArray = this.state.currentQuery ? this.state[`${this.state.currentQuery}`] : this.state.jobs;
-        for (let i = 0; i < activeJobsArray.length; i++) {
-            let job = activeJobsArray[i];
-            let found = null;
-            // iterate through each key value pair in the job object
+        let searchTerm = e.target.value.toLowerCase();
+        if (searchTerm.length === 0) {
+            return this.setState({ filtered: null });
+        }
+        // activeJobsList = current list to search through
+        const activeJobsList = this.state.jobListType ? this.state[`${this.state.jobListType}`] : this.state.jobList;
+        const matchText = (job, searchTerm) => {
             for (let key in job) {
                 const value = job[key];
-                if (typeof(value) === "string") {
-                    // Case-insensitive search
-                    if (value.toLowerCase().indexOf(`${searchTerm.toLowerCase()}`) > -1) {
-                        const item = document.getElementById(`${activeJobsArray[i].id}`);
-                        item.style.display = "flex";
-                        found = true;
-                    }
+                if (typeof(value) === 'string') {
+                    if (value.toLowerCase().indexOf(`${searchTerm}`) !== -1) return true;
                 }
             }
-            if (!found) {
-                // hide elements that don't match search query
-                const item = document.getElementById(`${activeJobsArray[i].id}`);
-                item.style.display = "none";
-            }
         }
+        this.setState({ filtered: activeJobsList.filter(job => matchText(job, searchTerm))});
     }
 
     // Next 3 fns: Sets display density of job list
@@ -346,7 +340,7 @@ class CompanyJobList extends React.Component {
 
     // show JobEdit.js view drawer
     openDrawer = id => {
-        this.setState({ job: this.state.jobs.filter(job => job.id === id)[0] });
+        this.setState({ job: this.state.jobList.filter(job => job.id === id)[0] });
         this.setState({ drawer: true });
     }
 
@@ -397,7 +391,7 @@ class CompanyJobList extends React.Component {
             error,
             message,
             loading,
-            jobs,
+            filtered,
             search,
             count,
             published_count,
@@ -406,7 +400,8 @@ class CompanyJobList extends React.Component {
             job,
             drawer,
             drawerPlacement,
-            currentQuery,
+            jobList,
+            jobListType,
             popconfirmPublish
         } = this.state;    
 
@@ -427,7 +422,7 @@ class CompanyJobList extends React.Component {
            );
 
         const jobTypeMenu = (
-            <RadioGroup defaultValue="all" onChange={this.setQuery} size="small">
+            <RadioGroup defaultValue="all" onChange={this.setJobListType} size="small">
                 <RadioButton value="All">All</RadioButton>
                 <RadioButton value="Published">Published</RadioButton>
                 <RadioButton value="Unpublished">Unpublished</RadioButton>
@@ -440,9 +435,9 @@ class CompanyJobList extends React.Component {
 
         )
 
-        const mapJobs = query => {
+        const mapJobs = list => {
             return (
-                query.map(job => {
+                list.map(job => {
                     return (
                         <List.Item 
                             key={job.id}
@@ -527,7 +522,7 @@ class CompanyJobList extends React.Component {
                     </Dropdown>
                 </div>
 
-                {jobs ? (
+                {filtered ? (
                         <List 
                         className="flex column company-job-list" 
                         bordered={true} 
@@ -546,9 +541,32 @@ class CompanyJobList extends React.Component {
                             </div>
                         ]}
                         >
-                            {mapJobs(currentQuery ? this.state[`${this.state.currentQuery}`] : this.state.jobs )}
+                            {mapJobs(filtered)}
                         </List>
-                ) : (null)}
+                ) : (
+                        <List 
+                        className="flex column company-job-list" 
+                        bordered={true} 
+                        loading={loading} 
+                        pagination={true} 
+                        position="both" 
+                        loadMore
+                        gutter={1}
+                        header={[
+                            <div key={1}>
+                                <Checkbox onChange={this.checkAll}/>
+                                <div className="whitespace"></div>
+                                <p>Boost</p>
+                                <em className="ant-list-item-action-split"></em>
+                                <p>Published</p>
+                            </div>
+                        ]}
+                        >
+                        {jobList ? (
+                            mapJobs(jobListType ? this.state[`${jobListType}`] : this.state.jobList )
+                        ) : (null)}
+                        </List>
+                )}
 
                 <Drawer
                     width={580}
