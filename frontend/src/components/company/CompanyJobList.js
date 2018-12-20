@@ -20,14 +20,12 @@ class CompanyJobList extends React.Component {
             published_count: null,
             unpublished_count: null,
             jobList: null,
-            published: null,
-            unpublished: null,
+            publishedList: null,
+            unpublishedList: null,
             next: null,
             previous: null,
             padding: null,
-            checkedList: [],
-            clicked: [],
-            checkAll: false,
+            checkedList: new Set(),
             bulk: false,
             jobType: null,
             job: null,
@@ -63,14 +61,14 @@ class CompanyJobList extends React.Component {
                 count: response.data.count,
                 next: response.data.next,
                 previous: response.data.previous,
-                published: response.data.results.filter(job => job.is_active === true),
-                unpublished: response.data.results.filter(job => job.is_active === false),
+                publishedList: response.data.results.filter(job => job.is_active === true),
+                unpublishedList: response.data.results.filter(job => job.is_active === false),
                 loading: false
             });
             // call stack ordering to be called after job list is filtered.
             this.setState({
-                published_count: this.state.published.length,
-                unpublished_count: this.state.unpublished.length
+                published_count: this.state.publishedList.length,
+                unpublished_count: this.state.unpublishedList.length
             });
         })
         .catch(err => {
@@ -80,9 +78,11 @@ class CompanyJobList extends React.Component {
 
     // Display published, unpublished, or all jobs lists in tab selection
     setJobListType = e => {
-        const query = e.target.value.toLowerCase();
-        if (query === 'unpublished' || query === 'published') this.setState({ jobListType: query });
-        else this.setState({ jobListType: null });
+        const query = e.target.value.toLowerCase() + 'List';
+        if (query === 'allList') {
+            this.setState({ jobListType: null });
+        }
+        else this.setState({ jobListType: query });
     }
     
     // delete REST request
@@ -142,8 +142,9 @@ class CompanyJobList extends React.Component {
         if (searchTerm.length === 0) {
             return this.setState({ filtered: null });
         }
-        // activeJobsList = current list to search through
-        const activeJobsList = this.state.jobListType ? this.state[`${this.state.jobListType}`] : this.state.jobList;
+        // activeJobsList is jobs list to search through
+        const jobListType = this.state.jobListType;
+        const activeJobsList = this.state.jobListType ? this.state[`${jobListType}`] : this.state.jobList;
         const matchText = (job, searchTerm) => {
             for (let key in job) {
                 const value = job[key];
@@ -172,52 +173,68 @@ class CompanyJobList extends React.Component {
         this.setState({ padding: "25px"});
     }
 
-    // Default onClick handler for checkboxes
-    checkJob = e => {
-        const { clicked, checkedList } = this.state;
-        // shift key condition - to select multiple items
-        const shiftPressed = e.nativeEvent.shiftKey;
-        if (shiftPressed) {
-            // last clicked is last clicked without shift key active
-            let lastClicked = clicked[clicked.length - 1];
-            if (lastClicked) {
-                this.checkJobShiftKey(e.target.checked, e.target.id, lastClicked);
-            } else {
-            // if clicked array is empty
-                if (e.target.checked === true) {
-                    this.setState({ 
-                        checkedList: checkedList.concat(e.target.id),
-                        clicked: clicked.concat(e.target.id)
-                    });
-                } else {
-                    this.setState({ 
-                        checkedList: this.state.checkedList.filter(item => item !== e.target.id),
-                        clicked: clicked.filter(item => item !== e.target.id)
-                    });
-                    // reset clicked array if checkedList is empty
-                    if (checkedList.length === 0) {
-                        this.setState({ clicked: [] });
-                    }
-                }
-            }
-        // if shift key is not pressed
+    handleCheckJob = e => {
+        if (e.nativeEvent.shiftKey) {
+            this.checkMultipleJobs()
         } else {
-            if (e.target.checked === true) {
-                this.setState({ 
-                    checkedList: checkedList.concat(e.target.id),
-                    clicked: clicked.concat(e.target.id)
-                });
-            } else {
-                this.setState({ 
-                    checkedList: this.state.checkedList.filter(item => item !== e.target.id),
-                    clicked: clicked.filter(item => item !== e.target.id)
-                });
-                // reset clicked array if checkedList is empty
-                if (checkedList.length === 0) {
-                    this.setState({ clicked: [] });
-                }
-            }
+            this.checkJob(e);
         }
+    }
+    
+    // add / remove checked inputs to Set() in state
+    checkJob = e => {
+        const job_id = e.target.id;
+        const { checkedList } = this.state;
+        if (e.target.checked && !checkedList.has(job_id)) {
+            checkedList.add(job_id);
+        } else if (!e.target.checked && checkedList.has(job_id)) {
+            checkedList.delete(job_id);
+        }
+
+        // const { clicked, checkedList } = this.state;
+        // // shift key condition - to select multiple items
+        // const shiftPressed = e.nativeEvent.shiftKey;
+        // if (shiftPressed) {
+        //     // last clicked is last clicked without shift key active
+        //     let lastClicked = clicked[clicked.length - 1];
+        //     if (lastClicked) {
+        //         this.checkJobShiftKey(e.target.checked, e.target.id, lastClicked);
+        //     } else {
+        //     // if clicked array is empty
+        //         if (e.target.checked === true) {
+        //             this.setState({ 
+        //                 checkedList: checkedList.concat(e.target.id),
+        //                 clicked: clicked.concat(e.target.id)
+        //             });
+        //         } else {
+        //             this.setState({ 
+        //                 checkedList: this.state.checkedList.filter(item => item !== e.target.id),
+        //                 clicked: clicked.filter(item => item !== e.target.id)
+        //             });
+        //             // reset clicked array if checkedList is empty
+        //             if (checkedList.length === 0) {
+        //                 this.setState({ clicked: [] });
+        //             }
+        //         }
+        //     }
+        // // if shift key is not pressed
+        // } else {
+        //     if (e.target.checked === true) {
+        //         this.setState({ 
+        //             checkedList: checkedList.concat(e.target.id),
+        //             clicked: clicked.concat(e.target.id)
+        //         });
+        //     } else {
+        //         this.setState({ 
+        //             checkedList: this.state.checkedList.filter(item => item !== e.target.id),
+        //             clicked: clicked.filter(item => item !== e.target.id)
+        //         });
+        //         // reset clicked array if checkedList is empty
+        //         if (checkedList.length === 0) {
+        //             this.setState({ clicked: [] });
+        //         }
+        //     }
+        // }
     }
 
     checkJobShiftKey = (checked, id, lastClicked) => {
@@ -314,10 +331,12 @@ class CompanyJobList extends React.Component {
     // onClick handler for first checkbox
     checkAll = e => {
         // get a list of all checkboxes to check / uncheck
-        const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
-        this.setState({ checkedList: this.checkRange(e.target.checked, checkboxes) });
+        // const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
         if (!e.target.checked) {
             this.setState({ clicked: [] });
+        } else {
+
+            this.setState({ checkedList: [] });
         }
     }
 
@@ -330,8 +349,10 @@ class CompanyJobList extends React.Component {
                 checkedListIds.push(input.id);
             }
             if (checked && !input.checked) {
+                // input.checked = "checked";
                 input.click();
             } else if (!checked && input.checked) {
+                // input.checked = "checked";
                 input.click();
             }
         }
@@ -470,7 +491,7 @@ class CompanyJobList extends React.Component {
                             ]}
                             style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
                         >
-                            <Checkbox onClick={this.checkJob} id={`${job.id}`} className="job-item"/>
+                            <Checkbox onChange={this.handleCheckJob} id={`${job.id}`} className="job-item"/>
                             <em className="ant-list-item-action-split-modified"></em>
                             <p>{job.title}</p>
                         </List.Item>
@@ -522,6 +543,7 @@ class CompanyJobList extends React.Component {
                     </Dropdown>
                 </div>
 
+                {/* If search term present, display list */}
                 {filtered ? (
                         <List 
                         className="flex column company-job-list" 
@@ -544,6 +566,7 @@ class CompanyJobList extends React.Component {
                             {mapJobs(filtered)}
                         </List>
                 ) : (
+                    // Else if no search term, display jobs if jobList is not null
                         <List 
                         className="flex column company-job-list" 
                         bordered={true} 
@@ -562,6 +585,7 @@ class CompanyJobList extends React.Component {
                             </div>
                         ]}
                         >
+                        {/* if jobListType is not null, render that list */}
                         {jobList ? (
                             mapJobs(jobListType ? this.state[`${jobListType}`] : this.state.jobList )
                         ) : (null)}
