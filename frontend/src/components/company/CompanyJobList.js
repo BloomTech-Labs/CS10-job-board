@@ -15,13 +15,14 @@ class CompanyJobList extends React.Component {
             message: null,
             loading: false,
             search: "",
-            filtered: null,
+            filtered: [],
             count: null,
             published_count: null,
             unpublished_count: null,
             jobList: null,
             publishedList: null,
             unpublishedList: null,
+            jobListType: "jobList",
             next: null,
             previous: null,
             padding: null,
@@ -31,7 +32,6 @@ class CompanyJobList extends React.Component {
             job: null,
             drawer: false,
             drawerPlacement: "right",
-            jobListType: null,
             popconfirmPublish: null
         }
     }
@@ -74,15 +74,6 @@ class CompanyJobList extends React.Component {
         .catch(err => {
             this.setState({ error: `Error processing request. Try Again.`, loading: false});
         });
-    }
-
-    // Display published, unpublished, or all jobs lists in tab selection
-    setJobListType = e => {
-        const query = e.target.value.toLowerCase() + 'List';
-        if (query === 'allList') {
-            this.setState({ jobListType: null });
-        }
-        else this.setState({ jobListType: query });
     }
     
     // delete REST request
@@ -134,17 +125,22 @@ class CompanyJobList extends React.Component {
         }
     }
 
+    // Display published, unpublished, or all jobs lists in tab selection
+    setJobListType = listName => {
+        this.setState({ jobListType: listName });
+        if (this.state.search.length > 0) {
+            this.searchJobs(this.state[`${listName}`], this.state.search);
+        }
+    }
+
     // Filter search
 
-    searchJobs = e => {
-        this.setState({ search: e.target.value });
-        let searchTerm = e.target.value.toLowerCase();
+    searchJobs = (list, searchTerm) => {
+
         if (searchTerm.length === 0) {
-            return this.setState({ filtered: null });
+            return this.setState({ filtered: [] });
         }
-        // activeJobsList is jobs list to search through
-        const jobListType = this.state.jobListType;
-        const activeJobsList = this.state.jobListType ? this.state[`${jobListType}`] : this.state.jobList;
+
         const matchText = (job, searchTerm) => {
             for (let key in job) {
                 const value = job[key];
@@ -153,7 +149,8 @@ class CompanyJobList extends React.Component {
                 }
             }
         }
-        this.setState({ filtered: activeJobsList.filter(job => matchText(job, searchTerm))});
+        let filtered = list.filter(job => matchText(job, searchTerm));
+        this.setState({ filtered: filtered });
     }
 
     // Next 3 fns: Sets display density of job list
@@ -335,7 +332,8 @@ class CompanyJobList extends React.Component {
         if (!e.target.checked) {
             this.setState({ clicked: [] });
         } else {
-
+            // jobsList, publishedList, unpublishedList (3 states)
+            // 
             this.setState({ checkedList: [] });
         }
     }
@@ -443,10 +441,10 @@ class CompanyJobList extends React.Component {
            );
 
         const jobTypeMenu = (
-            <RadioGroup defaultValue="all" onChange={this.setJobListType} size="small">
-                <RadioButton value="All">All</RadioButton>
-                <RadioButton value="Published">Published</RadioButton>
-                <RadioButton value="Unpublished">Unpublished</RadioButton>
+            <RadioGroup defaultValue="jobList" onChange={(e) => this.setJobListType(e.target.value)} size="small">
+                <RadioButton value="jobList">All</RadioButton>
+                <RadioButton value="publishedList">Published</RadioButton>
+                <RadioButton value="unpublishedList">Unpublished</RadioButton>
                 <Tooltip placement="top" trigger="hover" title={<span>Refresh</span>} mouseEnterDelay={0.8}>
                     <Button className="company-job-edit-link" onClick={this.fetchJobs} value="refresh-jobs" style={{marginLeft: "6px"}}>
                         <Icon type="sync" spin={loading} />
@@ -518,7 +516,7 @@ class CompanyJobList extends React.Component {
                 </div>
 
                 <Form className="company-job-search">
-                    <Input className="search" type="text" placeholder="search jobs" onChange={this.searchJobs} name="search" value={search}/>
+                    <Input className="search" type="text" placeholder="search jobs" onChange={this.onChange} onKeyUp={() => this.searchJobs(this.state[`${jobListType}`], search)} name="search" value={search}/>
                 </Form>
                 
                 <div className="job-list-actions">
@@ -543,55 +541,31 @@ class CompanyJobList extends React.Component {
                     </Dropdown>
                 </div>
 
-                {/* If search term present, display list */}
-                {filtered ? (
-                        <List 
-                        className="flex column company-job-list" 
-                        bordered={true} 
-                        loading={loading} 
-                        pagination={true} 
-                        position="both" 
-                        loadMore
-                        gutter={1}
-                        header={[
-                            <div key={1}>
-                                <Checkbox onChange={this.checkAll}/>
-                                <div className="whitespace"></div>
-                                <p>Boost</p>
-                                <em className="ant-list-item-action-split"></em>
-                                <p>Published</p>
-                            </div>
-                        ]}
-                        >
-                            {mapJobs(filtered)}
-                        </List>
-                ) : (
-                    // Else if no search term, display jobs if jobList is not null
-                        <List 
-                        className="flex column company-job-list" 
-                        bordered={true} 
-                        loading={loading} 
-                        pagination={true} 
-                        position="both" 
-                        loadMore
-                        gutter={1}
-                        header={[
-                            <div key={1}>
-                                <Checkbox onChange={this.checkAll}/>
-                                <div className="whitespace"></div>
-                                <p>Boost</p>
-                                <em className="ant-list-item-action-split"></em>
-                                <p>Published</p>
-                            </div>
-                        ]}
-                        >
-                        {/* if jobListType is not null, render that list */}
-                        {jobList ? (
-                            mapJobs(jobListType ? this.state[`${jobListType}`] : this.state.jobList )
-                        ) : (null)}
-                        </List>
-                )}
-
+                <List
+                    className="flex column company-job-list"
+                    bordered={true}
+                    loading={loading}
+                    pagination={true}
+                    position="both"
+                    loadMore
+                    gutter={1}
+                    header={[
+                        <div key={1}>
+                            <Checkbox onChange={this.checkAll} />
+                            <div className="whitespace"></div>
+                            <p>Boost</p>
+                            <em className="ant-list-item-action-split"></em>
+                            <p>Published</p>
+                        </div>
+                    ]}
+                >
+                    {jobList && filtered.length === 0 ? (
+                        mapJobs(this.state[`${jobListType}`])
+                    ) : (
+                        mapJobs(filtered)
+                    )}
+                </List>
+                
                 <Drawer
                     width={580}
                     visible={drawer}
