@@ -176,17 +176,24 @@ class CompanyJobList extends React.Component {
     // add / remove checked inputs to Set() in state
     checkJob = e => {
         const job_id = e.target.id;
+        const checked = e.target.checked;
         let { checkedList } = this.state;
-        checkedList[job_id] = !checkedList[job_id];
+        checkedList[job_id] = checked;
         this.setState({ checkedList: checkedList});
     }
 
     handleCheckJob = e => {
         if (e.nativeEvent.shiftKey) {
-            this.checkMultipleJobs();
+            this.checkMultipleJobs(e);
         } else {
             this.checkJob(e);
         }
+    }
+
+    checkMultipleJobs = e => {
+        const clicked_id = e.target.id;
+        // we know what is checked: checkedList {}
+        // we know order of jobs this.state[`jobListType`] or filtered
     }
     
 
@@ -329,8 +336,9 @@ class CompanyJobList extends React.Component {
     // onClick handler for first checkbox
     checkAll = e => {
         const { checkedList } = this.state;
+        const checked = e.target.checked;
         for (let job in checkedList) {
-            checkedList[job] = !checkedList[job];
+            checkedList[job] = checked;
         }
         this.setState({ checkedList: checkedList });
     }
