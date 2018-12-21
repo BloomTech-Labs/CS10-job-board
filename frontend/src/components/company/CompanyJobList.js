@@ -26,7 +26,7 @@ class CompanyJobList extends React.Component {
             next: null,
             previous: null,
             padding: null,
-            checkedList: new Set(),
+            checkedList: {},
             bulk: false,
             jobType: null,
             job: null,
@@ -68,7 +68,11 @@ class CompanyJobList extends React.Component {
             // call stack ordering to be called after job list is filtered.
             this.setState({
                 published_count: this.state.publishedList.length,
-                unpublished_count: this.state.unpublishedList.length
+                unpublished_count: this.state.unpublishedList.length,
+                checkedList: response.data.results.reduce((obj, job) => {
+                    obj[job.id] = false;
+                    return obj;
+                }, {})
             });
         })
         .catch(err => {
@@ -134,7 +138,6 @@ class CompanyJobList extends React.Component {
     }
 
     // Filter search
-
     searchJobs = (list, searchTerm) => {
 
         if (searchTerm.length === 0) {
@@ -170,14 +173,6 @@ class CompanyJobList extends React.Component {
         this.setState({ padding: "25px"});
     }
 
-    handleCheckJob = e => {
-        if (e.nativeEvent.shiftKey) {
-            this.checkMultipleJobs()
-        } else {
-            this.checkJob(e);
-        }
-    }
-    
     // add / remove checked inputs to Set() in state
     checkJob = e => {
         const job_id = e.target.id;
@@ -187,6 +182,16 @@ class CompanyJobList extends React.Component {
         } else if (!e.target.checked && checkedList.has(job_id)) {
             checkedList.delete(job_id);
         }
+    }
+
+    handleCheckJob = e => {
+        if (e.nativeEvent.shiftKey) {
+            this.checkMultipleJobs();
+        } else {
+            this.checkJob(e);
+        }
+    }
+    
 
         // const { clicked, checkedList } = this.state;
         // // shift key condition - to select multiple items
@@ -232,8 +237,7 @@ class CompanyJobList extends React.Component {
         //         }
         //     }
         // }
-    }
-
+    
     checkJobShiftKey = (checked, id, lastClicked) => {
         const currentChecked = id;
         const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
@@ -329,13 +333,9 @@ class CompanyJobList extends React.Component {
     checkAll = e => {
         // get a list of all checkboxes to check / uncheck
         // const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
-        if (!e.target.checked) {
-            this.setState({ clicked: [] });
-        } else {
-            // jobsList, publishedList, unpublishedList (3 states)
-            // 
-            this.setState({ checkedList: [] });
-        }
+        this.state[`${this.state.jobListType}`].forEach(element => {
+            console.log(element);
+        });
     }
 
 
@@ -489,7 +489,11 @@ class CompanyJobList extends React.Component {
                             ]}
                             style = {{ paddingTop: padding ? (padding) : "10px", paddingBottom: padding ? (padding) : "10px"}}
                         >
-                            <Checkbox onChange={this.handleCheckJob} id={`${job.id}`} className="job-item"/>
+                            <Checkbox 
+                                onChange={this.handleCheckJob} 
+                                id={`${job.id}`} 
+                                checked={false}
+                                className="job-item"/>
                             <em className="ant-list-item-action-split-modified"></em>
                             <p>{job.title}</p>
                         </List.Item>
