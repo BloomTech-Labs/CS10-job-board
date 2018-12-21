@@ -176,12 +176,9 @@ class CompanyJobList extends React.Component {
     // add / remove checked inputs to Set() in state
     checkJob = e => {
         const job_id = e.target.id;
-        const { checkedList } = this.state;
-        if (e.target.checked && !checkedList.has(job_id)) {
-            checkedList.add(job_id);
-        } else if (!e.target.checked && checkedList.has(job_id)) {
-            checkedList.delete(job_id);
-        }
+        let { checkedList } = this.state;
+        checkedList[job_id] = !checkedList[job_id];
+        this.setState({ checkedList: checkedList});
     }
 
     handleCheckJob = e => {
@@ -331,11 +328,11 @@ class CompanyJobList extends React.Component {
 
     // onClick handler for first checkbox
     checkAll = e => {
-        // get a list of all checkboxes to check / uncheck
-        // const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
-        this.state[`${this.state.jobListType}`].forEach(element => {
-            console.log(element);
-        });
+        const { checkedList } = this.state;
+        for (let job in checkedList) {
+            checkedList[job] = !checkedList[job];
+        }
+        this.setState({ checkedList: checkedList });
     }
 
 
@@ -415,6 +412,7 @@ class CompanyJobList extends React.Component {
             count,
             published_count,
             unpublished_count,
+            checkedList,
             padding,
             job,
             drawer,
@@ -492,7 +490,7 @@ class CompanyJobList extends React.Component {
                             <Checkbox 
                                 onChange={this.handleCheckJob} 
                                 id={`${job.id}`} 
-                                checked={false}
+                                checked={checkedList[job.id]}
                                 className="job-item"/>
                             <em className="ant-list-item-action-split-modified"></em>
                             <p>{job.title}</p>
