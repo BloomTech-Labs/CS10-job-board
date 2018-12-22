@@ -81,52 +81,53 @@ class CompanyJobList extends React.Component {
     }
     
     // delete REST request
-    deleteJob = (id, requestOptions) => {
+    deleteJob = (id, requestOptions, cb) => {
         axios.delete(`${process.env.REACT_APP_API}company/jobs/${id}/`, requestOptions)
-            .then(response => {
-                this.state.bulk ? (
-                    this.setState({ checkedList: this.state.checkedList.filter(item => item.id !== id)})
-                ) : (
-                    this.setState({ message: `Record successfully deleted`, loading: false })
-                );
-            })
-            .catch(err => {
-                this.state.bulk ? (
-                    console.log(err)
-                ) : (
-                    this.setState({ error: `Error deleting records. Try again.`, loading: false})
-                );
-            });      
+        .then(response => {
+            cb(null, response);
+        })
+        .catch(error => {
+            cb(error);
+        });   
     }
 
     // handles delete requests for one or many items
-    handleBulkDelete = e => {
+    // TODO: refactor API to accept multiple ID ?
+    handleDeleteJob = e => {
         e.preventDefault();
-        this.setState({ bulk: true, error: false, message: false, loading: true });
-        let {checkedList} = this.state;
-        const deleteJob = this.deleteJob;
-        const numOfJobs = checkedList.length;
+        this.setState({ error: false, message: false, loading: true });
+        const {checkedList} = this.state;
+        const currentJobList = this.state[`${this.state.jobListType}`];
+        const isChecked = job => {
+            if (checkedList[job.id]) return true;
+        }
+        const jobIDsToDelete = currentJobList.filter(job => isChecked(job)).map(job => job.id);
         const token = localStorage.getItem('token');
         const requestOptions = { headers: { Authorization: `JWT ${token}` }};
-        if (numOfJobs > 0) {
-            // function to ensure proper delete before moving on to next item in checkedList
-            async function loop(requestOptions, deleteJob) {
-                for (let i = 0; i < numOfJobs; i++) {
-                    const id = checkedList[i];
-                    await deleteJob(id, requestOptions);
-                }
-            };
-            loop(requestOptions, deleteJob).then(response => {
-                // Timeout to ensure delete by server before requesting new list of jobs
-                setTimeout(() => {
-                    this.fetchJobs();
-                    this.setState({ message: `Successfully removed ${numOfJobs} jobs.`, bulk: false, loading: false, checkedList: [] });
-                }, 1000);
-            })
-            .catch(err => {
-                this.setState({ error: `Error deleting jobs. Try again or refresh.`, bulk: false, loading: false});
-            });
+        const deleteJob = this.deleteJob;
+        async function deleteLoop(requestOptions, deleteJob) {
+            let successArr = [];
+            let errorArr = [];
+            const cb = (error, response) => {
+                if (error) errorArr.push(error);
+                else successArr.push(response);
+            }
+            for (let id of jobIDsToDelete) {
+                await deleteJob(id, requestOptions, cb);
+            }
+            return {success: successArr, error: errorArr};
         }
+        deleteLoop(requestOptions, deleteJob).then(response => {
+            setTimeout(() => {
+                const success = response.success.length;
+                const error = response.error.length;
+                this.fetchJobs();
+                this.setState({ 
+                    message: success > 0 ? `Successfully removed ${success} job${success === 1 ? '' : 's'}` : null,
+                    error: error > 0 ? `Failed to delete ${error} job${error === 1 ? '': 's'}` : null,
+                    loading: false });
+            }, 1000, response);
+        })
     }
 
     // Display published, unpublished, or all jobs lists in tab selection
@@ -539,7 +540,7 @@ class CompanyJobList extends React.Component {
                             title="Are you sure you want to delete these jobs?"
                             okText="Delete"
                             cancelText="Cancel"
-                            onConfirm={this.handleBulkDelete}
+                            onConfirm={this.handleDeleteJob}
                         >
                             <Icon type="delete" onClick={null}/>
                         </Popconfirm>
