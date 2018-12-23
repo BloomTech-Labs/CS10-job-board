@@ -6,7 +6,7 @@ const CompanyJobBalance = props => {
         <div className="company-balance">
             <div className="flex">
                 <Icon type="thunderbolt" />
-                <p>Job Credits: {props.subscription === 'Unlimited' ? 'Unlimited' : props.job_credit}</p>
+                <p>Job Credits: {props.subscription === 'plan_DoNu8JmqFRMrze' ? 'Unlimited' : props.job_credit}</p>
             </div>
         </div>
     );
