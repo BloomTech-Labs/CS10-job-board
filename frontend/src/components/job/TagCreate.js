@@ -11,8 +11,8 @@ class TagCreate extends React.Component {
   }
 
   handleClose = (removedTag) => {
-    const tags = this.state.tags.filter(tag => tag !== removedTag);
-    this.setState({ tags });
+    const tags = this.props.tags.filter(tag => tag !== removedTag);
+    this.props.setTags(tags);
   }
 
   showInput = () => {
