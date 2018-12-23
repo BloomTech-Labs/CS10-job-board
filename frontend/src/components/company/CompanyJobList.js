@@ -27,7 +27,7 @@ class CompanyJobList extends React.Component {
             previous: null,
             padding: null,
             checkedList: {},
-            bulk: false,
+            lastChecked: null,
             jobType: null,
             job: null,
             drawer: false,
@@ -63,6 +63,7 @@ class CompanyJobList extends React.Component {
                 previous: response.data.previous,
                 publishedList: response.data.results.filter(job => job.is_active === true),
                 unpublishedList: response.data.results.filter(job => job.is_active === false),
+                jobIds: response.data.results.map(job => job.id),
                 loading: false
             });
             // call stack ordering to be called after job list is filtered.
@@ -91,7 +92,6 @@ class CompanyJobList extends React.Component {
         });   
     }
 
-    // handles delete requests for one or many items
     // TODO: refactor API to accept multiple ID ?
     handleDeleteJob = e => {
         e.preventDefault();
@@ -184,7 +184,10 @@ class CompanyJobList extends React.Component {
     }
 
     handleCheckJob = e => {
-        if (e.nativeEvent.shiftKey) {
+        if (e.target.checked && !e.nativeEvent.shiftKey) {
+            this.setState({ lastChecked: e.target.id });
+            this.checkJob(e);
+        } else if (e.target.checked && e.nativeEvent.shiftKey && this.state.lastChecked !== e.target.id) {
             this.checkMultipleJobs(e);
         } else {
             this.checkJob(e);
@@ -192,146 +195,21 @@ class CompanyJobList extends React.Component {
     }
 
     checkMultipleJobs = e => {
-        const clicked_id = e.target.id;
-        // we know what is checked: checkedList {}
-        // we know order of jobs this.state[`jobListType`] or filtered
-    }
-    
+        const checked_id = parseInt(e.target.id);
+        const lastChecked = parseInt(this.state.lastChecked);
+        const { checkedList } = this.state;
+        const jobIds = this.state.jobIds;
+        let indexChecked = jobIds.indexOf(checked_id);
+        let indexLastChecked = jobIds.indexOf(lastChecked);
+        let order = indexChecked > indexLastChecked ? true : false;
+        let start = order ? indexLastChecked : indexChecked;
+        let end = order ? indexChecked : indexLastChecked;
 
-        // const { clicked, checkedList } = this.state;
-        // // shift key condition - to select multiple items
-        // const shiftPressed = e.nativeEvent.shiftKey;
-        // if (shiftPressed) {
-        //     // last clicked is last clicked without shift key active
-        //     let lastClicked = clicked[clicked.length - 1];
-        //     if (lastClicked) {
-        //         this.checkJobShiftKey(e.target.checked, e.target.id, lastClicked);
-        //     } else {
-        //     // if clicked array is empty
-        //         if (e.target.checked === true) {
-        //             this.setState({ 
-        //                 checkedList: checkedList.concat(e.target.id),
-        //                 clicked: clicked.concat(e.target.id)
-        //             });
-        //         } else {
-        //             this.setState({ 
-        //                 checkedList: this.state.checkedList.filter(item => item !== e.target.id),
-        //                 clicked: clicked.filter(item => item !== e.target.id)
-        //             });
-        //             // reset clicked array if checkedList is empty
-        //             if (checkedList.length === 0) {
-        //                 this.setState({ clicked: [] });
-        //             }
-        //         }
-        //     }
-        // // if shift key is not pressed
-        // } else {
-        //     if (e.target.checked === true) {
-        //         this.setState({ 
-        //             checkedList: checkedList.concat(e.target.id),
-        //             clicked: clicked.concat(e.target.id)
-        //         });
-        //     } else {
-        //         this.setState({ 
-        //             checkedList: this.state.checkedList.filter(item => item !== e.target.id),
-        //             clicked: clicked.filter(item => item !== e.target.id)
-        //         });
-        //         // reset clicked array if checkedList is empty
-        //         if (checkedList.length === 0) {
-        //             this.setState({ clicked: [] });
-        //         }
-        //     }
-        // }
-    
-    checkJobShiftKey = (checked, id, lastClicked) => {
-        const currentChecked = id;
-        const checkboxes = document.querySelectorAll(".job-item .ant-checkbox-input");
-        let checkedListIds = [];
-        let removeItems = [];
-        let push = false;
-        for (let i = 0; i < checkboxes.length; i++) {
-            const input = checkboxes[i];
-            // if item matches both last clicked and currently checked, loop through rest to deselect
-            if (input.id === lastClicked && input.id === currentChecked) {
-
-                if (checked) {
-                    checkedListIds.push(input.id);
-                } else {
-                    removeItems.push(input.id);
-                }
-                // remove remaining items if checked
-                for (let p = i + 1; p < checkboxes.length; p++) {
-                    const input = checkboxes[p];
-                    if (input.checked) {
-                        removeItems.push(input.id);
-                        input.click();
-                    } else {
-                        break;
-                    }
-                }
-                // break once all remaining are unchecked
-                break;
-            }
-            // if a node matches either last clicked or currently checked, flip the boolean "push"
-            else if (input.id === lastClicked || input.id === currentChecked) {
-                push = !push;
-                // if push is true, it is the first time to be flipped:
-                //      if input matches currently checked, then it indicates a backwards selection
-                //      in the DOM node list. (currentChecked comes before lastClicked in list)
-                if (push === true && input.id === currentChecked) {
-                    // if the event is checked, add the input to later add to state
-                    if (checked) {
-                        checkedListIds.push(input.id);
-                    } else {
-                        removeItems.push(input.id);
-                    }
-                }
-                // if push is false inside this else if block, it is the end of the selection list
-                //      inside the loop of the DOM nodes. If the id matches currently checked, then 
-                //      the selection can shrink by removing clicked items after currently selected.
-                if (push === false && input.id === currentChecked) {
-                    if (checked) {
-                        checkedListIds.push(input.id);
-                    } else {
-                        removeItems.push(input.id);
-                    }
-                    // loop through remaining DOM nodes to uncheck
-                    for (let p = i + 1; p < checkboxes.length; p++) {
-                        const input = checkboxes[p];
-                        if (input.checked) {
-                            removeItems.push(input.id);
-                            input.click();
-                        } else {
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-            // adds items in between lastClicked and currentChecked if push boolean is true
-            if (push) {
-                if (checked && !input.checked) {
-                    input.click();
-                    checkedListIds.push(input.id);
-                }
-            }
+        for (let i = start; i <= end; i++) {
+            const id = jobIds[i];
+            checkedList[id] = true;
         }
-        const { checkedList, clicked } = this.state;
-        let filteredCheckedList = checkedListIds.filter(id => checkedList.indexOf(id) === -1);
-        const newCheckedList = checkedList.concat(filteredCheckedList);
-        this.setState({ 
-            checkedList: newCheckedList,
-            clicked: clicked
-        });
-        // 
-        if (removeItems.length > 0) {
-            let updatedChecked = this.state.checkedList.filter(id => removeItems.indexOf(id) === -1);
-            let updatedClicked = this.state.clicked.filter(id => removeItems.indexOf(id) === -1);
-            this.setState({ 
-                checkedList: updatedChecked,
-                clicked: updatedClicked
-            });
-        }
+        this.setState({ checkedList: checkedList });
     }
 
     // onClick handler for first checkbox
@@ -342,25 +220,6 @@ class CompanyJobList extends React.Component {
             checkedList[job] = checked;
         }
         this.setState({ checkedList: checkedList });
-    }
-
-
-    checkRange = (checked, checkedList) => {
-        let checkedListIds = [];
-        for (let i = 0; i < checkedList.length; i++) {
-            const input = checkedList[i];
-            if (checked) {
-                checkedListIds.push(input.id);
-            }
-            if (checked && !input.checked) {
-                // input.checked = "checked";
-                input.click();
-            } else if (!checked && input.checked) {
-                // input.checked = "checked";
-                input.click();
-            }
-        }
-        return checkedListIds;
     }
 
     // show JobEdit.js view drawer
