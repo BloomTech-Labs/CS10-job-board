@@ -127,7 +127,7 @@ class CompanyJobEdit extends React.Component {
     this.setState({ min_salary: e });
   }
 
-  addTags = tags => {
+  setTags = tags => {
     this.setState({ tags: tags });
   }
 
@@ -265,7 +265,7 @@ class CompanyJobEdit extends React.Component {
             </div>
   
             <FormItem label="Tags" name="tags">
-              <TagCreate addTags={this.addTags} tags={tags}/>
+              <TagCreate setTags={this.setTags} tags={tags}/>
             </FormItem>
   
             <div className="flex">
