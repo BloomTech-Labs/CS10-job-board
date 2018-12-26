@@ -84,7 +84,7 @@ class Command(BaseCommand):
             user=user,
             stripe_id=new_customer['id'],
             subscription=subscription,
-            job_credit='999'
+            job_credit='99999'
         )
 
         new_membership.save()
